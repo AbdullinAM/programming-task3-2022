@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import static com.example.russianCheckers.logic.fieldOptions.CellStatus.ACTIVE;
 import static com.example.russianCheckers.logic.fieldOptions.CellStatus.INACTIVE;
-import static com.example.russianCheckers.ui.settings.Settings.*;
+import static com.example.russianCheckers.ui.uiSettings.Settings.*;
 
 @Getter
 @Setter

@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.example.russianCheckers.logic.checkers.StatusChecker.*;
 import static com.example.russianCheckers.logic.fieldOptions.CellStatus.*;
-import static com.example.russianCheckers.ui.settings.Settings.*;
+import static com.example.russianCheckers.ui.uiSettings.Settings.*;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 

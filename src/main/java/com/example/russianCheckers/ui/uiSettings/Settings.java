@@ -1,9 +1,7 @@
-package com.example.russianCheckers.ui.settings;
+package com.example.russianCheckers.ui.uiSettings;
 
 import javafx.scene.paint.Color;
-import org.springframework.stereotype.Component;
 
-@Component
 public class Settings {
     public final static String GAME_NAME = "Russian checkers";
     public final static int SCREEN_RESOLUTION_X = 800;

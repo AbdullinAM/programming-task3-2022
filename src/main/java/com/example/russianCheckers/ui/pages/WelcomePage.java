@@ -10,8 +10,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import static com.example.russianCheckers.ui.settings.Settings.SCREEN_RESOLUTION_X;
-import static com.example.russianCheckers.ui.settings.Settings.SCREEN_RESOLUTION_Y;
+import static com.example.russianCheckers.ui.uiSettings.Settings.SCREEN_RESOLUTION_X;
+import static com.example.russianCheckers.ui.uiSettings.Settings.SCREEN_RESOLUTION_Y;
 
 public class WelcomePage {
 

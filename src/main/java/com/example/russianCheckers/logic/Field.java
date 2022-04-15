@@ -13,7 +13,7 @@ import java.util.List;
 import static com.example.russianCheckers.logic.checkers.StatusChecker.NOTHING_BLACK;
 import static com.example.russianCheckers.logic.checkers.StatusChecker.NOTHING_WHITE;
 import static com.example.russianCheckers.logic.fieldOptions.CellStatus.INACTIVE;
-import static com.example.russianCheckers.ui.settings.Settings.*;
+import static com.example.russianCheckers.ui.uiSettings.Settings.*;
 
 @Data
 public class Field {

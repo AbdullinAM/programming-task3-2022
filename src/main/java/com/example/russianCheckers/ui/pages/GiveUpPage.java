@@ -11,7 +11,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import static com.example.russianCheckers.ui.settings.Settings.*;
+import static com.example.russianCheckers.ui.uiSettings.Settings.*;
 
 public class GiveUpPage {
 

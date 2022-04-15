@@ -2,7 +2,7 @@ package com.example.russianCheckers.ui.pages;
 
 import com.example.russianCheckers.logic.CheckersLogic;
 import com.example.russianCheckers.logic.Field;
-import com.example.russianCheckers.ui.settings.Settings;
+import com.example.russianCheckers.ui.uiSettings.Settings;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,7 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import static com.example.russianCheckers.ui.settings.Settings.*;
+import static com.example.russianCheckers.ui.uiSettings.Settings.*;
 
 public class GameFieldPage {
 
@@ -160,5 +160,5 @@ public class GameFieldPage {
     public static Text getCurrentStepValue() {
         return currentStepValue;
     }
-    
+
 }

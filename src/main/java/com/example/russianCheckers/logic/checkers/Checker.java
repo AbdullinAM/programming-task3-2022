@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import static com.example.russianCheckers.logic.checkers.StatusChecker.*;
-import static com.example.russianCheckers.ui.settings.Settings.*;
+import static com.example.russianCheckers.ui.uiSettings.Settings.*;
 import static javafx.scene.paint.Color.*;
 
 @Getter
