@@ -31,7 +31,8 @@ public class EventHandlerChecker {
                     CheckersLogic.findAvailableEatSteps(checker.getPosition(), 4);
                 }
                 CheckersLogic.printAvailableSteps();
-                CheckersLogic.setToInactiveOtherCheckers(checker.getPosition());
+                CheckersLogic.setToInactiveOtherCheckers(checker.getPosition(), CheckersLogic.getFriendCheckers());
+                CheckersLogic.setToInactiveOtherCheckers(checker.getPosition(), CheckersLogic.getEnemyCheckers());
             }
         };
         checker.getChecker().addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);

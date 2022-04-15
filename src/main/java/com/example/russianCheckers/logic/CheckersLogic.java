@@ -63,17 +63,16 @@ public class CheckersLogic {
             yEnd = y1;
         }
 
-        for (int i = xMin; i <= xMax; i+= 100) {
-            int currentX = i;
+        for (int currentX = xMin; currentX <= xMax; currentX+= 100) {
             int currentY;
-            if (yStart < yEnd) currentY = yStart + (i - xMin);
-            else currentY = yStart - (i - xMin);
+            if (yStart < yEnd) currentY = yStart + (currentX - xMin);
+            else currentY = yStart - (currentX - xMin);
 
             String currentPos = convertCoordinateToPosition(currentX, currentY);
-            if (statusChecker.equals(CURRENT_CHECKER_WHITE) && currentPos != null && FieldInformation.getField().get(currentPos).equals(ENEMY_CHECKER)) {
+            if (statusChecker.equals(CURRENT_CHECKER_WHITE) && FieldInformation.getField().get(currentPos).equals(ENEMY_CHECKER)) {
                 FieldInformation.getField().put(currentPos, FREE);
                 field.deleteChecker(currentPos);
-            } else if(statusChecker.equals(CURRENT_CHECKER_BLACK) && currentPos != null && FieldInformation.getField().get(currentPos).equals(FRIEND_CHECKER)) {
+            } else if(statusChecker.equals(CURRENT_CHECKER_BLACK) && FieldInformation.getField().get(currentPos).equals(FRIEND_CHECKER)) {
                 FieldInformation.getField().put(currentPos, FREE);
                 field.deleteChecker(currentPos);
             }
@@ -162,6 +161,12 @@ public class CheckersLogic {
         }
     }
 
+    /**
+     * 1 - UP and LEFT
+     * 2 - UP and RIGHT
+     * 3 - DOWN and LEFT
+     * 4 - DOWN and RIGHT
+     */
     public static void findAvailableSuperSteps(String position, int direction, boolean isAlreadyPassFirstEnemy) {
         String nextStep = "";
         String nextDoubleStep = "";
@@ -213,7 +218,12 @@ public class CheckersLogic {
         }
     }
 
-
+    /**
+     * 1 - UP and LEFT
+     * 2 - UP and RIGHT
+     * 3 - DOWN and LEFT
+     * 4 - DOWN and RIGHT
+     */
     public static void findAvailableEatSteps(String position, int direction) {
         String nextStep = "";
         String nextDoubleStep = "";
@@ -244,15 +254,10 @@ public class CheckersLogic {
     }
 
     /**
-     *
-     * @param position
-     * @param direction
-     *
      * 1 - UP and LEFT
      * 2 - UP and RIGHT
      * 3 - DOWN and LEFT
      * 4 - DOWN and RIGHT
-     *
      */
     public static void findAvailableSteps(String position, int direction) {
         String nextStep = "";
@@ -278,23 +283,18 @@ public class CheckersLogic {
         availablePositions.clear();
     }
 
-    public static void setToInactiveOtherCheckers(String position) {
+    public static void setToInactiveOtherCheckers(String position, List<Checker> checkers) {
 
-        friendCheckers.stream()
+        checkers
+                .stream()
                 .filter(checker -> checker.getStatusChecker() == CURRENT_CHECKER_WHITE && !checker.getPosition().equals(position))
                 .forEach(checker -> checker.updateStatus(NOTHING_WHITE));
 
-        friendCheckers.stream()
+        checkers
+                .stream()
                 .filter(checker -> checker.getStatusChecker() == CURRENT_CHECKER_BLACK && !checker.getPosition().equals(position))
                 .forEach(checker -> checker.updateStatus(NOTHING_BLACK));
 
-        enemyCheckers.stream()
-                .filter(checker -> checker.getStatusChecker() == CURRENT_CHECKER_WHITE && !checker.getPosition().equals(position))
-                .forEach(checker -> checker.updateStatus(NOTHING_WHITE));
-
-        enemyCheckers.stream()
-                .filter(checker -> checker.getStatusChecker() == CURRENT_CHECKER_BLACK && !checker.getPosition().equals(position))
-                .forEach(checker -> checker.updateStatus(NOTHING_BLACK));
     }
 
     public static void restartGame() {

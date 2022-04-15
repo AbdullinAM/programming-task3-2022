@@ -17,10 +17,10 @@ import static com.example.russianCheckers.ui.settings.Settings.*;
 
 public class GameFieldPage {
 
-    private static Text countStepsValue = new Text();
-    private static Text currentStepValue = new Text();
-    private static Text whiteCheckersAliveValue = new Text();
-    private static Text blackCheckersAliveValue = new Text();
+    private static final Text countStepsValue = new Text();
+    private static final Text currentStepValue = new Text();
+    private static final Text whiteCheckersAliveValue = new Text();
+    private static final Text blackCheckersAliveValue = new Text();
 
     public static void printGameField(Stage stage) {
         Group root = new Group();
@@ -160,12 +160,5 @@ public class GameFieldPage {
     public static Text getCurrentStepValue() {
         return currentStepValue;
     }
-
-    public static int getWhiteCheckerValue() {
-     return Integer.parseInt(GameFieldPage.whiteCheckersAliveValue.getText());
-    }
-
-    public static int getBlackCheckerValue() {
-        return Integer.parseInt(GameFieldPage.blackCheckersAliveValue.getText());
-    }
+    
 }
