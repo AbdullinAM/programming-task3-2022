@@ -6,22 +6,6 @@ enum class Direction {
     UP, DOWN, LEFT, RIGHT
 }
 
-
-//class Cell(val number: Int) {
-//    var v:Int? = null
-//    fun setValue(number: Int) {
-//        v = number
-//    }
-//
-//    fun getValue(): Int? {
-//        return v
-//    }
-//
-//    override fun equals(other: Any?): Boolean {
-//        if (other !is Cell) return false
-//        return this.number == other.number && this.v == other.v
-//    }
-//}
 fun main() {
 //    val cell1 = Grid.Cell(0, 0)
 //    cell1.setValue(2)
@@ -45,14 +29,12 @@ fun main() {
 //    val newGrid = Grid().moveGrid(Direction.LEFT, grid)
 //    val secondGrid = Grid().moveGrid(Direction.UP, newGrid)
     val grid = Grid().createGrid()
-    val gridUP = Grid().moveGrid(Direction.UP, grid)
-    val gridDOWN = Grid().moveGrid(Direction.DOWN, gridUP)
-    val gridLEFT = Grid().moveGrid(Direction.LEFT, gridDOWN)
-    println(gridLEFT)
+    println(grid)
+    println(grid.reversed())
 }
 
 class Grid {
-    class Cell(val column: Int, val row: Int) {
+    class Cell(val row: Int, val column: Int) {
         var v:Int? = null
         fun setValue(number: Int?) {
             v = number
@@ -66,24 +48,24 @@ class Grid {
             val cells = mutableListOf<Cell>()
             grid.forEach {  cells.add(it) }
             when(direction) {
-                Direction.UP -> if (Cell(this.column, this.row - 1) in cells)
-                    return cells.find{it == Cell(this.column, this.row - 1)}?.getValue()
-                Direction.DOWN -> if (Cell(this.column, this.row + 1) in cells)
-                    return cells.find{it == Cell(this.column, this.row + 1)}?.getValue()
-                Direction.LEFT -> if (Cell(this.column - 1, this.row) in cells)
-                    return cells.find{it == Cell(this.column - 1, this.row)}?.getValue()
-                Direction.RIGHT -> if (Cell(this.column + 1, this.row) in cells)
-                    return cells.find{it == Cell(this.column + 1, this.row)}?.getValue()
+                Direction.UP -> if (Cell(this.row - 1, this.column) in cells)
+                    return cells.find{it == Cell(this.row - 1, this.column)}?.getValue()
+                Direction.DOWN -> if (Cell(this.row + 1, this.column) in cells)
+                    return cells.find{it == Cell(this.row + 1, this.column)}?.getValue()
+                Direction.LEFT -> if (Cell(this.row, this.column - 1,) in cells)
+                    return cells.find{it == Cell(this.row, this.column - 1)}?.getValue()
+                Direction.RIGHT -> if (Cell(this.row, this.column + 1) in cells)
+                    return cells.find{it == Cell(this.row, this.column + 1)}?.getValue()
 
             }
             return null
         }
         fun getNeighbour(direction: Direction): Cell {
             return when(direction) {
-                Direction.UP -> Cell(this.column, this.row - 1)
-                Direction.DOWN -> Cell(this.column, this.row + 1)
-                Direction.LEFT -> Cell(this.column - 1, this.row)
-                Direction.RIGHT -> Cell(this.column + 1, this.row)
+                Direction.UP -> Cell(this.row - 1, this.column)
+                Direction.DOWN -> Cell(this.row + 1, this.column)
+                Direction.LEFT -> Cell(this.row, this.column - 1)
+                Direction.RIGHT -> Cell(this.row, this.column + 1)
             }
         }
 
@@ -92,35 +74,12 @@ class Grid {
             return this.column == other.column && this.row == other.row
         }
         override fun toString(): String {
-            return "(${this.column}, ${this.row}) = ${this.getValue()}"
+            return "(${this.row}, ${this.column}) = ${this.getValue()}"
         }
     }
 
 
     fun createGrid(): List<Cell> {
-//        val cellsValues = mutableListOf<Int?>()
-//        val columnsList = mutableListOf<List<Cell>>()
-//        val firstCell = Cell((0..3).random(), (0..3).random())
-//        var secondCell = Cell((0..15).random(), (0..3).random())
-//        while (firstCell != secondCell) secondCell = Cell((0..15).random(), (0..3).random())
-//        val firstValue =
-//            if ((0..9).random() == 0) 4
-//            else 2
-//        val secondValue =
-//            if ((0..9).random() == 0) 4
-//            else 2
-//        for (i in 0..15) {
-//            if (i == firstCell.number) cellsValues[i] = firstValue
-//            if (i == secondCell.number) cellsValues[i] = secondValue
-//            else cellsValues[i] = null
-//        }
-//        return cellsValues.toList()
-//        for (column in 0..3) {
-//            val cellList = mutableListOf<Cell>()
-//            for (row in  0..3) {
-//                if (column == firstCell.column && row == firstCell.row)
-//            }
-//        }
         val grid = createEmptyGrid()
         val firstCell = Cell((0..3).random(), (0..3).random())
         var secondCell = Cell((0..3).random(), (0..3).random())
@@ -143,66 +102,78 @@ class Grid {
 
 
     fun createEmptyGrid(): List<Cell> {
-        //Column, row version
-        /*val columnsList = mutableListOf<List<Cell>>()
-        for (column in 0..3) {
-            val cellList = mutableListOf<Cell>()
-            for (row in 0..3) {
-                cellList.add(Cell(column, row))
-            }
-            columnsList.add(cellList)
-        }
-        return columnsList
-
-         */
         val result = mutableListOf<Cell>()
-        for (column in 0..3) {
-            for (row in 0..3) {
-                result.add(Cell(column, row))
+        for (row in 0..3) {
+            for (column in 0..3) {
+                result.add(Cell(row, column))
             }
         }
         return result
     }
 // Create check line(row, column) with empty cells function or try while cycle
     fun moveGrid(direction: Direction, grid: List<Cell>): List<Cell> {
-        val gridNew = grid.toMutableList()
-        grid.forEach {
+        var gridResult =  listOf<Cell>()
+        val gridMain = grid.toMutableList()
+        val gridReversed = grid.reversed().toMutableList()
+        if (direction == Direction.DOWN || direction == Direction.RIGHT) {
+            gridMain.forEach {
                 var cell = it
                 var cellValue = it.getValue()
                 var neighbour = it.getNeighbour(direction)
                 var neighbourValue = it.getNeighbourValue(direction, grid)
                 var sum = neighbourValue?.plus(cellValue!!)
-//                when (neighbourValue) {
-//                    cellValue -> {
-//                        gridNew.find { it == neighbour }?.setValue(sum)
-//                        gridNew.find { it == cell}?.setValue(0)
-//                    }
-//                    0 -> {
-//                        val neighbourNext = neighbour.getNeighbour(direction)
-//                        gridNew.find { it == neighbour }?.setValue(it.getValue())
-//                        gridNew.find { it == cell}?.setValue(0)
-//                    }
-            while (neighbourValue != null) {
-                when (neighbourValue) {
-                    cellValue -> {
-                        gridNew.find { it == neighbour }?.setValue(sum)
-                        gridNew.find { it == cell }?.setValue(0)
-                        break
+                while (neighbourValue != null) {
+                    when (neighbourValue) {
+                        cellValue -> {
+                            gridMain.find { it == neighbour }?.setValue(sum)
+                            gridMain.find { it == cell }?.setValue(0)
+                            break
+                        }
+                        0 -> {
+                            gridMain.find { it == neighbour }?.setValue(cellValue)
+                            gridMain.find { it == cell }?.setValue(0)
+                            cell = neighbour
+                            cellValue = neighbourValue
+                            neighbour = neighbour.getNeighbour(direction)
+                            neighbourValue = it.getNeighbourValue(direction, grid)
+                            sum = neighbourValue?.plus(cellValue)
+                        }
+                        else -> break
                     }
-                    0 -> {
-                        gridNew.find { it == neighbour }?.setValue(cellValue)
-                        gridNew.find { it == cell }?.setValue(0)
-                        cell = neighbour
-                        cellValue = neighbourValue
-                        neighbour = neighbour.getNeighbour(direction)
-                        neighbourValue = it.getNeighbourValue(direction, grid)
-                        sum = neighbourValue?.plus(cellValue)
-                    }
-                    else -> break
                 }
-                }
+            }
+            gridResult = gridMain
         }
-        return gridNew
+        else {
+            gridReversed.forEach {
+                var cell = it
+                var cellValue = it.getValue()
+                var neighbour = it.getNeighbour(direction)
+                var neighbourValue = it.getNeighbourValue(direction, grid)
+                var sum = neighbourValue?.plus(cellValue!!)
+                while (neighbourValue != null) {
+                    when (neighbourValue) {
+                        cellValue -> {
+                            gridMain.find { it == neighbour }?.setValue(sum)
+                            gridMain.find { it == cell }?.setValue(0)
+                            break
+                        }
+                        0 -> {
+                            gridMain.find { it == neighbour }?.setValue(cellValue)
+                            gridMain.find { it == cell }?.setValue(0)
+                            cell = neighbour
+                            cellValue = neighbourValue
+                            neighbour = neighbour.getNeighbour(direction)
+                            neighbourValue = it.getNeighbourValue(direction, grid)
+                            sum = neighbourValue?.plus(cellValue!!)
+                        }
+                        else -> break
+                    }
+                }
+            }
+            gridResult = gridReversed.reversed()
+        }
+        return gridResult
     }
 
 }
