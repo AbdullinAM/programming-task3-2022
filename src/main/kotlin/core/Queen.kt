@@ -2,7 +2,7 @@ package core
 
 class Queen(color: Color): Checker(color) {
     override fun possibleTurns(cell: Cell): Pair<Boolean, List<Cell>> {
-        val checkers = getCheckers()!!
+        val checkers = getCheckers()
         val result = mutableListOf<Cell>()
         val canEat = mutableListOf<Cell>()
         for (direction in DIRECTIONS) {

@@ -1,13 +1,12 @@
 package core
 
 open class Checker(val color: Color) {
+
     companion object {
         val DIRECTIONS = arrayOf(Cell(1,-1), Cell(-1,-1), Cell(1,1), Cell(-1,1))
     }
 
     private var mainBoard: Board? = null
-
-    private var tempBoard: Map<Cell, Checker?>? = null
 
     fun setMainBoard(board: Board) {
         this.mainBoard = board
@@ -19,10 +18,10 @@ open class Checker(val color: Color) {
         return cell.x in 0 until 8 && cell.y in 0 until 8
     }
 
-    fun getCheckers() = if (tempBoard == null) mainBoard!!.getAllCheckers() else tempBoard
+    fun getCheckers() = mainBoard!!.getAllCheckers()
 
     open fun possibleTurns(cell : Cell): Pair<Boolean, List<Cell>> {
-        val checkers = getCheckers()!!
+        val checkers = getCheckers()
         val result = mutableListOf<Cell>()
         val canEat = mutableListOf<Cell>()
         if (color == Color.WHITE) {

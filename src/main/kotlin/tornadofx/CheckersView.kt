@@ -86,7 +86,7 @@ class CheckersView : View(), BoardListener {
         inProcess = true
     }
 
-    private fun updateBoardAndStatus(cell: List<Cell>? = null) {
+    private fun updateBoardAndStatus(cells: List<Cell>? = null) {
         val winner = board.gameOver()
         statusLabel.text = when {
             winner == Color.BLACK -> {
@@ -102,10 +102,10 @@ class CheckersView : View(), BoardListener {
             else ->
                 "Game in process: Whites turn"
         }
-        if (cell != null) {
-            for (cells in cell) {
-                buttons[cells]?.apply {
-                    graphic = ImageView(getPng(cells))
+        if (cells != null)
+            for (cell in cells) {
+                buttons[cell]?.apply {
+                    graphic = ImageView(getPng(cell))
                     style {
                         minHeight = 65.px
                         minWidth = 65.px
@@ -113,7 +113,6 @@ class CheckersView : View(), BoardListener {
                     }
                 }
             }
-        }
         else return
     }
 
