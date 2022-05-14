@@ -7,7 +7,8 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 
 @Data
 public class FieldModifier {
@@ -19,92 +20,94 @@ public class FieldModifier {
     private static Checker selectedChecker;
     private static String currentPosition;
     private static List<String> availablePositions = new ArrayList<>();
+    private static List<String> availablePositionsToClickToCheckers = new ArrayList<>();
 
-    private static Supplier<String> up = () ->  String.valueOf((char) (((int) currentPosition.charAt(0)) + 1)) + currentPosition.charAt(1);
-    private static Supplier<String> down = () -> String.valueOf((char) (((int) currentPosition.charAt(0)) - 1)) + currentPosition.charAt(1);
-    private static Supplier<String> left = () -> currentPosition.charAt(0) + String.valueOf(Character.getNumericValue(currentPosition.charAt(1)) + 1);
-    private static Supplier<String> right = () -> currentPosition.charAt(0) + String.valueOf(Character.getNumericValue(currentPosition.charAt(1)) - 1);
+    private static Function<String, String> up = (pos) ->  String.valueOf((char) (((int) pos.charAt(0)) + 1)) + pos.charAt(1);
+    private static Function<String, String> down = (pos) -> String.valueOf((char) (((int) pos.charAt(0)) - 1)) + pos.charAt(1);
+    private static Function<String, String> left = (pos) -> pos.charAt(0) + String.valueOf(Character.getNumericValue(pos.charAt(1)) + 1);
+    private static Function<String, String> right = (pos) -> pos.charAt(0) + String.valueOf(Character.getNumericValue(pos.charAt(1)) - 1);
 
-    private static void availablePositionsInSelectedDirectionSuperChecker(Supplier<String> vertical, Supplier<String> horizontal) {
-        currentPosition = selectedChecker.getPosition();
+    private static void availablePositionsInSelectedDirectionSuperChecker(Function<String, String> vertical, Function<String, String> horizontal, List<String> result, Checker checker) {
+        String pos = checker.getPosition();
         boolean isPreviousBlack = false;
         boolean isPreviousWhite = false;
         boolean isAlreadyAte = false;
-        currentPosition = vertical.get();
-        currentPosition = horizontal.get();
-        while (insideDesk()) {
-            if (Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.FREE) availablePositions.add(currentPosition);
-            if (Field.getCells().get(currentPosition).getCheckerStatus() != CheckerStatus.FREE && (isPreviousBlack || isPreviousWhite)) return;
-            if (Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.BLACK) isPreviousBlack = true;
-            if (Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.WHITE) isPreviousWhite = true;
-            if (Field.getCells().get(currentPosition).getCheckerStatus() != CheckerStatus.FREE && isAlreadyAte) return;
-            if (Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.FREE && isPreviousBlack && selectedChecker.getCheckerStatus() == CheckerStatus.WHITE && !isAlreadyAte) { isAlreadyAte = true; availablePositions.add(currentPosition); }
-            if (Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.FREE && isPreviousWhite && selectedChecker.getCheckerStatus() == CheckerStatus.BLACK && !isAlreadyAte) { isAlreadyAte = true; availablePositions.add(currentPosition); }
-            currentPosition = vertical.get();
-            currentPosition = horizontal.get();
+        pos = vertical.apply(pos);
+        pos = horizontal.apply(pos);
+        while (insideDesk(pos)) {
+            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE) result.add(pos);
+            if (Field.getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && (isPreviousBlack || isPreviousWhite)) return;
+            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.BLACK) isPreviousBlack = true;
+            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.WHITE) isPreviousWhite = true;
+            if (Field.getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && isAlreadyAte) return;
+            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isPreviousBlack && checker.getCheckerStatus() == CheckerStatus.WHITE && !isAlreadyAte) { isAlreadyAte = true; result.add(pos); }
+            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isPreviousWhite && checker.getCheckerStatus() == CheckerStatus.BLACK && !isAlreadyAte) { isAlreadyAte = true; result.add(pos); }
+            pos = vertical.apply(pos);
+            pos = horizontal.apply(pos);
         }
     }
 
-    private static void availablePositionsInSelectedDirection(Supplier<String> vertical, Supplier<String> horizontal, CheckerStatus enemy, boolean lockBeckStep) {
-        currentPosition = selectedChecker.getPosition();
-        currentPosition = vertical.get();
-        currentPosition = horizontal.get();
-        if (Field.getCells().get(currentPosition) != null && Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.FREE && !lockBeckStep)
-            availablePositions.add(currentPosition);
-        else if (Field.getCells().get(currentPosition) != null && Field.getCells().get(currentPosition).getCheckerStatus() == enemy) {
-            currentPosition = vertical.get();
-            currentPosition = horizontal.get();
-            if (Field.getCells().get(currentPosition) != null && Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.FREE)
-                availablePositions.add(currentPosition);
+    private static void availablePositionsInSelectedDirection(Function<String, String> vertical, Function<String, String> horizontal, CheckerStatus enemy, boolean lockBeckStep, List<String> result, Checker checker) {
+        String pos = checker.getPosition();
+        pos = vertical.apply(pos);
+        pos = horizontal.apply(pos);
+        if (Field.getCells().get(pos) != null && Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && !lockBeckStep)
+            result.add(pos);
+        else if (Field.getCells().get(pos) != null && Field.getCells().get(pos).getCheckerStatus() == enemy) {
+            pos = vertical.apply(pos);
+            pos = horizontal.apply(pos);
+            if (Field.getCells().get(pos) != null && Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE)
+                result.add(pos);
         }
     }
 
-    public static void findAvailableSteps() {
-        FieldModifier.availablePositions.clear();
+    public static List<String> findAvailableSteps(Checker checker, boolean isWhiteStep) {
+        List<String> result = new ArrayList<>();
 
-        if (selectedChecker == null) return;
-
-        if (selectedChecker.isSuperChecker()) {
-            availablePositionsInSelectedDirectionSuperChecker(up, left);
-            availablePositionsInSelectedDirectionSuperChecker(up, right);
-            availablePositionsInSelectedDirectionSuperChecker(down, left);
-            availablePositionsInSelectedDirectionSuperChecker(down, right);
-            return;
+        if (checker.isSuperChecker()) {
+            availablePositionsInSelectedDirectionSuperChecker(up, left, result, checker);
+            availablePositionsInSelectedDirectionSuperChecker(up, right, result, checker);
+            availablePositionsInSelectedDirectionSuperChecker(down, left, result, checker);
+            availablePositionsInSelectedDirectionSuperChecker(down, right, result, checker);
+            return result;
         }
         if (isWhiteStep) {
-            availablePositionsInSelectedDirection(down, left, CheckerStatus.BLACK, false);
-            availablePositionsInSelectedDirection(down, right, CheckerStatus.BLACK, false);
-            availablePositionsInSelectedDirection(up, left, CheckerStatus.BLACK, true);
-            availablePositionsInSelectedDirection(up, right, CheckerStatus.BLACK, true);
-            return;
+            availablePositionsInSelectedDirection(down, left, CheckerStatus.BLACK, false, result, checker);
+            availablePositionsInSelectedDirection(down, right, CheckerStatus.BLACK, false, result, checker);
+            availablePositionsInSelectedDirection(up, left, CheckerStatus.BLACK, true, result, checker);
+            availablePositionsInSelectedDirection(up, right, CheckerStatus.BLACK, true, result, checker);
+            return result;
         }
-        availablePositionsInSelectedDirection(down, left, CheckerStatus.WHITE, true);
-        availablePositionsInSelectedDirection(down, right, CheckerStatus.WHITE, true);
-        availablePositionsInSelectedDirection(up, left, CheckerStatus.WHITE, false);
-        availablePositionsInSelectedDirection(up, right, CheckerStatus.WHITE, false);
+        availablePositionsInSelectedDirection(down, left, CheckerStatus.WHITE, true, result, checker);
+        availablePositionsInSelectedDirection(down, right, CheckerStatus.WHITE, true, result, checker);
+        availablePositionsInSelectedDirection(up, left, CheckerStatus.WHITE, false, result, checker);
+        availablePositionsInSelectedDirection(up, right, CheckerStatus.WHITE, false, result, checker);
+        return result;
     }
 
-    private static void findAvailableStepsAfterEat() {
-        if (selectedChecker.isSuperChecker()) {
-            availablePositionsInSelectedDirectionSuperCheckerAfterEat(up, right);
-            availablePositionsInSelectedDirectionSuperCheckerAfterEat(up, left);
-            availablePositionsInSelectedDirectionSuperCheckerAfterEat(down, right);
-            availablePositionsInSelectedDirectionSuperCheckerAfterEat(down, left);
-            return;
+    public static List<String> findAvailableStepsAfterEat(Checker checker, boolean isWhiteStep) {
+        List<String> result = new ArrayList<>();
+        if (checker.isSuperChecker()) {
+            availablePositionsInSelectedDirectionSuperCheckerAfterEat(up, right, result, checker);
+            availablePositionsInSelectedDirectionSuperCheckerAfterEat(up, left, result, checker);
+            availablePositionsInSelectedDirectionSuperCheckerAfterEat(down, right, result, checker);
+            availablePositionsInSelectedDirectionSuperCheckerAfterEat(down, left, result, checker);
+            return result;
         }
 
         if (isWhiteStep) {
-            availablePositionsSelectedDirectionAfterEat(down, left, CheckerStatus.BLACK);
-            availablePositionsSelectedDirectionAfterEat(down, right, CheckerStatus.BLACK);
-            availablePositionsSelectedDirectionAfterEat(up, left, CheckerStatus.BLACK);
-            availablePositionsSelectedDirectionAfterEat(up, right, CheckerStatus.BLACK);
-            return;
+            availablePositionsSelectedDirectionAfterEat(down, left, CheckerStatus.BLACK, result, checker);
+            availablePositionsSelectedDirectionAfterEat(down, right, CheckerStatus.BLACK, result, checker);
+            availablePositionsSelectedDirectionAfterEat(up, left, CheckerStatus.BLACK, result, checker);
+            availablePositionsSelectedDirectionAfterEat(up, right, CheckerStatus.BLACK, result, checker);
+            return result;
         }
 
-        availablePositionsSelectedDirectionAfterEat(down, left, CheckerStatus.WHITE);
-        availablePositionsSelectedDirectionAfterEat(down, right, CheckerStatus.WHITE);
-        availablePositionsSelectedDirectionAfterEat(up, left, CheckerStatus.WHITE);
-        availablePositionsSelectedDirectionAfterEat(up, right, CheckerStatus.WHITE);
+        availablePositionsSelectedDirectionAfterEat(down, left, CheckerStatus.WHITE, result, checker);
+        availablePositionsSelectedDirectionAfterEat(down, right, CheckerStatus.WHITE, result, checker);
+        availablePositionsSelectedDirectionAfterEat(up, left, CheckerStatus.WHITE, result, checker);
+        availablePositionsSelectedDirectionAfterEat(up, right, CheckerStatus.WHITE, result, checker);
+        return result;
     }
 
     public static void tryChangeSide(String positionBefore, String positionAfter) {
@@ -115,7 +118,7 @@ public class FieldModifier {
 
             eat(positions);
             availablePositions.clear();
-            findAvailableStepsAfterEat();
+            availablePositions.addAll(findAvailableStepsAfterEat(selectedChecker, isWhiteStep));
             if (!availablePositions.isEmpty()) unlockCurrentStep = false;
             else {
                 unlockCurrentStep = true;
@@ -127,7 +130,7 @@ public class FieldModifier {
         if (!isWhiteStep && positions.stream().map(pos -> Field.getCells().get(pos)).anyMatch(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE)) {
             eat(positions);
             availablePositions.clear();
-            findAvailableStepsAfterEat();
+            availablePositions.addAll(findAvailableStepsAfterEat(selectedChecker, isWhiteStep));
             if (!availablePositions.isEmpty()) unlockCurrentStep = false;
             else {
                 unlockCurrentStep = true;
@@ -141,35 +144,35 @@ public class FieldModifier {
         unlockCurrentStep = true;
     }
 
-    private static void availablePositionsInSelectedDirectionSuperCheckerAfterEat(Supplier<String> vertical, Supplier<String> horizontal) {
-        currentPosition = selectedChecker.getPosition();
+    private static void availablePositionsInSelectedDirectionSuperCheckerAfterEat(Function<String, String> vertical, Function<String, String> horizontal, List<String> result, Checker checker) {
+        String pos = checker.getPosition();
         boolean isPreviousBlack = false;
         boolean isPreviousWhite = false;
         boolean isAlreadyAte = false;
-        currentPosition = vertical.get();
-        currentPosition = horizontal.get();
-        while (insideDesk()) {
-            if (Field.getCells().get(currentPosition).getCheckerStatus() != CheckerStatus.FREE && (isPreviousBlack || isPreviousWhite)) return;
-            if (Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.FREE && isAlreadyAte) availablePositions.add(currentPosition);
-            if (Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.BLACK) isPreviousBlack = true;
-            if (Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.WHITE) isPreviousWhite = true;
-            if (Field.getCells().get(currentPosition).getCheckerStatus() != CheckerStatus.FREE && isAlreadyAte) return;
-            if (Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.FREE && isPreviousBlack && selectedChecker.getCheckerStatus() == CheckerStatus.WHITE && !isAlreadyAte) { isAlreadyAte = true; availablePositions.add(currentPosition); }
-            if (Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.FREE && isPreviousWhite && selectedChecker.getCheckerStatus() == CheckerStatus.BLACK && !isAlreadyAte) { isAlreadyAte = true; availablePositions.add(currentPosition); }
-            currentPosition = vertical.get();
-            currentPosition = horizontal.get();
+        pos = vertical.apply(pos);
+        pos = horizontal.apply(pos);
+        while (insideDesk(pos)) {
+            if (Field.getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && (isPreviousBlack || isPreviousWhite)) return;
+            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isAlreadyAte) result.add(pos);
+            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.BLACK) isPreviousBlack = true;
+            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.WHITE) isPreviousWhite = true;
+            if (Field.getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && isAlreadyAte) return;
+            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isPreviousBlack && checker.getCheckerStatus() == CheckerStatus.WHITE && !isAlreadyAte) { isAlreadyAte = true; result.add(pos); }
+            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isPreviousWhite && checker.getCheckerStatus() == CheckerStatus.BLACK && !isAlreadyAte) { isAlreadyAte = true; result.add(pos); }
+            pos = vertical.apply(pos);
+            pos = horizontal.apply(pos);
         }
     }
 
-    private static void availablePositionsSelectedDirectionAfterEat(Supplier<String> vertical, Supplier<String> horizontal, CheckerStatus enemy) {
-        currentPosition = selectedChecker.getPosition();
-        currentPosition = vertical.get();
-        currentPosition = horizontal.get();
-        if (Field.getCells().get(currentPosition) != null && Field.getCells().get(currentPosition).getCheckerStatus() == enemy) {
-            currentPosition = vertical.get();
-            currentPosition = horizontal.get();
-            if (Field.getCells().get(currentPosition) != null && Field.getCells().get(currentPosition).getCheckerStatus() == CheckerStatus.FREE)
-                availablePositions.add(currentPosition);
+    private static void availablePositionsSelectedDirectionAfterEat(Function<String, String> vertical, Function<String, String> horizontal, CheckerStatus enemy, List<String> result, Checker checker) {
+        String pos = checker.getPosition();
+        pos = vertical.apply(pos);
+        pos = horizontal.apply(pos);
+        if (Field.getCells().get(pos) != null && Field.getCells().get(pos).getCheckerStatus() == enemy) {
+            pos = vertical.apply(pos);
+            pos = horizontal.apply(pos);
+            if (Field.getCells().get(pos) != null && Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE)
+                result.add(pos);
         }
     }
 
@@ -225,12 +228,12 @@ public class FieldModifier {
         return false;
     }
 
-    private static boolean insideDesk() {
+    private static boolean insideDesk(String pos) {
         return
-                Character.getNumericValue(currentPosition.charAt(1)) > 0 &&
-                Character.getNumericValue(currentPosition.charAt(1)) < 9 &&
-                ((int) currentPosition.charAt(0)) > 64 &&
-                ((int) currentPosition.charAt(0)) < 73;
+                Character.getNumericValue(pos.charAt(1)) > 0 &&
+                Character.getNumericValue(pos.charAt(1)) < 9 &&
+                ((int) pos.charAt(0)) > 64 &&
+                ((int) pos.charAt(0)) < 73;
     }
 
     public static void tryFinalizeGame() {
@@ -243,32 +246,78 @@ public class FieldModifier {
         }
     }
 
-    public static boolean hasAnyAvailableStep() {
-        boolean isUnlockCurrentStep = FieldModifier.unlockCurrentStep;
-        boolean isWhiteStep = FieldModifier.isWhiteStep;
-        String currentPosition = selectedChecker.getPosition();
-        List<String> availablePositions = new ArrayList<>(FieldModifier.availablePositions);
+    public static boolean isNeedOnlyEat() {
+        AtomicBoolean takeAllPos = new AtomicBoolean(false);
+        if (isWhiteStep) {
+            Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE).forEach(checker -> {
+                findAvailableSteps(checker, true).forEach(pos -> {
+                    if (calculateRangePositions(checker.getPosition(), pos).stream()
+                            .anyMatch(btwPos -> Field.getCells().get(btwPos).getCheckerStatus() == CheckerStatus.BLACK)) {
+                        takeAllPos.set(true);
+                    }
+                });
+            });
+        } else {
+            Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK).forEach(checker -> {
+                findAvailableSteps(checker, false).forEach(pos -> {
+                    if (calculateRangePositions(checker.getPosition(), pos).stream()
+                            .anyMatch(btwPos -> Field.getCells().get(btwPos).getCheckerStatus() == CheckerStatus.WHITE)) {
+                        takeAllPos.set(true);
+                    }
+                });
+            });
+        }
+        return takeAllPos.get();
+    }
 
-        boolean flag =
-                (Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE).anyMatch(checker -> {
-                   FieldModifier.isWhiteStep = true;
-                   FieldModifier.unlockCurrentStep = true;
-                   FieldModifier.selectedChecker = checker;
-                   findAvailableSteps();
-                   return (FieldModifier.availablePositions.size() > 0);
-                }) &&
-                Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK).anyMatch(checker -> {
-                    FieldModifier.isWhiteStep = false;
-                    FieldModifier.unlockCurrentStep = true;
-                    FieldModifier.selectedChecker = checker;
-                    findAvailableSteps();
-                    return (FieldModifier.availablePositions.size() > 0);
-                }) );
-        FieldModifier.unlockCurrentStep = isUnlockCurrentStep;
-        FieldModifier.isWhiteStep = isWhiteStep;
-        FieldModifier.selectedChecker = Field.getCells().get(currentPosition);
-        FieldModifier.availablePositions = new ArrayList<>(availablePositions);
-        return flag;
+    public static List<String> findAllAvailablePositionsToStep() {
+        List<String> result = new ArrayList<>();
+
+        AtomicBoolean takeAllPos = new AtomicBoolean(true);
+        if (isWhiteStep) {
+            Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE).forEach(checker -> {
+                findAvailableSteps(checker, true).forEach(pos -> {
+                            if (calculateRangePositions(checker.getPosition(), pos).stream()
+                                    .anyMatch(btwPos -> Field.getCells().get(btwPos).getCheckerStatus() == CheckerStatus.BLACK)) {
+                                takeAllPos.set(false);
+                                result.add(checker.getPosition());
+                            }
+                        });
+            });
+            if (takeAllPos.get()) {
+                result.addAll(Field
+                        .getCells()
+                        .values()
+                        .stream()
+                        .filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE).map(Checker::getPosition)
+                        .toList());
+            }
+        } else {
+            Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK).forEach(checker -> {
+                findAvailableSteps(checker, false).forEach(pos -> {
+                    if (calculateRangePositions(checker.getPosition(), pos).stream()
+                            .anyMatch(btwPos -> Field.getCells().get(btwPos).getCheckerStatus() == CheckerStatus.WHITE)) {
+                        takeAllPos.set(false);
+                        result.add(checker.getPosition());
+                    }
+                });
+            });
+            if (takeAllPos.get()) {
+                result.addAll(Field
+                        .getCells()
+                        .values()
+                        .stream()
+                        .filter(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK).map(Checker::getPosition)
+                        .toList());
+            }
+        }
+        return result;
+    }
+
+    public static boolean hasAnyAvailableStep() {
+        return
+                (Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE).anyMatch(checker -> findAvailableSteps(checker, true).size() > 0) &&
+                Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK).anyMatch(checker -> findAvailableSteps(checker, false).size() > 0));
     }
 
     public static void restartGame() {
@@ -313,6 +362,15 @@ public class FieldModifier {
 
     public static boolean isUnlockCurrentStep() {
         return FieldModifier.unlockCurrentStep;
+    }
+
+    public static List<String> getAvailablePositionsToClickToCheckers() {
+        return FieldModifier.availablePositionsToClickToCheckers;
+    }
+
+    public static void setAvailablePositions(List<String> positions) {
+        FieldModifier.availablePositions.clear();
+        FieldModifier.availablePositions.addAll(positions);
     }
 
 }

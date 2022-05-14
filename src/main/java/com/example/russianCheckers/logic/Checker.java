@@ -19,9 +19,7 @@ public class Checker {
 
     public class Builder {
 
-        private Builder() {
-            // private constructor
-        }
+        private Builder() {}
 
         public Builder setCheckerStatus(CheckerStatus checkerStatus) {
             Checker.this.checkerStatus = checkerStatus;

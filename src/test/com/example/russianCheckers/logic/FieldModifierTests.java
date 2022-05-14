@@ -40,23 +40,14 @@ public class FieldModifierTests {
         Field.refreshField();
         Checker checker1 = Field.getCells().get("C2");
         checker1.setSuperChecker(true);
-        FieldModifier.setSelectedChecker(checker1);
-        FieldModifier.setIsWhiteStep(false);
-        FieldModifier.findAvailableSteps();
-        assertEquals(3, FieldModifier.getAvailableSteps().size());
+        assertEquals(3, FieldModifier.findAvailableSteps(checker1, false).size());
 
         Checker checker2 = Field.getCells().get("A2");
-        FieldModifier.setSelectedChecker(checker2);
-        FieldModifier.setIsWhiteStep(false);
-        FieldModifier.findAvailableSteps();
-        assertEquals(0, FieldModifier.getAvailableSteps().size());
+        assertEquals(0, FieldModifier.findAvailableSteps(checker2, false).size());
 
 
         Checker checker3 = Field.getCells().get("F3");
-        FieldModifier.setSelectedChecker(checker3);
-        FieldModifier.setIsWhiteStep(true);
-        FieldModifier.findAvailableSteps();
-        assertEquals(2, FieldModifier.getAvailableSteps().size());
+        assertEquals(2, FieldModifier.findAvailableSteps(checker3, true).size());
     }
 
     @Test
