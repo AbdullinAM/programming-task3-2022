@@ -1,137 +1,59 @@
 package com.example.russianCheckers.logic;
 
-import com.example.russianCheckers.logic.checkers.Checker;
-import com.example.russianCheckers.logic.fieldOptions.CellField;
-import com.example.russianCheckers.logic.fieldOptions.CellStatus;
-import com.example.russianCheckers.ui.pages.GameFieldPage;
-import javafx.scene.Group;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.example.russianCheckers.logic.checkers.StatusChecker.NOTHING_BLACK;
-import static com.example.russianCheckers.logic.checkers.StatusChecker.NOTHING_WHITE;
-import static com.example.russianCheckers.logic.fieldOptions.CellStatus.INACTIVE;
-import static com.example.russianCheckers.ui.uiSettings.Settings.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 public class Field {
 
-    private final List<CellField> cells = new ArrayList();
-    private List<Checker> friendCheckers;
-    private List<Checker> enemyCheckers;
-    private Group group;
-    private final int rangeY = SCREEN_RESOLUTION_Y;
-    private final int rangeX = SCREEN_RESOLUTION_X;
-    private final int step = CELL_LENGTH;
-    private static Field instance = new Field();
-    public static Field getInstance() {
-        return instance;
+    private static Map<String, Checker> cells = new HashMap<>();
+
+    static {
+        refreshField();
     }
 
-    public static void restartField() {
-        instance = new Field();
+    public static void refreshField() {
+        cells.clear();
+        cells.put("F1", Checker.newBuilder().setIsSuperChecker(false).setPosition("F1").setCheckerStatus(CheckerStatus.WHITE).build());
+        cells.put("F3", Checker.newBuilder().setIsSuperChecker(false).setPosition("F3").setCheckerStatus(CheckerStatus.WHITE).build());
+        cells.put("F5", Checker.newBuilder().setIsSuperChecker(false).setPosition("F5").setCheckerStatus(CheckerStatus.WHITE).build());
+        cells.put("F7", Checker.newBuilder().setIsSuperChecker(false).setPosition("F7").setCheckerStatus(CheckerStatus.WHITE).build());
+        cells.put("G2", Checker.newBuilder().setIsSuperChecker(false).setPosition("G2").setCheckerStatus(CheckerStatus.WHITE).build());
+        cells.put("G4", Checker.newBuilder().setIsSuperChecker(false).setPosition("G4").setCheckerStatus(CheckerStatus.WHITE).build());
+        cells.put("G6", Checker.newBuilder().setIsSuperChecker(false).setPosition("G6").setCheckerStatus(CheckerStatus.WHITE).build());
+        cells.put("G8", Checker.newBuilder().setIsSuperChecker(false).setPosition("G8").setCheckerStatus(CheckerStatus.WHITE).build());
+        cells.put("H1", Checker.newBuilder().setIsSuperChecker(false).setPosition("H1").setCheckerStatus(CheckerStatus.WHITE).build());
+        cells.put("H3", Checker.newBuilder().setIsSuperChecker(false).setPosition("H3").setCheckerStatus(CheckerStatus.WHITE).build());
+        cells.put("H5", Checker.newBuilder().setIsSuperChecker(false).setPosition("H5").setCheckerStatus(CheckerStatus.WHITE).build());
+        cells.put("H7", Checker.newBuilder().setIsSuperChecker(false).setPosition("H7").setCheckerStatus(CheckerStatus.WHITE).build());
+
+        cells.put("D1", Checker.newBuilder().setIsSuperChecker(false).setPosition("D1").setCheckerStatus(CheckerStatus.FREE).build());
+        cells.put("D3", Checker.newBuilder().setIsSuperChecker(false).setPosition("D3").setCheckerStatus(CheckerStatus.FREE).build());
+        cells.put("D5", Checker.newBuilder().setIsSuperChecker(false).setPosition("D5").setCheckerStatus(CheckerStatus.FREE).build());
+        cells.put("D7", Checker.newBuilder().setIsSuperChecker(false).setPosition("D7").setCheckerStatus(CheckerStatus.FREE).build());
+        cells.put("E2", Checker.newBuilder().setIsSuperChecker(false).setPosition("E2").setCheckerStatus(CheckerStatus.FREE).build());
+        cells.put("E4", Checker.newBuilder().setIsSuperChecker(false).setPosition("E4").setCheckerStatus(CheckerStatus.FREE).build());
+        cells.put("E6", Checker.newBuilder().setIsSuperChecker(false).setPosition("E6").setCheckerStatus(CheckerStatus.FREE).build());
+        cells.put("E8", Checker.newBuilder().setIsSuperChecker(false).setPosition("E8").setCheckerStatus(CheckerStatus.FREE).build());
+
+        cells.put("A2", Checker.newBuilder().setIsSuperChecker(false).setPosition("A2").setCheckerStatus(CheckerStatus.BLACK).build());
+        cells.put("A4", Checker.newBuilder().setIsSuperChecker(false).setPosition("A4").setCheckerStatus(CheckerStatus.BLACK).build());
+        cells.put("A6", Checker.newBuilder().setIsSuperChecker(false).setPosition("A6").setCheckerStatus(CheckerStatus.BLACK).build());
+        cells.put("A8", Checker.newBuilder().setIsSuperChecker(false).setPosition("A8").setCheckerStatus(CheckerStatus.BLACK).build());
+        cells.put("B1", Checker.newBuilder().setIsSuperChecker(false).setPosition("B1").setCheckerStatus(CheckerStatus.BLACK).build());
+        cells.put("B3", Checker.newBuilder().setIsSuperChecker(false).setPosition("B3").setCheckerStatus(CheckerStatus.BLACK).build());
+        cells.put("B5", Checker.newBuilder().setIsSuperChecker(false).setPosition("B5").setCheckerStatus(CheckerStatus.BLACK).build());
+        cells.put("B7", Checker.newBuilder().setIsSuperChecker(false).setPosition("B7").setCheckerStatus(CheckerStatus.BLACK).build());
+        cells.put("C2", Checker.newBuilder().setIsSuperChecker(false).setPosition("C2").setCheckerStatus(CheckerStatus.BLACK).build());
+        cells.put("C4", Checker.newBuilder().setIsSuperChecker(false).setPosition("C4").setCheckerStatus(CheckerStatus.BLACK).build());
+        cells.put("C6", Checker.newBuilder().setIsSuperChecker(false).setPosition("C6").setCheckerStatus(CheckerStatus.BLACK).build());
+        cells.put("C8", Checker.newBuilder().setIsSuperChecker(false).setPosition("C8").setCheckerStatus(CheckerStatus.BLACK).build());
     }
 
-    public void updateAvailableSteps(List<String> availableCells) {
-        if (availableCells.isEmpty()) {
-            cells.forEach(cell -> cell.updateCell(INACTIVE));
-        } else {
-            cells.forEach(it -> {
-                for (String cell : availableCells) {
-                    if (it.getPosition().equals(cell)) {
-                        it.updateCell(CellStatus.ACTIVE);
-                        return;
-                    }
-                    it.updateCell(INACTIVE);
-                }
-            });
-        }
-    }
-
-    public void printInitCheckers() {
-        int offsetY = 0;
-        boolean lineOffset = false;
-        int countLines = 0;
-        while (offsetY < rangeY) {
-            int offsetX = lineOffset ? 0 : step;
-            if (countLines < 3) {
-                while (offsetX < rangeX) {
-                    Checker checker = new Checker(offsetX + step / 2, offsetY + step / 2);
-                    checker.updateStatus(NOTHING_BLACK);
-                    offsetX += step * 2;
-                    enemyCheckers.add(checker);
-                }
-            }
-            if (countLines > 4) {
-                while (offsetX < rangeX) {
-                    Checker checker = new Checker(offsetX + step / 2, offsetY + step / 2);
-                    checker.updateStatus(NOTHING_WHITE);
-                    offsetX += step * 2;
-                    friendCheckers.add(checker);
-                }
-            }
-            offsetY += step;
-            lineOffset = !lineOffset;
-            countLines++;
-        }
-        friendCheckers.forEach(it -> group.getChildren().add(it.getChecker()));
-        enemyCheckers.forEach(it -> group.getChildren().add(it.getChecker()));
-    }
-
-    public void deleteChecker(String position) {
-
-        CheckersLogic.getFriendCheckers().stream()
-                .filter(checker -> checker.getPosition().equals(position))
-                .forEach(checker -> {
-                    GameFieldPage.updateWhiteCheckersAlive();
-                    group.getChildren().remove(checker.getChecker());
-                });
-        CheckersLogic.getEnemyCheckers().stream()
-                .filter(checker -> checker.getPosition().equals(position))
-                .forEach(checker -> {
-                    GameFieldPage.updateBlackCheckersAlive();
-                    group.getChildren().remove(checker.getChecker());
-                });
-
-        for (int i = 0; i < CheckersLogic.getFriendCheckers().size(); i++) {
-            if (CheckersLogic.getFriendCheckers().get(i).getPosition().equals(position)) {
-                CheckersLogic.getFriendCheckers().remove(CheckersLogic.getFriendCheckers().get(i));
-            }
-        }
-        for (int i = 0; i < CheckersLogic.getEnemyCheckers().size(); i++) {
-            if (CheckersLogic.getEnemyCheckers().get(i).getPosition().equals(position)) {
-                CheckersLogic.getEnemyCheckers().remove(CheckersLogic.getEnemyCheckers().get(i));
-            }
-        }
-    }
-
-    public void printField() {
-        int offsetY = 0;
-        boolean lineOffset = false;
-        while (offsetY < rangeY) {
-            int offsetX = lineOffset? 0 : step;
-            while (offsetX < rangeX) {
-                CellField cellField = new CellField(offsetX, offsetY);
-                cellField.updateCell(INACTIVE);
-                cells.add(cellField);
-                offsetX += step * 2;
-            }
-            offsetY += step;
-            lineOffset = !lineOffset;
-        }
-        cells.forEach(it -> group.getChildren().add(it.getCell()));
-    }
-
-    public void setFriendCheckers(List<Checker> friendCheckersList) {
-        friendCheckers = friendCheckersList;
-    }
-    public void setEnemyCheckers(List<Checker> enemyCheckersList) {
-        enemyCheckers = enemyCheckersList;
-    }
-    public void setGroup(Group root) {
-        group = root;
+    public static Map<String, Checker> getCells() {
+        return Field.cells;
     }
 
 }

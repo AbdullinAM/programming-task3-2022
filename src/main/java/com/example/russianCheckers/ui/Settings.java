@@ -1,4 +1,4 @@
-package com.example.russianCheckers.ui.uiSettings;
+package com.example.russianCheckers.ui;
 
 import javafx.scene.paint.Color;
 
@@ -13,6 +13,5 @@ public class Settings {
     public final static Color SUPER_CHECKER_COLOR_WHITE = Color.rgb(121,147, 147);
     public final static Color SUPER_CHECKER_COLOR_BLACK = Color.rgb(69, 44, 36);
     public final static Color WHITE_CHECKER = Color.rgb(169, 148, 114);
-    public final static Color WHITE_CHECKER_ACTIVE = Color.rgb(39, 47, 30);
-    public final static Color BLACK_CHECKER_ACTIVE = Color.rgb(24, 37, 44);
+    public final static Color BLACK_CHECKER = Color.rgb(24, 37, 44);
 }
