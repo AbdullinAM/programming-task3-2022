@@ -21,7 +21,7 @@ public class Cntrllr implements ModelListener {
         model.listener = this;
     }
 
-//  Поля и методы для основного окна
+//  РџРѕР»СЏ Рё РјРµС‚РѕРґС‹ РґР»СЏ РѕСЃРЅРѕРІРЅРѕРіРѕ РѕРєРЅР°
     private Model model = new Model();
 
     @FXML
@@ -38,8 +38,8 @@ public class Cntrllr implements ModelListener {
 
     public GridPane[] quartersOfField() {
         return new GridPane[] {quarter1,quarter2,quarter3,quarter4};
-    }//Почему-то если подобный массив занести в поле, то quarter1,quarter2... указывают на null.
-    // Поэтому сделана функция возвращающая новый массив.
+    }//РџРѕС‡РµРјСѓ-С‚Рѕ РµСЃР»Рё РїРѕРґРѕР±РЅС‹Р№ РјР°СЃСЃРёРІ Р·Р°РЅРµСЃС‚Рё РІ РїРѕР»Рµ, С‚Рѕ quarter1,quarter2... СѓРєР°Р·С‹РІР°СЋС‚ РЅР° null.
+    // РџРѕСЌС‚РѕРјСѓ СЃРґРµР»Р°РЅР° С„СѓРЅРєС†РёСЏ РІРѕР·РІСЂР°С‰Р°СЋС‰Р°СЏ РЅРѕРІС‹Р№ РјР°СЃСЃРёРІ.
 
     @FXML
     private Label diceLabel1;
@@ -67,11 +67,6 @@ public class Cntrllr implements ModelListener {
         selectedColumn = column;
     }
 
-//    private List<Integer> probableTurns = new ArrayList<>();
-//
-//    public void setProbableTurns(List<Integer> probableTurns) {
-//
-//    }
 
     public void updateBoard(){
         GroupOfChips[][] field = model.getField().getCurrent();
@@ -87,36 +82,36 @@ public class Cntrllr implements ModelListener {
                 List<Integer> probableTurns = model.getPossibleTurns(i*6+j);
                 int numberOfChips = chipsInColumn.getQuantity();
                 if (numberOfChips > 0) {
-                    Color colorOfChips = chipsInColumn.getNormalizedColor();
+                    ChipColor colorOfChips = chipsInColumn.getColor();
                     /* for chip in column */
                     for (int k = 0; k < numberOfChips; k++) {
-                        /*Рисуем круги фишек*/
-                        quartersOfField()[i].add(new Circle(10, colorOfChips), j, 14 - k);
-                        /*Рисуем зелёные круги для кнопок предложения хода если ещё не выбрана никакая колонка фишек
-                        *По нажатию упомянутой кнопки индекс её колонки будет запомнен в поле selectedColumn. */
-                        if (selectedColumn == -1)
-                            if (colorOfChips == model.getCurrentTurn().normalizedColor && !probableTurns.isEmpty()) {
-                                Button lastChipButton = new OfferTurnButton(i * 6 + j, model, this);
-                                quartersOfField()[i].add(new Circle(5, green), j, 15 - numberOfChips);
-                                quartersOfField()[i].add(lastChipButton, j, 15 - numberOfChips);
-                                atLeastOneOfferTurnButtonAdded = true;
+                        /*Р РёСЃСѓРµРј РєСЂСѓРіРё С„РёС€РµРє*/
+                        quartersOfField()[i].add(new Circle(10, colorOfChips.normalizedColor), j, 14 - k);
+                    }
+                    /*Р РёСЃСѓРµРј Р·РµР»С‘РЅС‹Рµ РєСЂСѓРіРё РґР»СЏ РєРЅРѕРїРѕРє РїСЂРµРґР»РѕР¶РµРЅРёСЏ С…РѕРґР° РµСЃР»Рё РµС‰С‘ РЅРµ РІС‹Р±СЂР°РЅР° РЅРёРєР°РєР°СЏ РєРѕР»РѕРЅРєР° С„РёС€РµРє.
+                     *РџРѕ РЅР°Р¶Р°С‚РёСЋ СѓРїРѕРјСЏРЅСѓС‚РѕР№ РєРЅРѕРїРєРё РёРЅРґРµРєСЃ РµС‘ РєРѕР»РѕРЅРєРё Р±СѓРґРµС‚ Р·Р°РїРѕРјРЅРµРЅ РІ РїРѕР»Рµ selectedColumn. */
+                    if (selectedColumn == -1)
+                        if (colorOfChips == model.getCurrentTurn() && !probableTurns.isEmpty()) {
+                            Button lastChipButton = new OfferTurnButton(i * 6 + j, model, this);
+                            quartersOfField()[i].add(new Circle(5, green), j, 15 - numberOfChips);
+                            quartersOfField()[i].add(lastChipButton, j, 15 - numberOfChips);
+                            atLeastOneOfferTurnButtonAdded = true;
                         }
-                        /*Если какая-то колонка выбрана для хода, то выделяем её жёлтым цветом*/
-                        if (selectedColumn == i * 6 + j) {
-                            quartersOfField()[i].add(new Circle(10, new Color(1.0, 1.0, 0.0, 1.0)), j, 15 - numberOfChips);
-                        }
+                    /*Р•СЃР»Рё РєР°РєР°СЏ-С‚Рѕ РєРѕР»РѕРЅРєР° РІС‹Р±СЂР°РЅР° РґР»СЏ С…РѕРґР°, С‚Рѕ РІС‹РґРµР»СЏРµРј РµС‘ Р¶С‘Р»С‚С‹Рј С†РІРµС‚РѕРј*/
+                    if (selectedColumn == i * 6 + j) {
+                        quartersOfField()[i].add(new Circle(10, new Color(1.0, 1.0, 0.0, 1.0)), j, 15 - numberOfChips);
                     }
                 }
             }
         }
-        /*Рисуем кнопки подтверждения хода зелёными кругами*/
+        /*Р•СЃР»Рё РєР°РєР°СЏ-С‚Рѕ РєРѕР»РѕРЅРєР° РІС‹Р±СЂР°РЅР° РґР»СЏ С…РѕРґР°, С‚Рѕ СЂРёСЃСѓРµРј Р·РµР»С‘РЅС‹Рµ РєСЂСѓРіРё РІ РјРµСЃС‚Р°С… РєСѓРґР° РјРѕР¶РЅРѕ cС…РѕРґРёС‚СЊ.*/
         if (selectedColumn > -1) {
             List<Integer> probableTurns = model.getPossibleTurns(selectedColumn);
             probableTurns.forEach(position ->
                     quartersOfField()[position/6].add(new Circle(10, green),position%6, 14-field[position/6][position%6].getQuantity()));
         } else {
-            /*Если игроку некуда походить (не добавлено ни одной offerTurnButton), а ходы (turnsLeft) у него остались,
-             * то ход передаём оппоненту.*/
+            /*Р•СЃР»Рё РёРіСЂРѕРєСѓ РЅРµРєСѓРґР° РїРѕС…РѕРґРёС‚СЊ (РЅРµ РґРѕР±Р°РІР»РµРЅРѕ РЅРё РѕРґРЅРѕР№ offerTurnButton), Р° С…РѕРґС‹ (turnsLeft) Сѓ РЅРµРіРѕ РѕСЃС‚Р°Р»РёСЃСЊ,
+             * С‚Рѕ С…РѕРґ РїРµСЂРµРґР°С‘Рј РѕРїРїРѕРЅРµРЅС‚Сѓ.*/
             if (!atLeastOneOfferTurnButtonAdded && !model.getTurnsLeft().isEmpty()) {
                 model.passTheTurn();
                 passTurnAlert();
@@ -136,13 +131,13 @@ public class Cntrllr implements ModelListener {
         if (!turnsLeft.contains(currentNumberInLabel2)) diceLabel2.setOpacity(0.1); else diceLabel2.setOpacity(1.0);
     }
 
-//  Вспомогательные методы
+//  Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
     public String getColorNotationOfCurrentTurn(){
-        if (model.getCurrentTurn() == ChipColor.BLACK) return "черные"; else return "белые";
+        if (model.getCurrentTurn() == ChipColor.BLACK) return "С‡РµСЂРЅС‹Рµ"; else return "Р±РµР»С‹Рµ";
     }
 
     public void passTurnAlert (){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION,"Вы не можете походить ни одной фишкой, ход передаётся оппоненту ");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION,"Р’С‹ РЅРµ РјРѕР¶РµС‚Рµ РїРѕС…РѕРґРёС‚СЊ РЅРё РѕРґРЅРѕР№ С„РёС€РєРѕР№, С…РѕРґ РїРµСЂРµРґР°С‘С‚СЃСЏ РѕРїРїРѕРЅРµРЅС‚Сѓ ");
         alert.setHeaderText(null);
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         alertStage.setAlwaysOnTop(true);

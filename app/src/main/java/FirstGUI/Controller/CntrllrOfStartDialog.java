@@ -5,9 +5,9 @@ import javafx.scene.control.TextField;
 
 public class CntrllrOfStartDialog {
 
-    private String whitePlayerName = "Белые";
+    private String whitePlayerName = "Р‘РµР»С‹Рµ";
 
-    private String blackPlayerName = "Чёрные";
+    private String blackPlayerName = "Р§С‘СЂРЅС‹Рµ";
 
     @FXML
     private TextField whitePlayer;

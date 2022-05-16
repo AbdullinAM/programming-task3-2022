@@ -52,17 +52,12 @@ public class Field {
         if(to>24) to = to%24;
         GroupOfChips start = field[from/6][from%6];
         GroupOfChips end = field[to/6][to%6];
-        if (end.getQuantity()==0){
-            end.setColor(start.getColor());
-        }
-        end.increaseQuantity();
+        end.increaseQuantity(start.getColor());
         start.decreaseQuantity();
-        if (start.getQuantity()==0){
-            start.setColor(null);
-        }
-        // Когда игрок завел все фишки в последнюю четверть и выводит с поля, просто удаляем фишки
-        if (whiteExitOpened && field[from/6][from%6].getColor() == ChipColor.WHITE) field[from/6][from%6].decreaseQuantity();
-        if (blackExitOpened && field[from/6][from%6].getColor() == ChipColor.BLACK) field[from/6][from%6].decreaseQuantity();
+
+        // РљРѕРіРґР° РёРіСЂРѕРє Р·Р°РІРµР» РІСЃРµ С„РёС€РєРё РІ РїРѕСЃР»РµРґРЅСЋСЋ С‡РµС‚РІРµСЂС‚СЊ Рё РІС‹РІРѕРґРёС‚ СЃ РїРѕР»СЏ, РїСЂРѕСЃС‚Рѕ СѓРґР°Р»СЏРµРј С„РёС€РєРё
+        if (whiteExitOpened && start.getColor() == ChipColor.WHITE) end.decreaseQuantity();
+        if (blackExitOpened && start.getColor() == ChipColor.BLACK) end.decreaseQuantity();
 
     }
 }

@@ -9,17 +9,15 @@ import java.util.List;
 
 public class Model {
 
-    /*Имена игроков для scoreboard*/
-
     public Model() {
         this.randomFirstTurn();
     }
 
 
-    /*Кости*/
+    /*РљРѕСЃС‚Рё*/
     private final Dice dice = new Dice();
 
-    /*Текущий ход и розыгрыш права первого хода*/
+    /*РўРµРєСѓС‰РёР№ С…РѕРґ Рё СЂРѕР·С‹РіСЂС‹С€ РїСЂР°РІР° РїРµСЂРІРѕРіРѕ С…РѕРґР°*/
     private ChipColor currentTurn = ChipColor.WHITE;
 
     public ChipColor getCurrentTurn() {
@@ -33,7 +31,7 @@ public class Model {
         }
     }
 
-    /*Список оставшихся ходов*/
+    /*РЎРїРёСЃРѕРє РѕСЃС‚Р°РІС€РёС…СЃСЏ С…РѕРґРѕРІ*/
     private List<Integer> turnsLeft = new ArrayList<>();
 
     public List<Integer> getTurnsLeft() {
@@ -51,24 +49,24 @@ public class Model {
         }
     }
 
-    /*С базы можно снять только одну фишку за ход*/
+    /*РЎ Р±Р°Р·С‹ РјРѕР¶РЅРѕ СЃРЅСЏС‚СЊ С‚РѕР»СЊРєРѕ РѕРґРЅСѓ С„РёС€РєСѓ Р·Р° РїРѕР»РЅС‹Р№ С…РѕРґ*/
     public boolean turnFromBaseHappened = false;
 
-    /*Передача хода оппоненту если не осталось вариантов ходов*/
+    /*РџРµСЂРµРґР°С‡Р° С…РѕРґР° РѕРїРїРѕРЅРµРЅС‚Сѓ РµСЃР»Рё РЅРµ РѕСЃС‚Р°Р»РѕСЃСЊ РІР°СЂРёР°РЅС‚РѕРІ С…РѕРґРѕРІ*/
     public void passTheTurn(){
         turnsLeft = new ArrayList<>();
         currentTurn = (currentTurn == ChipColor.WHITE)? ChipColor.BLACK : ChipColor.WHITE;
     }
 
 
-    /*Поле*/
+    /*РџРѕР»Рµ*/
     private Field field = new Field();
 
     public Field getField() {
         return field;
     }
 
-    /*Ходы и Listener для вызова отрисовки на контроллере*/
+    /*РҐРѕРґС‹ Рё Listener РґР»СЏ РІС‹Р·РѕРІР° РѕС‚СЂРёСЃРѕРІРєРё РЅР° РєРѕРЅС‚СЂРѕР»Р»РµСЂРµ*/
     public ModelListener listener;
 
     private boolean whiteExitOpened;
@@ -77,13 +75,13 @@ public class Model {
 
     @NotNull
     public List<Integer> getPossibleTurns (int position) {
+        ChipColor targetColor;
         List<Integer> result = new ArrayList<>();
         ChipColor color = field.get(position).getColor();
-        ChipColor targetColor;
         if (turnsLeft.isEmpty()) return result;
         if (turnFromBaseHappened && (position == 0 || position == 12)) return result;
-        /*Добавляем ходы исходя из стартовой позиции и имеющихся ходов (TurnsLeft)*/
-        /*Если ходов 2 или больше (дубль)*/
+        /*Р”РѕР±Р°РІР»СЏРµРј С…РѕРґС‹ РёСЃС…РѕРґСЏ РёР· СЃС‚Р°СЂС‚РѕРІРѕР№ РїРѕР·РёС†РёРё Рё РёРјРµСЋС‰РёС…СЃСЏ С…РѕРґРѕРІ (TurnsLeft)*/
+        /*Р•СЃР»Рё С…РѕРґРѕРІ 2 РёР»Рё Р±РѕР»СЊС€Рµ (РґСѓР±Р»СЊ)*/
         if (turnsLeft.size() >= 2) {
             int turn1 = turnsLeft.get(0);
             int turn2 = turnsLeft.get(1);
@@ -101,25 +99,25 @@ public class Model {
                     result.add((position + turn1 + turn2)%24);
                 }
             }
-        } else /*Если ход остался один*/ {
+        } else /*Р•СЃР»Рё С…РѕРґ РѕСЃС‚Р°Р»СЃСЏ РѕРґРёРЅ*/ {
             GroupOfChips target = field.get(position + turnsLeft.get(0));
             targetColor = target.getColor();
             if (targetColor == color || targetColor == null)
                 result.add((position + turnsLeft.get(0))%24);
         }
-        /*Удаляем ходы которые противоречат правилу гласящему что выходить с поля фишки могут только тогда
-        когда все фишки одного цвета добрались до последней четверти своего пути*/
-        if (color == ChipColor.WHITE && position > 17 && !whiteExitOpened) {
+        /*РЈРґР°Р»СЏРµРј С…РѕРґС‹ РєРѕС‚РѕСЂС‹Рµ РїСЂРѕС‚РёРІРѕСЂРµС‡Р°С‚ РїСЂР°РІРёР»Сѓ РіР»Р°СЃСЏС‰РµРјСѓ С‡С‚Рѕ РІС‹С…РѕРґРёС‚СЊ СЃ РїРѕР»СЏ С„РёС€РєРё РјРѕРіСѓС‚ С‚РѕР»СЊРєРѕ С‚РѕРіРґР°
+        РєРѕРіРґР° РІСЃРµ С„РёС€РєРё РѕРґРЅРѕРіРѕ С†РІРµС‚Р° РґРѕР±СЂР°Р»РёСЃСЊ РґРѕ РїРѕСЃР»РµРґРЅРµР№ С‡РµС‚РІРµСЂС‚Рё СЃРІРѕРµРіРѕ РїСѓС‚Рё*/
+        if (color == ChipColor.WHITE && position > 11 && !whiteExitOpened) {
             List<Integer> targetsToRemove = new ArrayList<>();
             result.forEach(target -> {
-                if (target >0 && target < 11) targetsToRemove.add(target);
+                if (target >=0 && target < 11) targetsToRemove.add(target);
             });
             result.removeAll(targetsToRemove);
         }
-        if (color == ChipColor.BLACK && position > 5 && position < 12 && !blackExitOpened) {
+        if (color == ChipColor.BLACK && position > 0 && position < 12 && !blackExitOpened) {
             List<Integer> targetsToRemove = new ArrayList<>();
             result.forEach(target -> {
-                if (target > 13) targetsToRemove.add(target);
+                if (target >= 12) targetsToRemove.add(target);
             });
             result.removeAll(targetsToRemove);
         }
@@ -127,9 +125,9 @@ public class Model {
     }
 
     public void makeTurn(int startPosition, int targetPosition){
-        //меняем поле
+        //РјРµРЅСЏРµРј РїРѕР»Рµ
         field.moveChip(startPosition, targetPosition, whiteExitOpened, blackExitOpened);
-        //меняем turnsLeft и currentTurn
+        //РјРµРЅСЏРµРј turnsLeft Рё currentTurn
         if (turnsLeft.size() >= 2){
             int maxTurn = turnsLeft.get(0)+turnsLeft.get(1);
             int delta = targetPosition - startPosition < 0? (24-startPosition+targetPosition) : (targetPosition - startPosition);
@@ -146,9 +144,9 @@ public class Model {
             turnsLeft.remove(0);
             currentTurn = currentTurn==ChipColor.WHITE?ChipColor.BLACK:ChipColor.WHITE;
         } else return;
-        // Можно сделать только один ход с базы, поэтому поднимаем соответствующий флаг если ход с базы
+        // РњРѕР¶РЅРѕ СЃРґРµР»Р°С‚СЊ С‚РѕР»СЊРєРѕ РѕРґРёРЅ С…РѕРґ СЃ Р±Р°Р·С‹, РїРѕСЌС‚РѕРјСѓ РїРѕРґРЅРёРјР°РµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ С„Р»Р°Рі РµСЃР»Рё С…РѕРґ СЃ Р±Р°Р·С‹
         if (startPosition == 0 || startPosition == 12) turnFromBaseHappened = true;
-        // Открываем выхода с поля игроку у которого все фишки в последней четверти
+        // РћС‚РєСЂС‹РІР°РµРј РІС‹С…РѕРґР° СЃ РїРѕР»СЏ РёРіСЂРѕРєСѓ Сѓ РєРѕС‚РѕСЂРѕРіРѕ РІСЃРµ С„РёС€РєРё РІ РїРѕСЃР»РµРґРЅРµР№ С‡РµС‚РІРµСЂС‚Рё
         openExitsIfPossible();
         listener.turnMade();
     }
@@ -169,7 +167,7 @@ public class Model {
         blackExitOpened = noBlacksOutOfHome;
     }
 
-//  Вспомогательные
+//  Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ
     public int howManyChipsInColumn(int column){
         return field.get(column).getQuantity();
     }

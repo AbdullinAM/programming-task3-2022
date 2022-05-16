@@ -2,7 +2,6 @@ package FirstGUI.Controller;
 
 import FirstGUI.Model.Model;
 import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
 
 public class OfferTurnButton extends Button{
 
