@@ -16,6 +16,7 @@ class CheckersView : View(), BoardListener {
     private var inProcess = true
     private lateinit var statusLabel: Label
     override val root = BorderPane()
+    private val list = mutableListOf<Cell>()
 
     init {
         title = "Checkers"
@@ -113,7 +114,74 @@ class CheckersView : View(), BoardListener {
                     }
                 }
             }
-        else return
+        val choosedCell = board.chooseCell
+        if (choosedCell != null && board.playerShouldEat().isEmpty()) {
+            for (cell in list) {
+                if (board[cell] !is Checker) {
+                    buttons[cell]?.apply {
+                        graphic = ImageView("./blackCell.png")
+                        style {
+                            minHeight = 65.px
+                            minWidth = 65.px
+                            padding = box(0.px)
+                        }
+                    }
+                }
+            }
+            list.clear()
+            for (posCell in board.possibleTurns(choosedCell).second) {
+                list.add(posCell)
+                buttons[posCell]?.apply {
+                    graphic = ImageView("./freeCell.png")
+                    style {
+                        minHeight = 65.px
+                        minWidth = 65.px
+                        padding = box(0.px)
+                    }
+                }
+            }
+        }
+        if (choosedCell == null) {
+            for (cell in list) {
+                if (board[cell] !is Checker) {
+                    buttons[cell]?.apply {
+                        graphic = ImageView("./blackCell.png")
+                        style {
+                            minHeight = 65.px
+                            minWidth = 65.px
+                            padding = box(0.px)
+                        }
+                    }
+                }
+            }
+            list.clear()
+        }
+        if (choosedCell != null && board.playerShouldEat().isNotEmpty() && board.possibleTurns(choosedCell).first) {
+            for (cell in list) {
+                if (board[cell] !is Checker) {
+                    buttons[cell]?.apply {
+                        graphic = ImageView("./blackCell.png")
+                        style {
+                            minHeight = 65.px
+                            minWidth = 65.px
+                            padding = box(0.px)
+                        }
+                    }
+                }
+            }
+            list.clear()
+            for (posCell in board.possibleTurns(choosedCell).second) {
+                list.add(posCell)
+                buttons[posCell]?.apply {
+                    graphic = ImageView("./freeCell.png")
+                    style {
+                        minHeight = 65.px
+                        minWidth = 65.px
+                        padding = box(0.px)
+                    }
+                }
+            }
+        }
     }
 
     private fun getPng(cell: Cell) = when {

@@ -3,7 +3,7 @@ package core
 open class Board (private val width: Int = 8, private val height: Int = 8) {
     var turn = Color.WHITE
 
-    private var chooseCell: Cell? = null
+    var chooseCell: Cell? = null
 
     private val checkers: MutableMap<Cell, Checker?> = mutableMapOf()
 
@@ -44,7 +44,7 @@ open class Board (private val width: Int = 8, private val height: Int = 8) {
         else checkers[cell]!!.possibleTurns(cell)
     }
 
-    private fun playerShouldEat() : List<Cell> {
+    fun playerShouldEat() : List<Cell> {
         val result = mutableListOf<Cell>()
         for ((cell, checker) in checkers)
             if (checker!!.color == turn)
@@ -55,6 +55,7 @@ open class Board (private val width: Int = 8, private val height: Int = 8) {
     fun makeTurn(cell: Cell) {
         if (checkers[cell] is Checker && !comboEat && turn == checkers[cell]!!.color) {
             chooseCell = cell
+            listener!!.turnMade(listOf(chooseCell!!) as MutableList<Cell>)
             return
         }
         val shouldEat = playerShouldEat()
