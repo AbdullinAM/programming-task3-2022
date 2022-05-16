@@ -26,8 +26,6 @@ public class GroupOfChips {
 
     public ChipColor getColor() { return color; }
 
-    public Color getNormalizedColor() { return color.normalizedColor; }
-
     public void decreaseQuantity(){
         quantity -= 1;
         if (quantity==0){

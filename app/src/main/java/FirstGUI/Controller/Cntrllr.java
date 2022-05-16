@@ -8,8 +8,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import java.util.List;
@@ -86,7 +88,10 @@ public class Cntrllr implements ModelListener {
                     /* for chip in column */
                     for (int k = 0; k < numberOfChips; k++) {
                         /*Рисуем круги фишек*/
-                        quartersOfField()[i].add(new Circle(10, colorOfChips.normalizedColor), j, 14 - k);
+                        quartersOfField()[i].add(new Circle(15, colorOfChips.image), j, 14 - k);
+//                        Circle circle = new Circle(15);
+//                        circle.setFill(new ImagePattern(new Image("black1.png")));
+//                        quartersOfField()[i].add(circle, j, 14 - k);
                     }
                     /*Рисуем зелёные круги для кнопок предложения хода если ещё не выбрана никакая колонка фишек.
                      *По нажатию упомянутой кнопки индекс её колонки будет запомнен в поле selectedColumn. */

@@ -16,14 +16,14 @@ public class Launcher extends javafx.application.Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-//        Основная сцена
+//        РћСЃРЅРѕРІРЅР°СЏ СЃС†РµРЅР°
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainScene.fxml"));
         primaryStage.setScene(new Scene(loader.load()));
         primaryStage.show();
         Cntrllr controllerOfMainScene = loader.getController();
         controllerOfMainScene.updateBoard();
 
-//        Стартовый диалог
+//        РЎС‚Р°СЂС‚РѕРІС‹Р№ РґРёР°Р»РѕРі
 //        loader = new FXMLLoader(getClass().getResource("/startDialog.fxml"));
 //        Dialog preGameDialog = new Dialog();
 //        preGameDialog.setDialogPane(loader.load());
@@ -31,8 +31,8 @@ public class Launcher extends javafx.application.Application {
 //        preGameDialog.showAndWait();
 //        CntrllrOfStartDialog controllerOfStartDialog = loader.getController();
 //
-//        //Алерт говорящий кто ходит первым
-//        Alert alert = new Alert(Alert.AlertType.INFORMATION,"Первыми ходят "+controllerOfMainScene.getColorNotationOfCurrentTurn());
+//        //РђР»РµСЂС‚ РіРѕРІРѕСЂСЏС‰РёР№ РєС‚Рѕ С…РѕРґРёС‚ РїРµСЂРІС‹Рј
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION,"РџРµСЂРІС‹РјРё С…РѕРґСЏС‚ "+controllerOfMainScene.getColorNotationOfCurrentTurn());
 //        alert.setHeaderText(null);
 //        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
 //        alertStage.setAlwaysOnTop(true);
