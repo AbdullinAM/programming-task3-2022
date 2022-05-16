@@ -55,7 +55,7 @@ open class Board (private val width: Int = 8, private val height: Int = 8) {
     fun makeTurn(cell: Cell) {
         if (checkers[cell] is Checker && !comboEat && turn == checkers[cell]!!.color) {
             chooseCell = cell
-            listener!!.turnMade(listOf(chooseCell!!) as MutableList<Cell>)
+            listener!!.turnMade(mutableListOf())
             return
         }
         val shouldEat = playerShouldEat()
