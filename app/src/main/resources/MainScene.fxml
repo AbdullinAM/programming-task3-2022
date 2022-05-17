@@ -13,9 +13,9 @@
 
 <VBox xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FirstGUI.Controller.Cntrllr">
    <children>
-      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="618.0" prefWidth="603.0">
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="618.0" prefWidth="603.0" style="-fx-background-color: 996633;">
          <children>
-            <AnchorPane style="-fx-background-image: url(board_pic1.png);">
+            <AnchorPane style="-fx-background-image: url(board2.jpg); -fx-background-size: 100% 100%;">
                <children>
                   <VBox layoutX="0.5" layoutY="2.5" AnchorPane.bottomAnchor="1.0" AnchorPane.topAnchor="5.0">
                      <children>
@@ -77,8 +77,8 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <AnchorPane style="-fx-background-image: url(board_pic1.png);">
+            <Separator orientation="VERTICAL" prefHeight="200.0" style="-fx-background-color: 996633; visibility: 0.0;" />
+            <AnchorPane style="-fx-background-image: url(board2.jpg); -fx-background-size: 100% 100%;">
                <children>
                   <VBox AnchorPane.bottomAnchor="1.0" AnchorPane.topAnchor="5.0">
                      <children>
@@ -140,21 +140,28 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <AnchorPane prefWidth="198.0">
+            <Separator orientation="VERTICAL" prefHeight="200.0" style="visibility: 0.0;" />
+            <AnchorPane prefWidth="198.0" style="-fx-background-image: url(стол.jpg); -fx-background-size: 100% 100%;">
                <children>
                   <Button fx:id="diceButton" layoutX="28.0" layoutY="381.0" mnemonicParsing="false" onKeyPressed="#diceButtonClicked" onMouseClicked="#diceButtonClicked" text="Бросить кости" />
-                  <Label layoutX="54.0" layoutY="309.0" text="Кости" />
-                  <Label fx:id="diceLabel1" layoutX="28.0" layoutY="327.0" prefHeight="35.0" prefWidth="25.0" text="0">
+                  <Label alignment="CENTER" layoutX="48.0" layoutY="296.0" prefHeight="26.0" prefWidth="54.0" style="-fx-background-color: ffffff;" text="Кости" textAlignment="CENTER">
                      <font>
-                        <Font size="36.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="diceLabel2" layoutX="96.0" layoutY="327.0" prefHeight="35.0" prefWidth="26.0" text="0">
-                     <font>
-                        <Font size="36.0" />
-                     </font>
-                  </Label>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <AnchorPane layoutX="28.0" layoutY="327.0" prefHeight="54.0" prefWidth="94.0">
+                     <children>
+                        <Label fx:id="diceLabel1" prefHeight="36.0" prefWidth="20.0" text="0" textFill="WHITE">
+                           <font>
+                              <Font size="36.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="diceLabel2" layoutX="68.0" prefHeight="33.0" prefWidth="20.0" text="0" textFill="WHITE">
+                           <font>
+                              <Font size="36.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
                </children>
             </AnchorPane>
          </children>

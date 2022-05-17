@@ -21,6 +21,7 @@ public class Cntrllr implements ModelListener {
 
     public Cntrllr() {
         model.listener = this;
+        model.randomFirstTurn();
     }
 
 //  Поля и методы для основного окна
@@ -49,7 +50,6 @@ public class Cntrllr implements ModelListener {
     @FXML
     private Label diceLabel2;
 
-
     @FXML
     private void diceButtonClicked(){
         model.rollNewTurns();
@@ -65,15 +65,15 @@ public class Cntrllr implements ModelListener {
 
     private Integer selectedColumn = -1;
 
-    public void columnChoosed(int column) {
+    public void setSelectedColumn(int column) {
         selectedColumn = column;
     }
 
 
     public void updateBoard(){
         GroupOfChips[][] field = model.getField().getCurrent();
-        Color white = new Color(1.0,1.0,1.0,1.0);
         Color green = new Color(0.0,1.0,0.0,1.0);
+        Color yellow = new Color(1.0, 1.0, 0.0, 1.0);
         boolean atLeastOneOfferTurnButtonAdded = false;
         /* for quarter of field */
         for (int i = 0; i < 4; i++) {
@@ -89,22 +89,19 @@ public class Cntrllr implements ModelListener {
                     for (int k = 0; k < numberOfChips; k++) {
                         /*Рисуем круги фишек*/
                         quartersOfField()[i].add(new Circle(15, colorOfChips.image), j, 14 - k);
-//                        Circle circle = new Circle(15);
-//                        circle.setFill(new ImagePattern(new Image("black1.png")));
-//                        quartersOfField()[i].add(circle, j, 14 - k);
                     }
                     /*Рисуем зелёные круги для кнопок предложения хода если ещё не выбрана никакая колонка фишек.
                      *По нажатию упомянутой кнопки индекс её колонки будет запомнен в поле selectedColumn. */
                     if (selectedColumn == -1)
                         if (colorOfChips == model.getCurrentTurn() && !probableTurns.isEmpty()) {
                             Button lastChipButton = new OfferTurnButton(i * 6 + j, model, this);
-                            quartersOfField()[i].add(new Circle(5, green), j, 15 - numberOfChips);
+                            quartersOfField()[i].add(new Circle(10, green), j, 15 - numberOfChips);
                             quartersOfField()[i].add(lastChipButton, j, 15 - numberOfChips);
                             atLeastOneOfferTurnButtonAdded = true;
                         }
                     /*Если какая-то колонка выбрана для хода, то выделяем её жёлтым цветом*/
                     if (selectedColumn == i * 6 + j) {
-                        quartersOfField()[i].add(new Circle(10, new Color(1.0, 1.0, 0.0, 1.0)), j, 15 - numberOfChips);
+                        quartersOfField()[i].add(new Circle(10, yellow), j, 15 - numberOfChips);
                     }
                 }
             }
@@ -136,7 +133,7 @@ public class Cntrllr implements ModelListener {
         if (!turnsLeft.contains(currentNumberInLabel2)) diceLabel2.setOpacity(0.1); else diceLabel2.setOpacity(1.0);
     }
 
-//  Вспомогательные методы
+//    Вспомогательные методы
     public String getColorNotationOfCurrentTurn(){
         if (model.getCurrentTurn() == ChipColor.BLACK) return "черные"; else return "белые";
     }
