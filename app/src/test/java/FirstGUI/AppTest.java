@@ -60,7 +60,7 @@ class AppTest {
         field.set(10, new GroupOfChips(0,null));
         model.openExitsIfPossible();
         turns = model.getPossibleTurns(23);
-        assertFalse(turns.isEmpty());
+        assertFalse(turns.isEmpty());;
     }
 
 //    @Test
