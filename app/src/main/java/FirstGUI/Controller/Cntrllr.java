@@ -14,13 +14,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Cntrllr implements ModelListener {
 
     public Cntrllr() {
         model.listener = this;
+        chipsImages.put(ChipColor.WHITE, new ImagePattern(new Image("white3.png")));
+        chipsImages.put(ChipColor.BLACK, new ImagePattern(new Image("black1.png")));
         model.randomFirstTurn();
     }
 
@@ -88,7 +93,7 @@ public class Cntrllr implements ModelListener {
                     /* for chip in column */
                     for (int k = 0; k < numberOfChips; k++) {
                         /*Рисуем круги фишек*/
-                        quartersOfField()[i].add(new Circle(15, colorOfChips.image), j, 14 - k);
+                        quartersOfField()[i].add(new Circle(15, chipsImages.get(colorOfChips)), j, 14 - k);
                     }
                     /*Рисуем зелёные круги для кнопок предложения хода если ещё не выбрана никакая колонка фишек.
                      *По нажатию упомянутой кнопки индекс её колонки будет запомнен в поле selectedColumn. */
@@ -146,4 +151,6 @@ public class Cntrllr implements ModelListener {
         alertStage.show();
     }
 
+    /*Пытался сделать картинки полями перечисления ChipColors, но тогда падают тесты*/
+    private Map<ChipColor, ImagePattern> chipsImages = new HashMap<>();
 }
