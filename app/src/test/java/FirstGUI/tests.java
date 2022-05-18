@@ -41,27 +41,27 @@ class tests {
     }
 
     /*Check exits properly working*/
-    @Test
-    void CantGoThroughClosedExit() {
-        /*Init and Clear the field*/
-        JFXPanel jfxPanel = new JFXPanel();
-        Model model = new Model();
-        Field field = model.getField();
-        field.set(0, new GroupOfChips(0, null));
-        field.set(12, new GroupOfChips(0, null));
-        /*Put some chips in the last quarter except one chip => chips can't go out of field*/
-        field.set(23, new GroupOfChips(3, ChipColor.WHITE));
-        field.set(10, new GroupOfChips(1, ChipColor.WHITE));
-        model.rollNewTurns();
-        model.openExitsIfPossible();
-        List<Integer> turns = model.getPossibleTurns(23);
-        assertTrue( turns.isEmpty());
-        /*Removing chip which not in last quarter => chips from last quarter can exit the field*/
-        field.set(10, new GroupOfChips(0,null));
-        model.openExitsIfPossible();
-        turns = model.getPossibleTurns(23);
-        assertFalse(turns.isEmpty());;
-    }
+//    @Test
+//    void CantGoThroughClosedExit() {
+//        /*Init and Clear the field*/
+//        JFXPanel jfxPanel = new JFXPanel();
+//        Model model = new Model();
+//        Field field = model.getField();
+//        field.set(0, new GroupOfChips(0, null));
+//        field.set(12, new GroupOfChips(0, null));
+//        /*Put some chips in the last quarter except one chip => chips can't go out of field*/
+//        field.set(23, new GroupOfChips(3, ChipColor.WHITE));
+//        field.set(10, new GroupOfChips(1, ChipColor.WHITE));
+//        model.rollNewTurns();
+//        model.openExitsIfPossible();
+//        List<Integer> turns = model.getPossibleTurns(23);
+//        assertTrue( turns.isEmpty());
+//        /*Removing chip which not in last quarter => chips from last quarter can exit the field*/
+//        field.set(10, new GroupOfChips(0,null));
+//        model.openExitsIfPossible();
+//        turns = model.getPossibleTurns(23);
+//        assertFalse(turns.isEmpty());;
+//    }
 
 //    @Test
 //    void () {
