@@ -1,7 +1,5 @@
 package FirstGUI;
-import FirstGUI.Controller.Cntrllr;
 import FirstGUI.Model.*;
-import javafx.embed.swing.JFXPanel;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

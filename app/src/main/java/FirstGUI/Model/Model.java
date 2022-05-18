@@ -44,10 +44,10 @@ public class Model {
         if (turnsLeft.isEmpty()) {
             dice.rollDice();
             turnsLeft.add(dice.getValue());
-//            turnsLeft.add(6);
+//            turnsLeft.add(3);
             dice.rollDice();
             turnsLeft.add(dice.getValue());
-//            turnsLeft.add(6);
+//            turnsLeft.add(3);
             if (turnsLeft.get(0).equals(turnsLeft.get(1))) turnsLeft.addAll(turnsLeft);
             turnFromBaseHappened = false;
             turnsCounter += 1;
@@ -109,7 +109,7 @@ public class Model {
             if (targetColor == color || targetColor == null)
                 result.add((position + turnsLeft.get(0))%24);
         }
-        /*Удаляем ходы которые противоречат правилу гласящему что выходить с поля фишки могут только тогда
+        /*Правило захода в дом. Выходить с поля фишки могут только тогда
         когда все фишки одного цвета добрались до последней четверти своего пути*/
         if (color == ChipColor.WHITE && position > 11 && !whiteExitOpened) {
             List<Integer> targetsToRemove = new ArrayList<>();
@@ -125,6 +125,15 @@ public class Model {
             });
             result.removeAll(targetsToRemove);
         }
+        /*Удаляем ходы которые противоречат правилу блокирования
+        (нельзя ставить 6 подряд если впереди нет фишки противника)*/
+        List<Integer> targetsToRemove = new ArrayList<>();
+        field.get(position).decreaseQuantity();
+        result.forEach(target ->{
+            if (field.willItBlock(color, target)) targetsToRemove.add(target);
+        });
+        result.removeAll(targetsToRemove);
+        field.get(position).increaseQuantity(color);
         return result;
     }
 
@@ -152,7 +161,7 @@ public class Model {
         // Первый бросок с головы, в начале игры (партии) предоставляет игрокам исключение из вышеуказанного правила.
         // Если одна шашка, которую только и можно снять с головы, не проходит, то можно снять вторую.
         if (startPosition == 0 || startPosition == 12) turnFromBaseHappened = true;
-        if (turnsCounter < 2 && getPossibleTurns(targetPosition).isEmpty()) {
+        if (turnsCounter <= 2 && getPossibleTurns(targetPosition).isEmpty()) {
             if (field.get(0).getColor() == currentTurn && field.get(0).getQuantity() > 13)
                 turnFromBaseHappened = false;
             if (field.get(12).getColor() == currentTurn && field.get(12).getQuantity() > 13)
