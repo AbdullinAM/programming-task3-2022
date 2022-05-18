@@ -1,5 +1,7 @@
 package FirstGUI.Model;
 
+import java.awt.*;
+
 public class Field {
 
     private final GroupOfChips[][] field = {{
@@ -43,6 +45,7 @@ public class Field {
     }
 
     public GroupOfChips get(int idx){
+        if(idx<0) idx = 24 + idx%24;
         if(idx>23) idx = idx%24;
         return field[idx/6][idx%6];
     }
@@ -64,4 +67,45 @@ public class Field {
         if (blackExitOpened && start.getColor() == ChipColor.BLACK) end.decreaseQuantity();
 
     }
+
+    public boolean willItBlock(ChipColor color, int targetPos){
+        int similarChipsCounter = 0;
+        for (int i = 1; i < 6; i++) {
+            if (get(targetPos-i).getColor()==color) similarChipsCounter += 1; else break;
+        }
+        for (int i = 1; i < 6; i++) {
+            if (get(targetPos+i).getColor()==color) similarChipsCounter += 1; else break;
+        }
+        if (similarChipsCounter >= 5) {
+            if (color == ChipColor.BLACK){
+                for (int i = targetPos; i < 24; i++) {
+                    if (get(i).getColor() == ChipColor.WHITE) return false;
+                }
+                return true;
+            }
+            if (targetPos <= 11)
+                for (int i = targetPos; i <= 11; i++) {
+                    if (get(i).getColor()== ChipColor.BLACK) return false;
+                }
+            else
+                for (int i = targetPos; i <= 35; i++) {
+                    if (get(i).getColor()== ChipColor.BLACK) return false;
+                }
+            return true;
+        }
+        return false;
+    }
+
+    public ChipColor winnerIs () {
+        boolean whiteWON = true;
+        boolean blackWON = true;
+        for (int i = 0; i <= 23; i++) {
+            if (get(i).getColor() == ChipColor.WHITE) whiteWON = false;
+            if (get(i).getColor() == ChipColor.BLACK) blackWON = false;
+        }
+        if (whiteWON) return ChipColor.WHITE;
+        if (blackWON) return ChipColor.BLACK;
+        return null;
+    }
+
 }

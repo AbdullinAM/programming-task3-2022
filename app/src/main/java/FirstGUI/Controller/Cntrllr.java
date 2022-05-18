@@ -124,6 +124,8 @@ public class Cntrllr implements ModelListener {
                 passTurnAlert();
             }
         }
+        /*Winning conditions*/
+        if (model.getField().winnerIs() != null) winnerAlert(model.getField().winnerIs());
     }
 
     private void updateTurns(){
@@ -138,7 +140,12 @@ public class Cntrllr implements ModelListener {
         if (!turnsLeft.contains(currentNumberInLabel2)) diceLabel2.setOpacity(0.1); else diceLabel2.setOpacity(1.0);
     }
 
-//    Вспомогательные методы
+
+    /*Я пытался сделать картинки полями перечисления ChipColors, но тогда невозможно тестировать,
+     так как ImagePattern не хочет инциализироваться вне javafx thread*/
+    private Map<ChipColor, ImagePattern> chipsImages = new HashMap<>();
+
+    //    Вспомогательные методы
     public String getColorNotationOfCurrentTurn(){
         if (model.getCurrentTurn() == ChipColor.BLACK) return "черные"; else return "белые";
     }
@@ -151,6 +158,12 @@ public class Cntrllr implements ModelListener {
         alertStage.show();
     }
 
-    /*Пытался сделать картинки полями перечисления ChipColors, но тогда падают тесты*/
-    private Map<ChipColor, ImagePattern> chipsImages = new HashMap<>();
+    private void winnerAlert(ChipColor winner){
+        String s = winner == ChipColor.BLACK? "чёрные" : "белые";
+        Alert alert = new Alert(Alert.AlertType.WARNING,"Победили " + s);
+        alert.setHeaderText(null);
+        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        alertStage.setAlwaysOnTop(true);
+        alertStage.show();
+    }
 }
