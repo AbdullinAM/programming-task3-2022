@@ -1,7 +1,5 @@
 package FirstGUI.Model;
 
-import javafx.scene.paint.Color;
-
 public class GroupOfChips {
     private Integer quantity;
 

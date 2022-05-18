@@ -9,7 +9,7 @@ public class ConfirmTurnButton extends Button {
         this.setPrefWidth(20);
         this.setOpacity(0.0);
         this.setOnMouseClicked(event -> {
-                cntrllr.columnChoosed(-1);
+                cntrllr.setSelectedColumn(-1);
                 cntrllr.updateBoard();
                 model.makeTurn(startColumn,targetColumn);
                 }

@@ -5,12 +5,14 @@ import javafx.scene.control.Button;
 
 public class OfferTurnButton extends Button{
 
+//    private static OfferTurnButton =
+
     public OfferTurnButton(int column, Model model, Cntrllr cntrllr) {
         this.setOpacity(0.0);
         this.setPrefWidth(20);
         this.setPrefHeight(20);
         this.setOnMouseClicked(event -> {
-            cntrllr.columnChoosed(column);
+            cntrllr.setSelectedColumn(column);
             cntrllr.updateBoard();
             model.getPossibleTurns(column)
                     .forEach(possibleTurn ->

@@ -26,8 +26,9 @@ dependencies {
     implementation 'org.jetbrains:annotations:16.0.2'
     javafx {
         version = "11.0.2"
-        modules = [ 'javafx.controls', 'javafx.fxml' ]
+        modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing' ]
     }
+
 
 
 }

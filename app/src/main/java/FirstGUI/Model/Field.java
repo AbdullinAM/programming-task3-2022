@@ -47,6 +47,10 @@ public class Field {
         return field[idx/6][idx%6];
     }
 
+    public void set(int idx, GroupOfChips chips){
+        field[idx/6][idx%6] = chips;
+    }
+
     public void moveChip(int from, int to, boolean whiteExitOpened, boolean blackExitOpened){
         if(from>24) from = from%24;
         if(to>24) to = to%24;

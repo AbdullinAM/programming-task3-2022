@@ -1,7 +1,6 @@
 package FirstGUI.Model;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +9,8 @@ import java.util.List;
 public class Model {
 
     public Model() {
-        this.randomFirstTurn();
-    }
 
+    }
 
     /*Кости*/
     private final Dice dice = new Dice();
@@ -31,6 +29,8 @@ public class Model {
         }
     }
 
+    private int turnsCounter = 0;
+
     /*Список оставшихся ходов*/
     private List<Integer> turnsLeft = new ArrayList<>();
 
@@ -38,14 +38,19 @@ public class Model {
         return turnsLeft;
     }
 
+    public void setTurnsLeft(List<Integer> turnsList) { this.turnsLeft = turnsList;}
+
     public void rollNewTurns() {
         if (turnsLeft.isEmpty()) {
             dice.rollDice();
             turnsLeft.add(dice.getValue());
+//            turnsLeft.add(6);
             dice.rollDice();
             turnsLeft.add(dice.getValue());
+//            turnsLeft.add(6);
             if (turnsLeft.get(0).equals(turnsLeft.get(1))) turnsLeft.addAll(turnsLeft);
             turnFromBaseHappened = false;
+            turnsCounter += 1;
         }
     }
 
@@ -66,12 +71,11 @@ public class Model {
         return field;
     }
 
+    public void setField(Field field) {
+        this.field = field;
+    }
+
     /*Ходы и Listener для вызова отрисовки на контроллере*/
-    public ModelListener listener;
-
-    private boolean whiteExitOpened;
-
-    private boolean blackExitOpened;
 
     @NotNull
     public List<Integer> getPossibleTurns (int position) {
@@ -110,7 +114,7 @@ public class Model {
         if (color == ChipColor.WHITE && position > 11 && !whiteExitOpened) {
             List<Integer> targetsToRemove = new ArrayList<>();
             result.forEach(target -> {
-                if (target >=0 && target < 11) targetsToRemove.add(target);
+                if (target >=0 && target <= 11) targetsToRemove.add(target);
             });
             result.removeAll(targetsToRemove);
         }
@@ -144,14 +148,30 @@ public class Model {
             turnsLeft.remove(0);
             currentTurn = currentTurn==ChipColor.WHITE?ChipColor.BLACK:ChipColor.WHITE;
         } else return;
-        // Можно сделать только один ход с базы, поэтому поднимаем соответствующий флаг если ход с базы
+        // Можно сделать только один ход с базы, поэтому поднимаем соответствующий флаг если ход с базы.
+        // Первый бросок с головы, в начале игры (партии) предоставляет игрокам исключение из вышеуказанного правила.
+        // Если одна шашка, которую только и можно снять с головы, не проходит, то можно снять вторую.
         if (startPosition == 0 || startPosition == 12) turnFromBaseHappened = true;
+        if (turnsCounter < 2 && getPossibleTurns(targetPosition).isEmpty()) {
+            if (field.get(0).getColor() == currentTurn && field.get(0).getQuantity() > 13)
+                turnFromBaseHappened = false;
+            if (field.get(12).getColor() == currentTurn && field.get(12).getQuantity() > 13)
+                turnFromBaseHappened = false;
+        }
         // Открываем выхода с поля игроку у которого все фишки в последней четверти
         openExitsIfPossible();
         listener.turnMade();
     }
 
-    private void openExitsIfPossible(){
+    public ModelListener listener;
+
+    /*Окончание игры*/
+
+    private boolean whiteExitOpened;
+
+    private boolean blackExitOpened;
+
+    public void openExitsIfPossible(){
         boolean noWhitesOutOfHome = true;
         boolean noBlacksOutOfHome = true;
         for (int i = 0; i < 18; i++) {
@@ -166,6 +186,7 @@ public class Model {
         whiteExitOpened = noWhitesOutOfHome;
         blackExitOpened = noBlacksOutOfHome;
     }
+
 
 //  Вспомогательные
     public int howManyChipsInColumn(int column){

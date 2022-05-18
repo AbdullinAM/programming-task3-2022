@@ -77,7 +77,7 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <Separator orientation="VERTICAL" prefHeight="200.0" style="-fx-background-color: 996633; visibility: 0.0;" />
+            <Separator orientation="VERTICAL" prefHeight="200.0" style="-fx-background-color: 996633;" />
             <AnchorPane style="-fx-background-image: url(board2.jpg); -fx-background-size: 100% 100%;">
                <children>
                   <VBox AnchorPane.bottomAnchor="1.0" AnchorPane.topAnchor="5.0">
@@ -143,7 +143,7 @@
             <Separator orientation="VERTICAL" prefHeight="200.0" style="visibility: 0.0;" />
             <AnchorPane prefWidth="198.0" style="-fx-background-image: url(стол.jpg); -fx-background-size: 100% 100%;">
                <children>
-                  <Button fx:id="diceButton" layoutX="28.0" layoutY="381.0" mnemonicParsing="false" onKeyPressed="#diceButtonClicked" onMouseClicked="#diceButtonClicked" text="Бросить кости" />
+                  <Button fx:id="diceButton" layoutX="28.0" layoutY="381.0" mnemonicParsing="false" onMouseClicked="#diceButtonClicked" text="Бросить кости" />
                   <Label alignment="CENTER" layoutX="48.0" layoutY="296.0" prefHeight="26.0" prefWidth="54.0" style="-fx-background-color: ffffff;" text="Кости" textAlignment="CENTER">
                      <font>
                         <Font size="15.0" />
