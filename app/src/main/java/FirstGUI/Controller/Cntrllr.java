@@ -93,20 +93,20 @@ public class Cntrllr implements ModelListener {
                     /* for chip in column */
                     for (int k = 0; k < numberOfChips; k++) {
                         /*Рисуем круги фишек*/
-                        quartersOfField()[i].add(new Circle(15, chipsImages.get(colorOfChips)), j, 14 - k);
+                        quartersOfField()[i].add(new Circle(13, chipsImages.get(colorOfChips)), j, 14 - k);
                     }
                     /*Рисуем зелёные круги для кнопок предложения хода если ещё не выбрана никакая колонка фишек.
                      *По нажатию упомянутой кнопки индекс её колонки будет запомнен в поле selectedColumn. */
                     if (selectedColumn == -1)
                         if (colorOfChips == model.getCurrentTurn() && !probableTurns.isEmpty()) {
                             Button lastChipButton = new OfferTurnButton(i * 6 + j, model, this);
-                            quartersOfField()[i].add(new Circle(10, green), j, 15 - numberOfChips);
+                            quartersOfField()[i].add(new Circle(9, green), j, 15 - numberOfChips);
                             quartersOfField()[i].add(lastChipButton, j, 15 - numberOfChips);
                             atLeastOneOfferTurnButtonAdded = true;
                         }
                     /*Если какая-то колонка выбрана для хода, то выделяем её жёлтым цветом*/
                     if (selectedColumn == i * 6 + j) {
-                        quartersOfField()[i].add(new Circle(10, yellow), j, 15 - numberOfChips);
+                        quartersOfField()[i].add(new Circle(9, yellow), j, 15 - numberOfChips);
                     }
                 }
             }
