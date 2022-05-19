@@ -89,7 +89,28 @@ class CheckersView : View(), BoardListener {
 
     private fun updateBoardAndStatus(cells: List<Cell>? = null) {
         val winner = board.gameOver()
+        var posBlack = false
+        var posWhite = false
+        for (x in 0..7) {
+            for (y in 0..7) {
+                val cell = Cell(x, y)
+                if (board[cell] is Checker && board.possibleTurns(cell).second.isNotEmpty() &&
+                    board[cell]?.color == Color.WHITE)
+                    posWhite = true
+                if (board[cell] is Checker && board.possibleTurns(cell).second.isNotEmpty() &&
+                    board[cell]?.color == Color.BLACK)
+                    posBlack = true
+            }
+        }
         statusLabel.text = when {
+            board.turn == Color.BLACK && !posBlack -> {
+                inProcess = false
+                "Whites Win! Press 'Restart' to continue"
+            }
+            board.turn == Color.WHITE && !posWhite -> {
+                inProcess = false
+                "Blacks Win! Press 'Restart' to continue"
+            }
             winner == Color.BLACK -> {
                 inProcess = false
                 "Blacks Win! Press 'Restart' to continue"
