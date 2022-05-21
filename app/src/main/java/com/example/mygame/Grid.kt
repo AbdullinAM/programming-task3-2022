@@ -306,7 +306,7 @@ class Grid {
                             gridMain.find { it == cell }?.setValue(0)
                             cell = neighbour
                             cellValue = neighbourValue
-                            neighbour = neighbour.getNeighbour(direction)
+                            neighbour = neighbour.getNeighbour(direction) //"neighbour" replace with "cell"
                             neighbourValue = it.getNeighbourValue(direction, grid)
                             sum = neighbourValue?.plus(cellValue)
                         }

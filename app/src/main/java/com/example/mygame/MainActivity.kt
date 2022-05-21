@@ -1,5 +1,6 @@
 package com.example.mygame
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    PreviewScreen()
+                    Board()
                 }
             }
         }
@@ -89,10 +90,10 @@ fun PreviewScreen() {
                 }
         )
         Button(onClick = {
-                         MainActivity().finish()
-            /* navController.navigate("Board")  {
-            popUpTo("menu") { inclusive = true }
-        }*/ },
+                        //MainActivity().finish()
+//             navController.navigate("Board")  {
+//            popUpTo("menu") { inclusive = true }
+        },
             modifier = Modifier
                 .width(200.dp)
                 .height(80.dp)
@@ -220,7 +221,7 @@ fun Board() {
                         items(grid.size) {
                                 index ->
                             val cellValue = grid[index].getValue()
-                            //var Color = Color(0xFFAD3B3B)
+                            //var color = Color(0xFFAD3B3B)
                             when(cellValue) {
                                 0 -> color = Color.White
                                 2 -> color = Color(0xFFDB9BFD)
@@ -253,6 +254,7 @@ fun Board() {
                         }
                     } )
                 Text( text = direction.toString())
+                Text( text = grid.toString())
             }
 
         }
