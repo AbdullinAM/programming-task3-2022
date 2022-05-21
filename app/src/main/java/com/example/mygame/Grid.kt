@@ -6,31 +6,6 @@ enum class Direction {
     UP, DOWN, LEFT, RIGHT
 }
 
-fun main() {
-    val cell1 = Grid.Cell(0, 0)
-    cell1.setValue(2)
-    val cell2 = Grid.Cell(0, 1)
-    cell2.setValue(2)
-    val cell3 = Grid.Cell(0, 2)
-    cell3.setValue(2)
-    val cell4 = Grid.Cell(1, 0)
-    cell4.setValue(2)
-    val cell5 = Grid.Cell(1, 1)
-    cell5.setValue(0)
-    val cell6 = Grid.Cell(1, 2)
-    cell6.setValue(0)
-    val cell7 = Grid.Cell(2, 0)
-    cell7.setValue(4)
-    val cell8 = Grid.Cell(2, 1)
-    cell8.setValue(4)
-    val cell9 = Grid.Cell(2, 2)
-    cell9.setValue(0)
-    val grid = listOf(cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9)
-    println(cell6.getNeighbourValue(Direction.DOWN,grid))
-//    val newGrid = Grid().moveGrid(Direction.LEFT, grid)
-//    val secondGrid = Grid().moveGrid(Direction.UP, newGrid)
-}
-
 class Grid {
     class Cell(val row: Int, val column: Int) {
         var v:Int? = null
@@ -121,167 +96,7 @@ class Grid {
         return result
     }
 
-    fun moveRight(grid: List<Cell>): List<Cell> {
-//        val grid = grid.reversed().toMutableList()
-//        grid.forEach {
-//            var cell = it
-//            var cellValue = it.getValue()
-//            var neighbour = it.getNeighbour(Direction.RIGHT)
-//            var neighbourValue = it.getNeighbourValue(Direction.RIGHT, grid)
-//            var sum = neighbourValue?.plus(cellValue!!)
-//            while (neighbourValue != null) {
-//                when (neighbourValue) {
-//                    cellValue -> {
-//                        grid.find { it == neighbour }?.setValue(sum)
-//                        grid.find { it == cell }?.setValue(0)
-//                        break
-//                    }
-//                    0 -> {
-//                        grid.find { it == neighbour }?.setValue(cellValue)
-//                        grid.find { it == cell }?.setValue(0)
-//                        cell = neighbour
-//                        cellValue = neighbourValue
-//                        neighbour = neighbour.getNeighbour(Direction.RIGHT)
-//                        neighbourValue = cell.getNeighbourValue(Direction.RIGHT, grid)
-//                        sum = neighbourValue?.plus(cellValue)
-//                    }
-//                    else -> break
-//                }
-//            }
-//        }
-//        return grid.reversed()
-        val grid = grid.toMutableList()
-        for (i in 15 downTo 0) {
-            var cell = grid[i]
-            var cellValue = cell.getValue()
-            if (cellValue == 0) continue
-            var neighbour = cell.getNeighbour(Direction.RIGHT)
-            var neighbourValue = cell.getNeighbourValue(Direction.RIGHT, grid)
-            var sum = neighbourValue?.plus(cellValue!!)
-            while (neighbourValue != null) {
-                when (neighbourValue) {
-                    cellValue -> {
-                        grid.find { it == neighbour }?.setValue(sum)
-                        grid.find { it == cell }?.setValue(0)
-                        break
-                    }
-                    0 -> {
-                        grid.find { it == neighbour }?.setValue(cellValue)
-                        grid.find { it == cell }?.setValue(0)
-                        cell = neighbour
-                        cellValue = neighbourValue
-                        neighbour = neighbour.getNeighbour(Direction.RIGHT)
-                        neighbourValue = cell.getNeighbourValue(Direction.RIGHT, grid)
-                        sum = neighbourValue?.plus(cellValue)
-                    }
-                    else -> break
-                }
-            }
-        }
-        return grid
-    }
 
-    fun moveLeft(grid: List<Cell>): List<Cell> {
-        val grid = grid.toMutableList()
-        grid.forEach {
-            var cell = it
-            var cellValue = it.getValue()
-            var neighbour = it.getNeighbour(Direction.LEFT)
-            var neighbourValue = it.getNeighbourValue(Direction.LEFT, grid)
-            var sum = neighbourValue?.plus(cellValue!!)
-            while (neighbourValue != null) {
-                when (neighbourValue) {
-                    cellValue -> {
-                        grid.find { it == neighbour }?.setValue(sum)
-                        grid.find { it == cell }?.setValue(0)
-                        break
-                    }
-                    0 -> {
-                        grid.find { it == neighbour }?.setValue(cellValue)
-                        grid.find { it == cell }?.setValue(0)
-                        cell = neighbour
-                        cellValue = neighbourValue
-                        neighbour = neighbour.getNeighbour(Direction.LEFT)
-                        neighbourValue = cell.getNeighbourValue(Direction.LEFT, grid)
-                        sum = neighbourValue?.plus(cellValue)
-                    }
-                    else -> break
-                }
-            }
-        }
-        return grid
-    }
-
-    fun moveDown(grid: List<Cell>): List<Cell> {
-        val grid = grid.reversed().toMutableList()
-        grid.forEach {
-            var cell = it
-            var cellValue = it.getValue()
-            var neighbour = it.getNeighbour(Direction.DOWN)
-            var neighbourValue = it.getNeighbourValue(Direction.DOWN, grid)
-            var sum = neighbourValue?.plus(cellValue!!)
-            while (neighbourValue != null) {
-                when (neighbourValue) {
-                    cellValue -> {
-                        grid.find { it == neighbour }?.setValue(sum)
-                        grid.find { it == cell }?.setValue(0)
-                        break
-                    }
-                    0 -> {
-                        grid.find { it == neighbour }?.setValue(cellValue)
-                        grid.find { it == cell }?.setValue(0)
-                        cell = neighbour
-                        cellValue = neighbourValue
-                        neighbour = neighbour.getNeighbour(Direction.DOWN)
-                        neighbourValue = cell.getNeighbourValue(Direction.DOWN, grid)
-                        sum = neighbourValue?.plus(cellValue)
-                    }
-                    else -> break
-                }
-            }
-        }
-        return grid.reversed()
-    }
-
-    fun moveUp(grid: List<Cell>): List<Cell> {
-        val grid = grid.toMutableList()
-        grid.forEach {
-            var cell = it
-            var cellValue = it.getValue()
-            var neighbour = it.getNeighbour(Direction.UP)
-            var neighbourValue = it.getNeighbourValue(Direction.UP, grid)
-            var sum = neighbourValue?.plus(cellValue!!)
-            while (neighbourValue != null) {
-                when (neighbourValue) {
-                    cellValue -> {
-                        grid.find { it == neighbour }?.setValue(sum)
-                        grid.find { it == cell }?.setValue(0)
-                        break
-                    }
-                    0 -> {
-                        grid.find { it == neighbour }?.setValue(cellValue)
-                        grid.find { it == cell }?.setValue(0)
-                        cell = neighbour
-                        cellValue = neighbourValue
-                        neighbour = neighbour.getNeighbour(Direction.UP)
-                        neighbourValue = cell.getNeighbourValue(Direction.UP, grid)
-                        sum = neighbourValue?.plus(cellValue)
-                    }
-                    else -> break
-                }
-            }
-        }
-        return grid
-    }
-
-//    fun moveGrid(direction: Direction, grid: List<Cell>): List<Cell>{
-//        return when(direction) {
-//            Direction.UP -> moveUp(grid)
-//            Direction.DOWN -> moveDown(grid)
-//            Direction.RIGHT -> moveRight(grid)
-//            Direction.LEFT -> moveLeft(grid)
-//        }
-//    }
 //// put foEach code in function  cellValue == 0 continue, index + - 4 + - 1 realisation
     fun moveGrid(direction: Direction, grid: List<Cell>): List<Cell> {
         var gridResult =  listOf<Cell>()
@@ -291,6 +106,7 @@ class Grid {
             gridMain.forEach {
                 var cell = it
                 var cellValue = it.getValue()
+                if (cellValue == 0) return@forEach
                 var neighbour = it.getNeighbour(direction)
                 var neighbourValue = it.getNeighbourValue(direction, grid)
                 var sum = neighbourValue?.plus(cellValue!!)
@@ -311,25 +127,6 @@ class Grid {
                             sum = neighbourValue?.plus(cellValue)
                         }
                         else -> break
-//                        else ->
-//                            {
-//                                val nextNeighbour = neighbour.getNeighbour(direction)
-//                                val nextNeighbourValue = nextNeighbour.getValue()
-//                                val sumNext = nextNeighbourValue?.plus(neighbourValue)
-//                                neighbourValue = when(nextNeighbourValue) {
-//                                    neighbourValue -> {
-//                                        gridMain.find { it == nextNeighbour }?.setValue(sumNext)
-//                                        gridMain.find { it == neighbour }?.setValue(0)
-//                                        0
-//                                    }
-//                                    0 -> {
-//                                        gridMain.find { it == nextNeighbour }?.setValue(neighbourValue)
-//                                        gridMain.find { it == neighbour }?.setValue(0)
-//                                        0
-//                                    }
-//                                    else -> break
-//                                }
-//                            }
 
                     }
                 }
@@ -340,6 +137,7 @@ class Grid {
             gridReversed.forEach {
                 var cell = it
                 var cellValue = it.getValue()
+                if (cellValue == 0) return@forEach
                 var neighbour = it.getNeighbour(direction)
                 var neighbourValue = it.getNeighbourValue(direction, grid)
                 var sum = neighbourValue?.plus(cellValue!!)
@@ -360,25 +158,6 @@ class Grid {
                             sum = neighbourValue?.plus(cellValue!!)
                         }
                         else -> break
-//                        else ->
-//                            {
-//                                val nextNeighbour = neighbour.getNeighbour(direction)
-//                                val nextNeighbourValue = nextNeighbour.getValue()
-//                                val sumNext = nextNeighbourValue?.plus(neighbourValue!!)
-//                                neighbourValue = when(nextNeighbourValue) {
-//                                    neighbourValue -> {
-//                                        gridMain.find { it == nextNeighbour }?.setValue(sumNext)
-//                                        gridMain.find { it == neighbour }?.setValue(0)
-//                                        0
-//                                    }
-//                                    0 -> {
-//                                        gridMain.find { it == nextNeighbour }?.setValue(neighbourValue)
-//                                        gridMain.find { it == neighbour }?.setValue(0)
-//                                        0
-//                                    }
-//                                    else -> break
-//                                }
-//                            }
                     }
                 }
             }

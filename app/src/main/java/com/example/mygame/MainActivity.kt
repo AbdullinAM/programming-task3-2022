@@ -1,6 +1,5 @@
 package com.example.mygame
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,10 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.core.content.ContextCompat.startActivity
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.mygame.ui.theme.MyGameTheme
 import kotlin.math.abs
 
@@ -69,11 +64,6 @@ class Game : ComponentActivity() {
 
 @Composable
 fun PreviewScreen() {
-//    val navController = rememberNavController()
-//    NavHost(navController = navController, startDestination = "menu") {
-//        composable("menu") { MainActivity() }
-//        composable("Board") { Board() }
-//    }
     ConstraintLayout {
         val (text, button) = createRefs()
         val guideLine = createGuidelineFromTop(0.5f)
@@ -89,11 +79,7 @@ fun PreviewScreen() {
                     end.linkTo(parent.end)
                 }
         )
-        Button(onClick = {
-                        //MainActivity().finish()
-//             navController.navigate("Board")  {
-//            popUpTo("menu") { inclusive = true }
-        },
+        Button(onClick = { /*TODO()*/},
             modifier = Modifier
                 .width(200.dp)
                 .height(80.dp)
@@ -106,41 +92,6 @@ fun PreviewScreen() {
             Text(text = "START GAME")
         }
     }
-}
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun SquareGrid() {
-    val grid = Grid().createGrid()
-    val values = mutableListOf<Int?>()
-    grid.forEach { values.add(it.getValue()) }
-    LazyVerticalGrid(cells = GridCells.Fixed(4),
-        contentPadding = PaddingValues(
-        start = 12.dp,
-        top = 16.dp,
-        end = 12.dp,
-        bottom = 16.dp
-    ),
-        content = {
-            items(values.size) {
-                index ->
-                Card(
-                    backgroundColor = Color(0xEDFD5F5F),
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .fillMaxWidth(),
-                    elevation = 8.dp,
-                ) {
-                    Text(
-                        text = values[index].toString(),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp,
-                        color = Color(0xFFFFFFFF),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-            }
-        } )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -220,9 +171,7 @@ fun Board() {
                     content = {
                         items(grid.size) {
                                 index ->
-                            val cellValue = grid[index].getValue()
-                            //var color = Color(0xFFAD3B3B)
-                            when(cellValue) {
+                            when(grid[index].getValue()) {
                                 0 -> color = Color.White
                                 2 -> color = Color(0xFFDB9BFD)
                                 4 -> color = Color(0xFFC352FF)
@@ -232,6 +181,9 @@ fun Board() {
                                 64 -> color = Color(0xFF4F0F70)
                                 128 -> color = Color(0xFF390A52)
                                 256 -> color = Color(0xFF29083A)
+                                512 -> color = Color(0xFF160320)
+                                1024 -> color = Color(0xFF11011A)
+                                2048 -> color = Color(0xFF000000)
                             }
                             Card(
                                 backgroundColor = color,
@@ -253,245 +205,12 @@ fun Board() {
                             }
                         }
                     } )
-                Text( text = direction.toString())
-                Text( text = grid.toString())
             }
 
         }
 
     }
 }
-
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun GamingBoard() {
-    var grid by remember { mutableStateOf(Grid().createGrid() )}
-    var direction by remember { mutableStateOf(-1) }
-    //val values = mutableListOf<Int?>()
-    //grid.forEach { values.add(it.getValue()) }
-    Box(
-        Modifier
-            .background(Color(0xFF738DAD))
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDrag = { change, dragAmount ->
-                        change.consumeAllChanges()
-
-                        val (x, y) = dragAmount
-                        if (abs(x) > abs(y)) {
-                            when {
-                                x > 0 -> {
-                                    //right
-                                    direction = 0
-                                }
-                                x < 0 -> {
-                                    // left
-                                    direction = 1
-                                }
-                            }
-                        } else {
-                            when {
-                                y > 0 -> {
-                                    // down
-                                    direction = 2
-                                }
-                                y < 0 -> {
-                                    // up
-                                    direction = 3
-                                }
-                            }
-                        }
-
-                    },
-                    onDragEnd = {
-                        when (direction) {
-                            0 -> {
-                                //right swipe code here
-                                grid = Grid().moveGrid(Direction.RIGHT, grid)
-                            }
-                            1 -> {
-                                grid = Grid().moveGrid(Direction.LEFT, grid)
-                                // left swipe code here
-                            }
-                            2 -> {
-                                grid = Grid().moveGrid(Direction.DOWN, grid)
-                                // down swipe code here
-                            }
-                            3 -> {
-                                grid = Grid().moveGrid(Direction.UP, grid)
-                                // up swipe code here
-                            }
-                        }
-                    }
-                )
-            }
-        ,
-        contentAlignment = Alignment.Center
-    ) {
-        Column(modifier = Modifier
-            .border(1.dp, Color.Black, RoundedCornerShape(5.dp))
-        )
-
-        {
-            Text(text = grid.toString())
-        }
-        LazyVerticalGrid(cells = GridCells.Fixed(4),
-            contentPadding = PaddingValues(
-                start = 12.dp,
-                top = 16.dp,
-                end = 12.dp,
-                bottom = 16.dp
-            ),
-            content = {
-                items(grid.size) {
-                        index ->
-                    Card(
-                        backgroundColor = Color(0xFFFF5C5C),
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .fillMaxWidth(),
-                        elevation = 8.dp,
-                    ) {
-                        Text(
-                            text = grid[index].getValue().toString(),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 30.sp,
-                            color = Color(0xFFFFFFFF),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                }
-            } )
-        }
-}
-
-
-//https://stackoverflow.com/questions/65573008/detect-swipe-direction-on-jetpack-compose
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
-@Composable
-fun SwipeTest() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        var text by remember { mutableStateOf("Box") }
-        var grid by remember { mutableStateOf(Grid().createGrid()) }
-        var cell by remember { mutableStateOf(grid[0].getValue().toString())}
-        var direction by remember { mutableStateOf(-1) }
-        Box(
-            Modifier/*.offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }*/
-                .size(500.dp, 500.dp)
-                .background(Color.Gray)
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDrag = { change, dragAmount ->
-                            change.consumeAllChanges()
-
-                            val (x, y) = dragAmount
-                            if (abs(x) > abs(y)) {
-                                when {
-                                    x > 0 -> {
-                                        //right
-                                        direction = 0
-                                    }
-                                    x < 0 -> {
-                                        // left
-                                        direction = 1
-                                    }
-                                }
-                            } else {
-                                when {
-                                    y > 0 -> {
-                                        // down
-                                        direction = 2
-                                    }
-                                    y < 0 -> {
-                                        // up
-                                        direction = 3
-                                    }
-                                }
-                            }
-
-                        },
-                        onDragEnd = {
-                            when (direction) {
-                                0 -> {
-                                    //right swipe code here
-                                    text = "Right"
-                                    grid = Grid().moveGrid(Direction.RIGHT, grid)
-                                }
-                                1 -> {
-                                    text = "Left"
-                                    grid = Grid().moveGrid(Direction.LEFT, grid)
-                                    // left swipe code here
-                                }
-                                2 -> {
-                                    text = "Down"
-                                    grid = Grid().moveGrid(Direction.DOWN, grid)
-                                    // down swipe code here
-                                }
-                                3 -> {
-                                    text = "Up"
-                                    grid = Grid().moveGrid(Direction.UP, grid)
-                                    // up swipe code here
-                                }
-                            }
-                        }
-                    )
-                }
-        ) {
-            Column() {
-                Text(text = text, modifier = Modifier.background(Color.Green))
-                Text(text = grid.toString(), modifier = Modifier.background(Color.Cyan))
-                LazyVerticalGrid(cells = GridCells.Fixed(4),
-            contentPadding = PaddingValues(
-                start = 12.dp,
-                top = 16.dp,
-                end = 12.dp,
-                bottom = 16.dp
-            ),
-            content = {
-                items(grid.size) {
-                        index ->
-                    Card(
-                        backgroundColor = Color(0xFFFF5C5C),
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .fillMaxWidth(),
-                        elevation = 8.dp
-                    ) {
-                        cell = grid[index].getValue().toString()
-                        Text(text = cell)
-
-                    }/*{
-                        Text(
-                            text = grid[index].getValue().toString(),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 30.sp,
-                            color = Color(0xFFFFFFFF),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }*/
-                }
-            } )
-            }
-
-        }
-
-    }
-}
-
-@Composable
-fun Playground() {
-    Card(modifier = Modifier.fillMaxSize(),
-        shape = RoundedCornerShape(10.dp),
-        backgroundColor = Color(0xFF738DAD),
-        elevation = 10.dp
-         ) {
-        GamingBoard()
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable
