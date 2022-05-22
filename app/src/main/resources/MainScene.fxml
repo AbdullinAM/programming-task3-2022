@@ -142,7 +142,7 @@
       </AnchorPane>
       <AnchorPane prefWidth="198.0" style="-fx-background-image: url(board-with-dices.jpg); -fx-background-size: 100% 100%;">
          <children>
-            <Button fx:id="diceButton" layoutX="28.0" layoutY="381.0" mnemonicParsing="false" onMouseClicked="#diceButtonClicked" text="Бросить кости" />
+            <Button fx:id="diceButton" layoutX="28.0" layoutY="381.0" mnemonicParsing="false" onKeyPressed="#diceButtonClicked" onMouseClicked="#diceButtonClicked" text="Бросить кости" />
             <AnchorPane layoutX="28.0" layoutY="327.0" prefHeight="54.0" prefWidth="94.0">
                <children>
                   <Label fx:id="diceLabel1" prefHeight="36.0" prefWidth="20.0" text="0" textFill="WHITE">

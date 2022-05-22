@@ -1,12 +1,10 @@
 package FirstGUI.Controller;
 
-import FirstGUI.Model.ChipColor;
-import FirstGUI.Model.Model;
-import FirstGUI.Model.ModelListener;
-import FirstGUI.Model.GroupOfChips;
+import FirstGUI.Model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -18,19 +16,21 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-
+/*Контроллер и отрисовщик */
 public class Cntrllr implements ModelListener {
 
     public Cntrllr() {
         model.listener = this;
         chipsImages.put(ChipColor.WHITE, new ImagePattern(new Image("white3.png")));
         chipsImages.put(ChipColor.BLACK, new ImagePattern(new Image("black1.png")));
-        model.randomFirstTurn();
     }
 
 //  Поля и методы для основного окна
-    private Model model = new Model();
+    private final Model model = new Model();
+
+    public Scoreboard scrboard;
 
     @FXML
     private GridPane quarter1;
@@ -74,58 +74,60 @@ public class Cntrllr implements ModelListener {
         selectedColumn = column;
     }
 
-
     public void updateBoard(){
-        GroupOfChips[][] field = model.getField().getCurrent();
+        Field field = model.getField();
         Color green = new Color(0.0,1.0,0.0,1.0);
         Color yellow = new Color(1.0, 1.0, 0.0, 1.0);
         boolean atLeastOneOfferTurnButtonAdded = false;
-        /* for quarter of field */
+        /* Clear the field */
         for (int i = 0; i < 4; i++) {
             quartersOfField()[i].getChildren().clear();
-            /* for column in quarter*/
-            for (int j = 0; j < 6; j++) {
-                GroupOfChips chipsInColumn = field[i][j];
-                List<Integer> probableTurns = model.getPossibleTurns(i*6+j);
-                int numberOfChips = chipsInColumn.getQuantity();
-                if (numberOfChips > 0) {
-                    ChipColor colorOfChips = chipsInColumn.getColor();
-                    /* for chip in column */
-                    for (int k = 0; k < numberOfChips; k++) {
-                        /*Рисуем круги фишек*/
-                        quartersOfField()[i].add(new Circle(13, chipsImages.get(colorOfChips)), j, 14 - k);
+        }
+        /* for column of field */
+        for (int i = 0; i < 24; i++) {
+            GroupOfChips chipsInColumn = field.get(i);
+            List<Integer> probableTurns = model.getPossibleTurns(i);
+            int numberOfChips = chipsInColumn.getQuantity();
+            if (numberOfChips > 0) {
+                ChipColor colorOfChips = chipsInColumn.getColor();
+                /* for chip in column */
+                for (int k = 0; k < numberOfChips; k++) {
+                    /*Рисуем круги фишек*/
+                    quartersOfField()[i/6].add(new Circle(13, chipsImages.get(colorOfChips)), i%6, 14 - k);
+                }
+                /*Рисуем зелёные круги для кнопок предложения хода если ещё не выбрана никакая колонка фишек.
+                 *По нажатию упомянутой кнопки индекс её колонки будет запомнен в поле selectedColumn. */
+                if (selectedColumn == -1)
+                    if (colorOfChips == model.getCurrentTurn() && !probableTurns.isEmpty()) {
+                        Button lastChipButton = new Buttons.OfferTurnButton(i, model, this);
+                        quartersOfField()[i/6].add(new Circle(9, green), i%6, 15 - numberOfChips);
+                        quartersOfField()[i/6].add(lastChipButton, i%6, 15 - numberOfChips);
+                        atLeastOneOfferTurnButtonAdded = true;
                     }
-                    /*Рисуем зелёные круги для кнопок предложения хода если ещё не выбрана никакая колонка фишек.
-                     *По нажатию упомянутой кнопки индекс её колонки будет запомнен в поле selectedColumn. */
-                    if (selectedColumn == -1)
-                        if (colorOfChips == model.getCurrentTurn() && !probableTurns.isEmpty()) {
-                            Button lastChipButton = new OfferTurnButton(i * 6 + j, model, this);
-                            quartersOfField()[i].add(new Circle(9, green), j, 15 - numberOfChips);
-                            quartersOfField()[i].add(lastChipButton, j, 15 - numberOfChips);
-                            atLeastOneOfferTurnButtonAdded = true;
-                        }
-                    /*Если какая-то колонка выбрана для хода, то выделяем её жёлтым цветом*/
-                    if (selectedColumn == i * 6 + j) {
-                        quartersOfField()[i].add(new Circle(9, yellow), j, 15 - numberOfChips);
-                    }
+                /*Если какая-то колонка выбрана для хода, то выделяем её жёлтым цветом*/
+                if (selectedColumn == i) {
+                    quartersOfField()[i/6].add(new Circle(9, yellow), i%6, 15 - numberOfChips);
                 }
             }
+
         }
+        /*Winning conditions*/
+        if (field.winnerIs() != null) winnerAlert(field.winnerIs());
         /*Если какая-то колонка выбрана для хода, то рисуем зелёные круги в местах куда можно cходить.*/
         if (selectedColumn > -1) {
             List<Integer> probableTurns = model.getPossibleTurns(selectedColumn);
             probableTurns.forEach(position ->
-                    quartersOfField()[position/6].add(new Circle(10, green),position%6, 14-field[position/6][position%6].getQuantity()));
+                    quartersOfField()[position/6].add(new Circle(10, green),position%6, 14-field.get(position).getQuantity()));
+            quartersOfField()[selectedColumn/6].add(
+                    new Buttons.RefuseTurnButton(this),selectedColumn%6,15-field.get(selectedColumn).getQuantity());
         } else {
-            /*Если игроку некуда походить (не добавлено ни одной offerTurnButton), а ходы (turnsLeft) у него остались,
-             * то ход передаём оппоненту.*/
+            /*Если игроку нечем походить (не добавлено ни одной offerTurnButton), а ходы (turnsLeft) у него остались,
+             * то ход передаём оппоненту, и выводим предупреждение.*/
             if (!atLeastOneOfferTurnButtonAdded && !model.getTurnsLeft().isEmpty()) {
                 model.passTheTurn();
                 passTurnAlert();
             }
         }
-        /*Winning conditions*/
-        if (model.getField().winnerIs() != null) winnerAlert(model.getField().winnerIs());
     }
 
     private void updateTurns(){
@@ -143,15 +145,12 @@ public class Cntrllr implements ModelListener {
 
     /*Я пытался сделать картинки полями перечисления ChipColors, но тогда невозможно тестировать,
      так как ImagePattern не хочет инциализироваться вне javafx thread*/
-    private Map<ChipColor, ImagePattern> chipsImages = new HashMap<>();
-
-    //    Вспомогательные методы
-    public String getColorNotationOfCurrentTurn(){
-        if (model.getCurrentTurn() == ChipColor.BLACK) return "черные"; else return "белые";
-    }
+    private final Map<ChipColor, ImagePattern> chipsImages = new HashMap<>();
 
     public void passTurnAlert (){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION,"Вы не можете походить ни одной фишкой, ход передаётся оппоненту ");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                "Вы не можете походить ни одной фишкой, ход передаётся оппоненту "
+        );
         alert.setHeaderText(null);
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         alertStage.setAlwaysOnTop(true);
@@ -159,11 +158,19 @@ public class Cntrllr implements ModelListener {
     }
 
     private void winnerAlert(ChipColor winner){
-        String s = winner == ChipColor.BLACK? "чёрные" : "белые";
-        Alert alert = new Alert(Alert.AlertType.WARNING,"Победили " + s);
-        alert.setHeaderText(null);
-        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-        alertStage.setAlwaysOnTop(true);
-        alertStage.show();
+        String winnerName = scrboard.getName(winner);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Ещё раунд?");
+        alert.setHeaderText("Поздравляем, "  + winnerName + ", вы выиграли раунд!");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            scrboard.changeColors();
+            alert = new Alert(Alert.AlertType.INFORMATION,
+                    "За белых теперь играет " + scrboard.getName(ChipColor.WHITE)
+            );
+            model.restart();
+        } else {
+            alert.hide();
+            alert.getDialogPane().getParent().getScene().getWindow().hide();
+        }
     }
 }

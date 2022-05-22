@@ -5,22 +5,29 @@ public class GroupOfChips {
 
     private ChipColor color;
 
+    public GroupOfChips(){
+        this.quantity = 0;
+    }
 
     public GroupOfChips(Integer quantity, ChipColor color) {
         this.quantity = quantity;
         this.color = color;
     }
 
-    public void setQuantity(Integer quantity) {
+    public GroupOfChips setQuantity(Integer quantity) {
         if(quantity >= 0 && quantity < 16){
             this.quantity = quantity;
         } else {
             throw new IllegalArgumentException();}
+        return this;
     }
 
     public Integer getQuantity() { return quantity; }
 
-    public void setColor(ChipColor color) { this.color = color; }
+    public GroupOfChips setColor(ChipColor color) {
+        this.color = color;
+        return this;
+    }
 
     public ChipColor getColor() { return color; }
 

@@ -8,25 +8,11 @@ import java.util.List;
 
 public class Model {
 
-    public Model() {
-
-    }
-
-    /*Кости*/
-    private final Dice dice = new Dice();
-
     /*Текущий ход и розыгрыш права первого хода*/
     private ChipColor currentTurn = ChipColor.WHITE;
 
     public ChipColor getCurrentTurn() {
         return currentTurn;
-    }
-
-    public void randomFirstTurn() {
-        dice.rollDice();
-        if (dice.getValue()>=4) {
-            currentTurn = ChipColor.BLACK;
-        }
     }
 
     private int turnsCounter = 0;
@@ -42,11 +28,9 @@ public class Model {
 
     public void rollNewTurns() {
         if (turnsLeft.isEmpty()) {
-            dice.rollDice();
-            turnsLeft.add(dice.getValue());
+            turnsLeft.add(Dice.rollDice());
 //            turnsLeft.add(3);
-            dice.rollDice();
-            turnsLeft.add(dice.getValue());
+            turnsLeft.add(Dice.rollDice());
 //            turnsLeft.add(3);
             if (turnsLeft.get(0).equals(turnsLeft.get(1))) turnsLeft.addAll(turnsLeft);
             turnFromBaseHappened = false;
@@ -65,14 +49,10 @@ public class Model {
 
 
     /*Поле*/
-    private Field field = new Field();
+    private static final Field field = new Field();
 
     public Field getField() {
         return field;
-    }
-
-    public void setField(Field field) {
-        this.field = field;
     }
 
     /*Ходы и Listener для вызова отрисовки на контроллере*/
@@ -90,7 +70,8 @@ public class Model {
             int turn1 = turnsLeft.get(0);
             int turn2 = turnsLeft.get(1);
             targetColor = field.get(position+turn1).getColor();
-            if (targetColor == color || targetColor == null){
+            if (targetColor == color || targetColor == null )
+                if (!field.willItBlock(color, position+turn1)){
                 result.add((position+turn1)%24);
             }
             targetColor = field.get(position+turn2).getColor();
@@ -132,6 +113,11 @@ public class Model {
         result.forEach(target ->{
             if (field.willItBlock(color, target)) targetsToRemove.add(target);
         });
+        /*Если оба turnsLeft блокируют, то не забываем удалить и суммарный ход*/
+        if (turnsLeft.size() > 1)
+            if(field.willItBlock(color, position + turnsLeft.get(0))
+                    && field.willItBlock(color, position + turnsLeft.get(1)))
+                targetsToRemove.add(position + turnsLeft.get(0) + turnsLeft.get(1));
         result.removeAll(targetsToRemove);
         field.get(position).increaseQuantity(color);
         return result;
@@ -160,14 +146,14 @@ public class Model {
         // Можно сделать только один ход с базы, поэтому поднимаем соответствующий флаг если ход с базы.
         // Первый бросок с головы, в начале игры (партии) предоставляет игрокам исключение из вышеуказанного правила.
         // Если одна шашка, которую только и можно снять с головы, не проходит, то можно снять вторую.
-        if (startPosition == 0 || startPosition == 12) turnFromBaseHappened = true;
+        if ((startPosition == 0 && currentTurn == ChipColor.WHITE) || (startPosition == 12 && currentTurn == ChipColor.BLACK)) turnFromBaseHappened = true;
         if (turnsCounter <= 2 && getPossibleTurns(targetPosition).isEmpty()) {
             if (field.get(0).getColor() == currentTurn && field.get(0).getQuantity() > 13)
                 turnFromBaseHappened = false;
             if (field.get(12).getColor() == currentTurn && field.get(12).getQuantity() > 13)
                 turnFromBaseHappened = false;
         }
-        // Открываем выхода с поля игроку у которого все фишки в последней четверти
+        // Открываем выход с поля игроку у которого все фишки в последней четверти
         openExitsIfPossible();
         listener.turnMade();
     }
@@ -186,10 +172,7 @@ public class Model {
         for (int i = 0; i < 18; i++) {
             if (field.get(i).getColor() == ChipColor.WHITE) noWhitesOutOfHome = false;
         }
-        for (int i = 12; i < 24; i++) {
-            if (field.get(i).getColor() == ChipColor.BLACK) noBlacksOutOfHome = false;
-        }
-        for (int i = 0; i < 6; i++) {
+        for (int i = 12; i < 30; i++) {
             if (field.get(i).getColor() == ChipColor.BLACK) noBlacksOutOfHome = false;
         }
         whiteExitOpened = noWhitesOutOfHome;
@@ -200,5 +183,12 @@ public class Model {
 //  Вспомогательные
     public int howManyChipsInColumn(int column){
         return field.get(column).getQuantity();
+    }
+
+    public void restart() {
+        currentTurn = ChipColor.WHITE;
+        turnsLeft = new ArrayList<>();
+        field.clear();
+        listener.turnMade();
     }
 }

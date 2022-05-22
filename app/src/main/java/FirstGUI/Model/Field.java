@@ -1,10 +1,8 @@
 package FirstGUI.Model;
 
-import java.awt.*;
-
 public class Field {
 
-    private final GroupOfChips[][] field = {{
+    private static final GroupOfChips[][] field = {{
                 new GroupOfChips(15, ChipColor.WHITE),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
@@ -40,7 +38,7 @@ public class Field {
             }
     };
 
-    public GroupOfChips[][] getCurrent() {
+    public GroupOfChips[][] getQuarters() {
         return field;
     }
 
@@ -60,21 +58,29 @@ public class Field {
         GroupOfChips start = field[from/6][from%6];
         GroupOfChips end = field[to/6][to%6];
         end.increaseQuantity(start.getColor());
-        start.decreaseQuantity();
-
         // Когда игрок завел все фишки в последнюю четверть и выводит с поля, просто удаляем фишки
-        if (whiteExitOpened && start.getColor() == ChipColor.WHITE) end.decreaseQuantity();
-        if (blackExitOpened && start.getColor() == ChipColor.BLACK) end.decreaseQuantity();
+        if (whiteExitOpened && start.getColor() == ChipColor.WHITE && to >= 0 & to < 17) end.decreaseQuantity();
+        if (blackExitOpened && start.getColor() == ChipColor.BLACK && to >= 12) end.decreaseQuantity();
+        start.decreaseQuantity();
 
     }
 
+    /*Проверяет нарушит ли какой-то ход запрет преграждения пути шестью шашками*/
     public boolean willItBlock(ChipColor color, int targetPos){
         int similarChipsCounter = 0;
         for (int i = 1; i < 6; i++) {
-            if (get(targetPos-i).getColor()==color) similarChipsCounter += 1; else break;
+            if (get(targetPos-i).getColor()==color) {
+                if(color == ChipColor.WHITE && targetPos-i == 12) break;
+                if(color == ChipColor.BLACK && targetPos-i == 0) break;
+                similarChipsCounter += 1;
+            } else break;
         }
         for (int i = 1; i < 6; i++) {
-            if (get(targetPos+i).getColor()==color) similarChipsCounter += 1; else break;
+            if (get(targetPos+i).getColor()==color){
+                if(color == ChipColor.WHITE && targetPos+i == 12) break;
+                if(color == ChipColor.BLACK && targetPos+i == 0) break;
+                similarChipsCounter += 1;
+            } else break;
         }
         if (similarChipsCounter >= 5) {
             if (color == ChipColor.BLACK){
@@ -106,6 +112,14 @@ public class Field {
         if (whiteWON) return ChipColor.WHITE;
         if (blackWON) return ChipColor.BLACK;
         return null;
+    }
+
+    public void clear(){
+        for (int i = 1; i < 24; i++) {
+            get(0).setColor(null).setQuantity(15);
+        }
+        get(0).setQuantity(15).setColor(ChipColor.WHITE);
+        get(11).setQuantity(15).setColor(ChipColor.BLACK);
     }
 
 }

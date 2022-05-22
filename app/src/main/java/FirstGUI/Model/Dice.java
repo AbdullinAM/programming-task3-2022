@@ -2,14 +2,9 @@ package FirstGUI.Model;
 import java.util.Random;
 
 public class Dice {
-    private int value = 0;
-    private final Random rand = new Random();
+    private static final Random rand = new Random();
 
-    public void rollDice() {
-        value = rand.nextInt(6);
-    }
-
-    public int getValue() {
-        return value + 1;
+    public static int rollDice() {
+        return rand.nextInt(6) + 1;
     }
 }
