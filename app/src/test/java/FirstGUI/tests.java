@@ -19,6 +19,7 @@ class tests {
         /*Init the field*/
         Model model = new Model();
         model.listener = new EmptyModelListener();
+        model.restart();
         Field field = model.getField();
         /*If you made one turn from base, but you can't move this chip further, you can make second turn from the base.*/
         model.setTurnsLeft(new ArrayList<>(Arrays.asList(6,6,6,6)));
@@ -42,6 +43,8 @@ class tests {
     void CantGoThroughClosedExit() {
         /*Init and Clear the field*/
         Model model = new Model();
+        model.listener = new EmptyModelListener();
+        model.restart();
         Field field = model.getField();
         field.set(0, new GroupOfChips(0, null));
         field.set(12, new GroupOfChips(0, null));
@@ -59,9 +62,76 @@ class tests {
         assertFalse(turns.isEmpty());
     }
 
-//    @Test
-//    void () {
-//    }
+
+    @Test
+    void checkBlockRules() {
+        Model model = new Model();
+        model.listener = new EmptyModelListener();
+        model.restart();
+        Field field = model.getField();
+        /* Сначала тривиальные ситуации для обоих цветов */
+        /* Пока черные не сделали ни одного хода, белые не могут поставить блок нигде*/
+        model.makeTurn(0, 1);
+        model.makeTurn(0, 2);
+        model.makeTurn(0, 3);
+        model.makeTurn(0, 4);
+        model.setTurnsLeft(new ArrayList<>(List.of(5)));
+        assertTrue(model.getPossibleTurns(0).isEmpty());
+        model.makeTurn(0, 6);
+        model.makeTurn(1, 7);
+        model.makeTurn(2, 8);
+        model.makeTurn(3, 9);
+        model.makeTurn(4, 10);
+        model.setTurnsLeft(new ArrayList<>(List.of(5)));
+        assertTrue(model.getPossibleTurns(0).isEmpty());
+        model.makeTurn(6, 14);
+        model.makeTurn(7, 15);
+        model.makeTurn(8, 16);
+        model.makeTurn(9, 17);
+        model.makeTurn(10, 18);
+        model.makeTurn(0, 8);
+        model.setTurnsLeft(new ArrayList<>(List.of(5)));
+        assertTrue(model.getPossibleTurns(8).isEmpty());
+        /*Теперь делаем ход чёрными и убеждаемся что можем поставить блок белыми там где черные уже прошли*/
+        model.makeTurn(12, 19);
+        model.setTurnsLeft(new ArrayList<>(List.of(5)));
+        assertFalse(model.getPossibleTurns(8).isEmpty());
+
+        /*Теперь то же самое для чёрных*/
+        field.clear();
+        model.makeTurn(12, 13);
+        model.makeTurn(12, 14);
+        model.makeTurn(12, 15);
+        model.makeTurn(12, 16);
+        model.setTurnsLeft(new ArrayList<>(List.of(5)));
+        assertTrue(model.getPossibleTurns(12).isEmpty());
+        model.makeTurn(12, 18);
+        model.makeTurn(13, 19);
+        model.makeTurn(14, 20);
+        model.makeTurn(15, 21);
+        model.makeTurn(16, 22);
+        model.setTurnsLeft(new ArrayList<>(List.of(5)));
+        assertTrue(model.getPossibleTurns(12).isEmpty());
+        model.makeTurn(18, 2);
+        model.makeTurn(19, 3);
+        model.makeTurn(20, 4);
+        model.makeTurn(21, 5);
+        model.makeTurn(22, 6);
+        model.makeTurn(12, 20);
+        model.setTurnsLeft(new ArrayList<>(List.of(5)));
+        assertTrue(model.getPossibleTurns(20).isEmpty());
+        model.makeTurn(0, 7);
+        model.setTurnsLeft(new ArrayList<>(List.of(5)));
+        assertFalse(model.getPossibleTurns(20).isEmpty());
+
+        /* Теперь моделируем ситуацию когда можно ставить 6 подряд, и это не будет считаться блоком потому что
+         *  будет находиться на стыке начала и конца пути для противоположной команды.
+         *  Например, ставим блок белыми так, чтобы частью он приходился на конец пути черных, а частью на начало. */
+        model.restart();
+
+        field.set(12, new GroupOfChips(1,ChipColor.WHITE));
+        //Надо дописать
+    }
 
 //    @Test
 //    void () {

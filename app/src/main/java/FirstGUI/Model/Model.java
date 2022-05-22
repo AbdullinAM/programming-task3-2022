@@ -65,7 +65,7 @@ public class Model {
         if (turnsLeft.isEmpty()) return result;
         if (turnFromBaseHappened && (position == 0 || position == 12)) return result;
         /*Добавляем ходы исходя из стартовой позиции и имеющихся ходов (TurnsLeft)*/
-        /*Если ходов 2 или больше (дубль)*/
+        /*Если ходов 2 и более */
         if (turnsLeft.size() >= 2) {
             int turn1 = turnsLeft.get(0);
             int turn2 = turnsLeft.get(1);
@@ -78,7 +78,9 @@ public class Model {
             if (targetColor == color || targetColor == null){
                 result.add((position+turn2)%24);
             }
-            if (!result.isEmpty()) {
+            if (result.isEmpty())
+                return result;
+            else {
                 targetColor = field.get(position + turn1 + turn2).getColor();
                 if (targetColor == color || targetColor == null) {
                     result.add((position + turn1 + turn2)%24);
@@ -117,7 +119,7 @@ public class Model {
         if (turnsLeft.size() > 1)
             if(field.willItBlock(color, position + turnsLeft.get(0))
                     && field.willItBlock(color, position + turnsLeft.get(1)))
-                targetsToRemove.add(position + turnsLeft.get(0) + turnsLeft.get(1));
+                targetsToRemove.add((position + turnsLeft.get(0) + turnsLeft.get(1))%24);
         result.removeAll(targetsToRemove);
         field.get(position).increaseQuantity(color);
         return result;
@@ -138,11 +140,11 @@ public class Model {
                 turnsLeft.remove(0);
             } else if (delta == turnsLeft.get(1)){
                 turnsLeft.remove(1);
-            } else return;
+            }
         } else if (turnsLeft.size() == 1) {
             turnsLeft.remove(0);
             currentTurn = currentTurn==ChipColor.WHITE?ChipColor.BLACK:ChipColor.WHITE;
-        } else return;
+        }
         // Можно сделать только один ход с базы, поэтому поднимаем соответствующий флаг если ход с базы.
         // Первый бросок с головы, в начале игры (партии) предоставляет игрокам исключение из вышеуказанного правила.
         // Если одна шашка, которую только и можно снять с головы, не проходит, то можно снять вторую.
@@ -188,6 +190,7 @@ public class Model {
     public void restart() {
         currentTurn = ChipColor.WHITE;
         turnsLeft = new ArrayList<>();
+        turnsCounter = 0;
         field.clear();
         listener.turnMade();
     }

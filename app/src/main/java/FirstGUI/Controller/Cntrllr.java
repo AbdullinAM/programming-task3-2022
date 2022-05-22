@@ -28,7 +28,7 @@ public class Cntrllr implements ModelListener {
     }
 
 //  Поля и методы для основного окна
-    private final Model model = new Model();
+    private static final Model model = new Model();
 
     public Scoreboard scrboard;
 
@@ -158,8 +158,9 @@ public class Cntrllr implements ModelListener {
     }
 
     private void winnerAlert(ChipColor winner){
+        scrboard.winnerIs(winner);
         String winnerName = scrboard.getName(winner);
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Ещё раунд?");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Счёт:\n"+scrboard.getScore()+"\nЕщё раунд?");
         alert.setHeaderText("Поздравляем, "  + winnerName + ", вы выиграли раунд!");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
@@ -167,10 +168,12 @@ public class Cntrllr implements ModelListener {
             alert = new Alert(Alert.AlertType.INFORMATION,
                     "За белых теперь играет " + scrboard.getName(ChipColor.WHITE)
             );
+            alert.setHeaderText(null);
+            alert.show();
             model.restart();
         } else {
             alert.hide();
-            alert.getDialogPane().getParent().getScene().getWindow().hide();
+            diceLabel1.getScene().getWindow().hide();
         }
     }
 }

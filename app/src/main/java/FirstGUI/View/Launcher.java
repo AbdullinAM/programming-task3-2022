@@ -37,9 +37,11 @@ public class Launcher extends javafx.application.Application {
           //Алерт говорящий кто ходит первым
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         if (Dice.rollDice()>3)
-            alert.setContentText("Первым ходит "+controllerOfStartDialog.getName(ChipColor.WHITE));
-        else
-            alert.setContentText("Первым ходит "+controllerOfStartDialog.getName(ChipColor.BLACK));
+            alert.setContentText("Первый играет белыми "+ controllerOfStartDialog.getName(ChipColor.WHITE));
+        else {
+            controllerOfStartDialog.changeColors();
+            alert.setContentText("Первый играет белыми " + controllerOfStartDialog.getName(ChipColor.WHITE));
+        }
         alert.setHeaderText(null);
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         alertStage.setAlwaysOnTop(true);

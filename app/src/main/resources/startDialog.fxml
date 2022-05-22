@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <DialogPane prefHeight="142.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FirstGUI.Controller.CntrllrOfStartDialog">
    <content>
       <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="370.0" style="-fx-background-color: 323232;">
@@ -18,15 +17,15 @@
                <children>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="182.0" style="-fx-background-color: ffffff;">
                      <children>
-                        <Label layoutX="29.0" layoutY="14.0" text="Имя игрока за белых" />
-                        <TextField fx:id="whitePlayer" layoutX="13.0" layoutY="32.0" />
+                        <Label layoutX="56.0" layoutY="14.0" text="Игрок №1" />
+                        <TextField fx:id="playerInput1" layoutX="13.0" layoutY="32.0" />
                      </children>
                   </AnchorPane>
                   <Separator orientation="VERTICAL" prefHeight="100.0" prefWidth="0.0" />
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="185.0" style="-fx-background-color: ffffff;">
                      <children>
-                        <Label layoutX="29.0" layoutY="14.0" text="Имя игрока за чёрных" />
-                        <TextField fx:id="blackPlayer" layoutX="17.0" layoutY="32.0" />
+                        <Label layoutX="58.0" layoutY="14.0" text="Игрок №2" />
+                        <TextField fx:id="playerInput2" layoutX="17.0" layoutY="32.0" />
                      </children>
                   </AnchorPane>
                </children>

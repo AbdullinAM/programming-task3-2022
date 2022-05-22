@@ -16,15 +16,15 @@ public class CntrllrOfStartDialog implements Scoreboard{
     private int blackScore = 0;
 
     @FXML
-    private TextField whitePlayer;
+    private TextField playerInput1;
 
     @FXML
-    private TextField blackPlayer;
+    private TextField playerInput2;
 
     @FXML
     private void startButtonClicked(){
-        whitePlayer.getScene().getWindow().hide();
-        setPLayersNamesIfGivenNotEmpty( whitePlayer.getText(), blackPlayer.getText());
+        playerInput1.getScene().getWindow().hide();
+        setPLayersNamesIfGivenNotEmpty( playerInput1.getText(), playerInput2.getText());
     }
 
     public void setPLayersNamesIfGivenNotEmpty(String nameOfWhite, String nameOfBlack){
@@ -56,5 +56,10 @@ public class CntrllrOfStartDialog implements Scoreboard{
         blackPlayerName = name;
         whiteScore = blackScore;
         blackScore = score;
+    }
+
+    @Override
+    public String getScore() {
+        return whitePlayerName+" - "+whiteScore+":"+blackScore+" - "+blackPlayerName;
     }
 }

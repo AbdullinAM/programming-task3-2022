@@ -2,7 +2,7 @@ package FirstGUI.Model;
 
 public class Field {
 
-    private static final GroupOfChips[][] field = {{
+    private final GroupOfChips[][] field = {{
                 new GroupOfChips(15, ChipColor.WHITE),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
@@ -71,14 +71,14 @@ public class Field {
         for (int i = 1; i < 6; i++) {
             if (get(targetPos-i).getColor()==color) {
                 if(color == ChipColor.WHITE && targetPos-i == 12) break;
-                if(color == ChipColor.BLACK && targetPos-i == 0) break;
+                if(color == ChipColor.BLACK && (targetPos-i)%24 == 0) break;
                 similarChipsCounter += 1;
             } else break;
         }
         for (int i = 1; i < 6; i++) {
             if (get(targetPos+i).getColor()==color){
                 if(color == ChipColor.WHITE && targetPos+i == 12) break;
-                if(color == ChipColor.BLACK && targetPos+i == 0) break;
+                if(color == ChipColor.BLACK && (targetPos+i)%24 == 0) break;
                 similarChipsCounter += 1;
             } else break;
         }
@@ -116,10 +116,10 @@ public class Field {
 
     public void clear(){
         for (int i = 1; i < 24; i++) {
-            get(0).setColor(null).setQuantity(15);
+            get(i).setColor(null).setQuantity(0);
         }
         get(0).setQuantity(15).setColor(ChipColor.WHITE);
-        get(11).setQuantity(15).setColor(ChipColor.BLACK);
+        get(12).setQuantity(15).setColor(ChipColor.BLACK);
     }
 
 }
