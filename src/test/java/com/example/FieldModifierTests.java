@@ -1,5 +1,9 @@
-package com.example.russianCheckers.logic;
+package com.example;
 
+import com.example.russianCheckers.logic.Checker;
+import com.example.russianCheckers.logic.CheckerStatus;
+import com.example.russianCheckers.logic.Field;
+import com.example.russianCheckers.logic.FieldModifier;
 import com.example.russianCheckers.ui.Settings;
 import org.junit.jupiter.api.Test;
 
