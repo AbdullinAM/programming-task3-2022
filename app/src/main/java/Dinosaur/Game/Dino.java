@@ -40,8 +40,8 @@ public class Dino {
 
         imageView = new ImageView(image);
         root.getChildren().add(imageView);
-        imageView.setFitHeight(this.height);
-        imageView.setFitWidth(this.width);//? почему this
+        imageView.setFitHeight(height);//this
+        imageView.setFitWidth(width);//this
     }
 
     public Dino(){

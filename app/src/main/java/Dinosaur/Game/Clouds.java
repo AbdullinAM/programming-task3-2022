@@ -22,7 +22,7 @@ public class Clouds {
         this.height = height;
         Image image;
 
-        FileInputStream fileInputStream = new FileInputStream("/Users/vladalodocnikova/IdeaProjects/programming-task3-2022/app/src/main/resources/Image/clouds.png");
+        FileInputStream fileInputStream = new FileInputStream("/Users/vladalodocnikova/IdeaProjects/programming-task3-2022/app/src/main/resources/Image/cloud.png");
         image= new Image(fileInputStream);
         imageView = new ImageView(image);
         root.getChildren().add(imageView);

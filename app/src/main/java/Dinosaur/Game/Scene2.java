@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -19,11 +18,11 @@ import java.util.ArrayList;
 
 public class Scene2 extends Application {
     private Stage stage;
-    Scene scene;
+    private Scene scene;
     private Group root = new Group();
     private Dino dino;
     private double random;
-    private int n = 100;
+    private int n = 10;
     private Cactus cactus;
     //private int m = 100;
     private int res ;
@@ -37,6 +36,7 @@ public class Scene2 extends Application {
     private Label endLabel = new Label();
     private int level = 2;
     private Label levelLabel = new Label("Lavel: " + (level-1));
+    private Label gameOver = new Label();
 
 
     public Scene2() throws FileNotFoundException {
@@ -45,10 +45,14 @@ public class Scene2 extends Application {
 
     public void start (Stage primaryStage) throws FileNotFoundException {
         this.stage = primaryStage;
+        stage.setMinHeight(625);
+        stage.setMinWidth(600);
+        stage.setMaxHeight(625);
+        stage.setMaxWidth(600);
 
-        //setBackGround();
-        game();
-
+        gameOver();
+        setBackGround();
+        createContent();
 
         scene = new Scene(root, 600, 600, Color.WHITE);
         primaryStage.setTitle("Dino");
@@ -62,13 +66,6 @@ public class Scene2 extends Application {
             }
         });
 
-//        primaryStage.setMinWidth(600); //ограничение окна
-//        primaryStage.setMinHeight(600);
-//        primaryStage.setWidth(600);
-//        primaryStage.setHeight(600);
-//        primaryStage.setMaxWidth(600);
-//        primaryStage.setMaxHeight(600);
-
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -79,7 +76,6 @@ public class Scene2 extends Application {
             }
         };
         timer.start();
-
     }
 
     public void setBackGround() throws FileNotFoundException { //задний фон
@@ -92,7 +88,7 @@ public class Scene2 extends Application {
         root.getChildren().add(imageView);
     }
 
-    public void game() throws FileNotFoundException {
+    public void createContent() throws FileNotFoundException {
         dino = new Dino (root, 70, 70);
         dino.setPosX(50);
         dino.setPosY(530);
@@ -106,7 +102,7 @@ public class Scene2 extends Application {
 
         root.getChildren().addAll(scoreLabel, healthLabel,levelLabel);
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) { //добавление облаков и кактусов
             cactus = new Cactus(root, 70,70);
             random = Math.random();
             res = 50 + (int) (random * ((600 - 50) + 1)); // от 50 до 600
@@ -118,15 +114,15 @@ public class Scene2 extends Application {
             cactus.setPosY(600 - cactus.getHeight());
             cactuses.add(cactus);
 
-            cloud = new Clouds(root, 100, 200);
+            cloud = new Clouds(root, 70, 50);
             random = Math.random();
-            res = 50 + (int) (random * ((300 - 50) + 1));
+            res = 50 + (int) (random * ((300 - 50) + 1)); //от 50 до 300
             if (i != 0) {
                 cloud.setPosX(clouds.get(i - 1).getPosX() + 100 + res);
             } else {
                 cloud.setPosX(150);
             }
-            res = 20 + (int) (random * ((150 - 20) + 1));
+            res = 20 + (int) (random * ((150 - 20) + 1));//от 20 до 150
             cloud.setPosY(150 + res);
             clouds.add(cloud);
         }
@@ -135,25 +131,42 @@ public class Scene2 extends Application {
     public void upDate(){
         flag = false;
         if (dino.getPosY() < 530) {//гравитация
-            dino.setPosY(dino.getPosY() + 1);
+            if (level > 2) {
+                dino.setPosY(dino.getPosY() + 2);
+            } else {
+                dino.setPosY(dino.getPosY() + 1);
+            }
         }
 
         scoreLabel.setText("Score : " + score);
         healthLabel.setText("Health : "+ dino.getHealth());
-        levelLabel.setText("Level : " + (level -1));
-
+        levelLabel.setText("Level : " + (level-1));
 
         for (int i = 0; i < n; i++ ){
-            cactuses.get(i).setPosX(cactuses.get(i).getPosX() - level);
+            cactuses.get(i).setPosX(cactuses.get(i).getPosX() - level);//увеличение скорости у кактусов
             clouds.get(i).setPosX(clouds.get(i).getPosX()-1);
 
             if (cactuses.get(i).getPosX() == dino.getPosX()) {
                 score += 1;
-                if (score % 5 == 0) { //каждые 15 очков - увеличивается скорость
+                if (score % 2 == 0) { //каждые 15 очков - увеличивается скорость
                     level += 1;
                 }
             }
-
         }
+    }
+
+    public void gameOver() throws FileNotFoundException { //конец игры
+        gameOver.setVisible(false);//невидимая
+        root.getChildren().add(gameOver);
+        FileInputStream fileInputStream = new FileInputStream("/Users/vladalodocnikova/IdeaProjects/Runner/src/main/resources/image/gameOver.png");
+        Image image = new Image(fileInputStream);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(200);
+        imageView.setFitWidth(200);
+        gameOver.setTranslateY(200);
+        gameOver.setTranslateX(200);
+        gameOver.setGraphic(imageView);
+        gameOver.toFront();
+        //root.getChildren().add(gameOver);
     }
 }

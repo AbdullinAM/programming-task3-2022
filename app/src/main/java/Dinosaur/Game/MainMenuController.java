@@ -25,16 +25,14 @@ public class MainMenuController {
 
     @FXML
     void initialize() {
-        button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                button.getScene().getWindow().hide();
-                Stage stage = new Stage();
-                try {
-                    scene2.start(stage);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+
+        button.setOnAction(event -> {
+            button.getScene().getWindow().hide();
+            Stage stage = new Stage();
+            try {
+                scene2.start(stage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
         });
     }
