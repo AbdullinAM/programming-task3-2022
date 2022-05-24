@@ -5,51 +5,35 @@
 
 package Dinosaur.Game;
 
-
 import javafx.application.Application;
-import javafx.geometry.Pos;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class App extends Application {
+
+    public App() throws FileNotFoundException {//пустой конструктор, который нужен для того, если мы ничего не передадим
+    }
+
     @Override
-    public void start (Stage primaryStage) throws Exception {
-        BorderPane root = new BorderPane();//макет
-        VBox vbox = new VBox(10);
-        HBox hbox = new HBox(10);//10 - отступы между элементами, 10 пикселей
-        hbox.setAlignment(Pos.CENTER);//выравнивание по центру
+    public void start (Stage primaryStage) throws IOException {//ошибка может быть на 24 строчке
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/Scene1.fxml"));//для создания интерфейса, получить определение интерфейса из файла
+        Scene scene = new Scene(fxmlLoader.load());//Метод FXMLLoader.load() возвращает объект типа Parent, который мы можем передать в конструктор объекта Scene, и таким образом, наше приложение получит интерфейс из fxml.
+        primaryStage.setTitle("Dino Game");
 
-        Button btn1 = addButton("1");
-        Button btn2 = addButton("2");
-        Button btn3 = addButton("3");
-        Button btn4 = addButton("4");
-        Button btn5 = addButton("5");
-        Button btn6 = addButton("6");
+        primaryStage.setMinWidth(600);
+        primaryStage.setMinHeight(600);
+        primaryStage.setWidth(600);
+        primaryStage.setHeight(600);
+        primaryStage.setMaxWidth(600);
+        primaryStage.setMaxHeight(600);
 
-        vbox.getChildren().addAll(btn1, btn2, btn3);//добавили кнопки
-        hbox.getChildren().addAll(btn4, btn5, btn6);
-
-        root.setTop(hbox); // установили панели на макет
-        root.setLeft(vbox);
-
-        Scene scene = new Scene(root,300,250);//создаем сцену
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
-    private Button addButton (String name) { //метод для создания кнопок, входной параметр - строка, которая будет на кнопки
-        Button btn = new Button(name);
-        btn.setPrefSize(70,20);
-        return btn;
-    }
-
-
     public static void main(String[] args) {//запускаем наше приложение
         launch(args);
     }
-
 }
