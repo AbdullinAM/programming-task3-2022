@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,7 +34,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyGameTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
@@ -49,7 +49,6 @@ class Game : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyGameTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
@@ -94,6 +93,7 @@ fun PreviewScreen() {
     }
 }
 
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Board() {
@@ -102,8 +102,10 @@ fun Board() {
         var cell by remember { mutableStateOf(grid[0].getValue().toString())}
         var direction by remember { mutableStateOf(-1) }
         var color by remember { mutableStateOf(Color(0xFFFFFFFF)) }
+        var gameLost by remember { mutableStateOf(false) }
+        var gameWon by remember { mutableStateOf(false) }
         Box(
-            Modifier/*.offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }*/
+            Modifier
                 .fillMaxSize()
                 .background(Color.White)
                 .pointerInput(Unit) {
@@ -140,20 +142,21 @@ fun Board() {
                         onDragEnd = {
                             when (direction) {
                                 0 -> {
-                                    //right swipe code here
                                     grid = Grid().moveGrid(Direction.RIGHT, grid)
+                                    if (grid.isEmpty()) gameLost = true
+                                    if (grid.any { it.getValue() == 2048 }) gameWon = true
                                 }
                                 1 -> {
                                     grid = Grid().moveGrid(Direction.LEFT, grid)
-                                    // left swipe code here
+                                    if (grid.isEmpty()) gameLost = true
                                 }
                                 2 -> {
                                     grid = Grid().moveGrid(Direction.DOWN, grid)
-                                    // down swipe code here
+                                    if (grid.isEmpty()) gameLost = true
                                 }
                                 3 -> {
                                     grid = Grid().moveGrid(Direction.UP, grid)
-                                    // up swipe code here
+                                    if (grid.isEmpty()) gameLost = true
                                 }
                             }
                         }
@@ -206,7 +209,38 @@ fun Board() {
                         }
                     } )
             }
-
+            Box(Modifier.fillMaxSize()) {
+                if (gameLost)
+                Column() {
+                    Text(text = "YOU HAVE LOST",
+                        fontSize = 50.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                    Button(onClick = {
+                        //java.lang.NullPointerException:
+                        // Attempt to invoke virtual method 'android.os.Looper android.app.ActivityThread.getLooper()' on a null object reference
+                        MainActivity().recreate()
+                    }) {
+                        Text("TRY AGAIN")
+                    }
+                }
+                if (gameWon)
+                    Column() {
+                        Text(text = "YOU HAVE WON!",
+                            fontSize = 50.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                        Button(onClick = {
+                            //java.lang.NullPointerException:
+                            // Attempt to invoke virtual method 'android.os.Looper android.app.ActivityThread.getLooper()' on a null object reference
+                            MainActivity().recreate()
+                        }) {
+                            Text("TRY AGAIN")
+                        }
+                    }
+            }
         }
 
     }

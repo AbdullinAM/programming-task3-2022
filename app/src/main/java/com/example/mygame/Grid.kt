@@ -1,5 +1,6 @@
 package com.example.mygame
 
+import java.util.NoSuchElementException
 import kotlin.ranges.random
 
 enum class Direction {
@@ -84,20 +85,25 @@ class Grid {
         return result
     }
 
+
     fun addValue(grid: List<Cell>): List<Cell> {
-        val result = grid.toMutableList()
+        var result = grid.toMutableList()
         val emptyCells = result.filter { it.getValue() == 0 }
         //java.util.NoSuchElementException: Cannot get random in empty range: 0..-1
-        val position = (emptyCells.indices).random()
-        val value =
-            if ((0..9).random() > 0) 2
-            else 4
-        result.find { it == emptyCells[position]}?.setValue(value)
-        return result
+        try {
+            val position = (emptyCells.indices).random()
+            val value =
+                if ((0..9).random() > 0) 2
+                else 4
+            result.find { it == emptyCells[position]}?.setValue(value)
+        } catch (e: NoSuchElementException) {
+            result = mutableListOf()
+        }
+        return result.toList()
     }
 
 
-//// put foEach code in function  cellValue == 0 continue, index + - 4 + - 1 realisation
+
     fun moveGrid(direction: Direction, grid: List<Cell>): List<Cell> {
         var gridResult =  listOf<Cell>()
         val gridMain = grid.toMutableList()
