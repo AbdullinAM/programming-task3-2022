@@ -151,14 +151,17 @@ fun Board() {
                                     1 -> {
                                         grid = Grid().moveGrid(Direction.LEFT, grid)
                                         if (grid.isEmpty()) gameLost = true
+                                        if (grid.any { it.getValue() == 2048 }) gameWon = true
                                     }
                                     2 -> {
                                         grid = Grid().moveGrid(Direction.DOWN, grid)
                                         if (grid.isEmpty()) gameLost = true
+                                        if (grid.any { it.getValue() == 2048 }) gameWon = true
                                     }
                                     3 -> {
                                         grid = Grid().moveGrid(Direction.UP, grid)
                                         if (grid.isEmpty()) gameLost = true
+                                        if (grid.any { it.getValue() == 2048 }) gameWon = true
                                     }
                                 }
                             }
@@ -312,5 +315,5 @@ fun Board() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-//        SwipeTest()
+    Board()
 }
