@@ -34,10 +34,11 @@ public class GroupOfChips {
     public void decreaseQuantity(){
         quantity -= 1;
         if (quantity==0){
-            setColor(null);
+            color = null;
         }}
 
     public void increaseQuantity(ChipColor color) {
+        if(this.color == color.opposite() || color == null) throw new IllegalArgumentException();
         if (quantity==0){
             this.color = color;
         }

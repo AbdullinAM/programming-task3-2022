@@ -11,7 +11,7 @@
 
 <DialogPane prefHeight="142.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FirstGUI.Controller.CntrllrOfStartDialog">
    <content>
-      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="370.0" style="-fx-background-color: 323232;">
+      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="370.0">
          <children>
             <HBox prefHeight="152.0" prefWidth="354.0">
                <children>

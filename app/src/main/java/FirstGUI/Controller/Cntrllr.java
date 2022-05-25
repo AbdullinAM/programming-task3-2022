@@ -23,14 +23,18 @@ public class Cntrllr implements ModelListener {
 
     public Cntrllr() {
         model.listener = this;
-        chipsImages.put(ChipColor.WHITE, new ImagePattern(new Image("white3.png")));
-        chipsImages.put(ChipColor.BLACK, new ImagePattern(new Image("black1.png")));
+        chipImagesMap.put(ChipColor.WHITE, new ImagePattern(new Image("white3.png")));
+        chipImagesMap.put(ChipColor.BLACK, new ImagePattern(new Image("black1.png")));
     }
 
 //  Поля и методы для основного окна
-    private static final Model model = new Model();
+    private final Model model = new Model();
 
     public Scoreboard scrboard;
+
+    /*Я пытался сделать картинки полями перечисления ChipColors, но тогда невозможно тестировать,
+     насколько я понял ImagePattern не хочет инциализироваться вне javafx thread*/
+    private final Map<ChipColor, ImagePattern> chipImagesMap = new HashMap<>();
 
     @FXML
     private GridPane quarter1;
@@ -46,8 +50,7 @@ public class Cntrllr implements ModelListener {
 
     public GridPane[] quartersOfField() {
         return new GridPane[] {quarter1,quarter2,quarter3,quarter4};
-    }//Почему-то если подобный массив занести в поле, то quarter1,quarter2... указывают на null.
-    // Поэтому сделана функция возвращающая новый массив.
+    }
 
     @FXML
     private Label diceLabel1;
@@ -86,14 +89,14 @@ public class Cntrllr implements ModelListener {
         /* for column of field */
         for (int i = 0; i < 24; i++) {
             GroupOfChips chipsInColumn = field.get(i);
-            List<Integer> probableTurns = model.getPossibleTurns(i);
             int numberOfChips = chipsInColumn.getQuantity();
             if (numberOfChips > 0) {
+                List<Integer> probableTurns = model.getPossibleTurns(i);
                 ChipColor colorOfChips = chipsInColumn.getColor();
                 /* for chip in column */
                 for (int k = 0; k < numberOfChips; k++) {
                     /*Рисуем круги фишек*/
-                    quartersOfField()[i/6].add(new Circle(13, chipsImages.get(colorOfChips)), i%6, 14 - k);
+                    quartersOfField()[i/6].add(new Circle(13, chipImagesMap.get(colorOfChips)), i%6, 14 - k);
                 }
                 /*Рисуем зелёные круги для кнопок предложения хода если ещё не выбрана никакая колонка фишек.
                  *По нажатию упомянутой кнопки индекс её колонки будет запомнен в поле selectedColumn. */
@@ -111,6 +114,7 @@ public class Cntrllr implements ModelListener {
             }
 
         }
+
         /*Winning conditions*/
         if (field.winnerIs() != null) winnerAlert(field.winnerIs());
         /*Если какая-то колонка выбрана для хода, то рисуем зелёные круги в местах куда можно cходить.*/
@@ -143,9 +147,7 @@ public class Cntrllr implements ModelListener {
     }
 
 
-    /*Я пытался сделать картинки полями перечисления ChipColors, но тогда невозможно тестировать,
-     так как ImagePattern не хочет инциализироваться вне javafx thread*/
-    private final Map<ChipColor, ImagePattern> chipsImages = new HashMap<>();
+
 
     public void passTurnAlert (){
         Alert alert = new Alert(Alert.AlertType.INFORMATION,

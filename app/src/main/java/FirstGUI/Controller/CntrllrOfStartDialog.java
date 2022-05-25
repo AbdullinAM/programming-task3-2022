@@ -7,10 +7,6 @@ import javafx.scene.control.TextField;
 
 public class CntrllrOfStartDialog implements Scoreboard{
 
-    private String whitePlayerName = "Игрок 1";
-
-    private String blackPlayerName = "Игрок 2";
-
     private int whiteScore = 0;
 
     private int blackScore = 0;
@@ -20,6 +16,10 @@ public class CntrllrOfStartDialog implements Scoreboard{
 
     @FXML
     private TextField playerInput2;
+
+    private String whitePlayerName = "Игрок 1";
+
+    private String blackPlayerName = "Игрок 2";
 
     @FXML
     private void startButtonClicked(){
@@ -42,20 +42,18 @@ public class CntrllrOfStartDialog implements Scoreboard{
 
     @Override
     public void winnerIs(ChipColor winner) {
-        if(winner == ChipColor.WHITE)
-            whiteScore += 1;
-        else
-            blackScore += 1;
+        whiteScore = winner == ChipColor.WHITE? whiteScore + 1 : 0;
+        blackScore = winner == ChipColor.BLACK? blackScore + 1 : 0;
     }
 
     @Override
     public void changeColors() {
         String name = whitePlayerName;
-        int score = whiteScore;
         whitePlayerName = blackPlayerName;
         blackPlayerName = name;
-        whiteScore = blackScore;
-        blackScore = score;
+        whiteScore = whiteScore + blackScore;
+        blackScore = whiteScore - blackScore;
+        whiteScore = whiteScore - blackScore;
     }
 
     @Override

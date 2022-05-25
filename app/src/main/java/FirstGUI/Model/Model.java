@@ -1,7 +1,5 @@
 package FirstGUI.Model;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +47,7 @@ public class Model {
 
 
     /*Поле*/
-    private static final Field field = new Field();
+    private final Field field = new Field();
 
     public Field getField() {
         return field;
@@ -57,21 +55,19 @@ public class Model {
 
     /*Ходы и Listener для вызова отрисовки на контроллере*/
 
-    @NotNull
     public List<Integer> getPossibleTurns (int position) {
-        ChipColor targetColor;
         List<Integer> result = new ArrayList<>();
         ChipColor color = field.get(position).getColor();
-        if (turnsLeft.isEmpty()) return result;
+        if (turnsLeft.isEmpty() || color == null) return result;
         if (turnFromBaseHappened && (position == 0 || position == 12)) return result;
+        ChipColor targetColor;
         /*Добавляем ходы исходя из стартовой позиции и имеющихся ходов (TurnsLeft)*/
         /*Если ходов 2 и более */
         if (turnsLeft.size() >= 2) {
             int turn1 = turnsLeft.get(0);
             int turn2 = turnsLeft.get(1);
             targetColor = field.get(position+turn1).getColor();
-            if (targetColor == color || targetColor == null )
-                if (!field.willItBlock(color, position+turn1)){
+            if (targetColor == color || targetColor == null ) {
                 result.add((position+turn1)%24);
             }
             targetColor = field.get(position+turn2).getColor();
@@ -92,36 +88,31 @@ public class Model {
             if (targetColor == color || targetColor == null)
                 result.add((position + turnsLeft.get(0))%24);
         }
+
+        List<Integer> targetsToRemove = new ArrayList<>();
         /*Правило захода в дом. Выходить с поля фишки могут только тогда
         когда все фишки одного цвета добрались до последней четверти своего пути*/
         if (color == ChipColor.WHITE && position > 11 && !whiteExitOpened) {
-            List<Integer> targetsToRemove = new ArrayList<>();
             result.forEach(target -> {
                 if (target >=0 && target <= 11) targetsToRemove.add(target);
             });
-            result.removeAll(targetsToRemove);
         }
         if (color == ChipColor.BLACK && position > 0 && position < 12 && !blackExitOpened) {
-            List<Integer> targetsToRemove = new ArrayList<>();
             result.forEach(target -> {
                 if (target >= 12) targetsToRemove.add(target);
             });
-            result.removeAll(targetsToRemove);
         }
         /*Удаляем ходы которые противоречат правилу блокирования
         (нельзя ставить 6 подряд если впереди нет фишки противника)*/
-        List<Integer> targetsToRemove = new ArrayList<>();
-        field.get(position).decreaseQuantity();
         result.forEach(target ->{
-            if (field.willItBlock(color, target)) targetsToRemove.add(target);
+            if (field.willItBlock(position, target)) targetsToRemove.add(target);
         });
         /*Если оба turnsLeft блокируют, то не забываем удалить и суммарный ход*/
         if (turnsLeft.size() > 1)
-            if(field.willItBlock(color, position + turnsLeft.get(0))
-                    && field.willItBlock(color, position + turnsLeft.get(1)))
+            if(field.willItBlock(position, position + turnsLeft.get(0))
+                    && field.willItBlock(position, position + turnsLeft.get(1)))
                 targetsToRemove.add((position + turnsLeft.get(0) + turnsLeft.get(1))%24);
         result.removeAll(targetsToRemove);
-        field.get(position).increaseQuantity(color);
         return result;
     }
 
