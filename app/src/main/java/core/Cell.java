@@ -52,21 +52,31 @@ public class Cell {
         return ClickResult.Default;
     }
 
-    public int getX() { return x; }
+    public int getX() {
+        return x;
+    }
 
-    public int getY() { return  y; }
+    public int getY() {
+        return  y;
+    }
 
     public State getState() {
         return this.state;
     }
 
-    public void setState(State state) { this.state = state; }
+    public void setState(State state) {
+        this.state = state;
+    }
 
-    public boolean isHidden() { return this.isHidden; }
+    public boolean isHidden() {
+        return this.isHidden;
+    }
 
     public boolean isMark() {
         return this.isMark;
     }
 
-    public void openCell() { this.isHidden = false; }
+    public void openCell() {
+        this.isHidden = false;
+    }
 }
