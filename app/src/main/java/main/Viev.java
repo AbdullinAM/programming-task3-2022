@@ -240,31 +240,38 @@ public class Viev {
         alertWin.setTitle("End Game");
         alertWin.setHeaderText("WIN!!!"+ System.lineSeparator() + "You can RESTART the game(press \"R\") or EXIT(press \"Esc\")");
         alertWin.setContentText("Your strategic skills are amazing, congratulations, you won");
+
         double r = setRadius(col, row);
         int shiftX = 2 * (int) r;
         int shiftY = 2 * (int) r;
         double n = Math.sqrt(r * r * 0.75);
         double TILE_HEIGHT = 2 * r;
         double TILE_WIDTH = 2 * n;
+
         AtomicReference<Field> field = new AtomicReference<>(new Field(col, row, amountMines));
         VBox root = new VBox();
         tileMap = new AnchorPane();
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         primaryStage.setScene(scene);
-        HBox menu = new HBox();
-        menu.setSpacing(30);
+
+
         Button restart = new Button("Restart");
         Button confirm = new Button("Confirm");
         Button close = new Button("Exit");
         Button help = new Button("Help");
+
         Text settings = new Text("Field size: "  + col + "x" + row + "; Mines: " + amountMines + System.lineSeparator() + "Press Q to Confirm; R to Restart; H for Help");
         settings.setFill(Color.BROWN);
         settings.setStyle("-fx-font: 22 arial;");
+
+        HBox menu = new HBox();
+        menu.setSpacing(30);
         menu.getChildren().add(confirm);
         menu.getChildren().add(restart);
         menu.getChildren().add(help);
         menu.getChildren().add(close);
         menu.getChildren().add(settings);
+
         root.getChildren().addAll(menu, tileMap);
         scene.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.R)) {
