@@ -9,6 +9,13 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'java'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+}
+
+javafx {
+    version = '17.0.2'
+    modules = ['javafx.controls', 'javafx.fxml']
 }
 
 repositories {
@@ -22,11 +29,12 @@ dependencies {
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:30.1.1-jre'
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 }
 
 application {
     // Define the main class for the application.
-    mainClass = 'programming.task3.App'
+    mainClass = 'main.MineSweeper'
 }
 
 tasks.named('test') {
