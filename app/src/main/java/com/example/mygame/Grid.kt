@@ -103,74 +103,41 @@ class Grid {
     }
 
 
-
     fun moveGrid(direction: Direction, grid: List<Cell>): List<Cell> {
-        var gridResult =  listOf<Cell>()
-        val gridMain = grid.toMutableList()
-        val gridReversed = grid.reversed().toMutableList()
-        if (direction == Direction.DOWN || direction == Direction.RIGHT) {
-            gridMain.forEach {
-                var cell = it
-                var cellValue = it.getValue()
-                if (cellValue == 0) return@forEach
-                var neighbour = it.getNeighbour(direction)
-                var neighbourValue = it.getNeighbourValue(direction, grid)
-                var sum = neighbourValue?.plus(cellValue!!)
-                while (neighbourValue != null) {
-                    when (neighbourValue) {
-                        cellValue -> {
-                            gridMain.find { it == neighbour }?.setValue(sum)
-                            gridMain.find { it == cell }?.setValue(0)
-                            break
-                        }
-                        0 -> {
-                            gridMain.find { it == neighbour }?.setValue(cellValue)
-                            gridMain.find { it == cell }?.setValue(0)
-                            cell = neighbour
-                            cellValue = neighbourValue
-                            neighbour = neighbour.getNeighbour(direction) //"neighbour" replace with "cell"
-                            neighbourValue = it.getNeighbourValue(direction, grid)
-                            sum = neighbourValue?.plus(cellValue)
-                        }
-                        else -> break
+        var gridResult =  grid.toMutableList()
+        if (direction == Direction.UP || direction == Direction.LEFT)
+            gridResult = gridResult.reversed().toMutableList()
+        gridResult.forEach {
+            var cell = it
+            var cellValue = it.getValue()
+            if (cellValue == 0) return@forEach
+            var neighbour = it.getNeighbour(direction)
+            var neighbourValue = it.getNeighbourValue(direction, grid)
+            var sum = neighbourValue?.plus(cellValue!!)
+            while (neighbourValue != null) {
+                when (neighbourValue) {
+                    cellValue -> {
+                        gridResult.find { it == neighbour }?.setValue(sum)
+                        gridResult.find { it == cell }?.setValue(0)
+                        break
+                    }
+                    0 -> {
+                        gridResult.find { it == neighbour }?.setValue(cellValue)
+                        gridResult.find { it == cell }?.setValue(0)
+                        cell = neighbour
+                        cellValue = neighbourValue
+                        neighbour = neighbour.getNeighbour(direction) //"neighbour" replace with "cell"
+                        neighbourValue = it.getNeighbourValue(direction, grid)
+                        sum = neighbourValue?.plus(cellValue)
+                    }
+                    else -> break
 
-                    }
                 }
             }
-            gridResult = gridMain
         }
-        else {
-            gridReversed.forEach {
-                var cell = it
-                var cellValue = it.getValue()
-                if (cellValue == 0) return@forEach
-                var neighbour = it.getNeighbour(direction)
-                var neighbourValue = it.getNeighbourValue(direction, grid)
-                var sum = neighbourValue?.plus(cellValue!!)
-                while (neighbourValue != null) {
-                    when (neighbourValue) {
-                        cellValue -> {
-                            gridMain.find { it == neighbour }?.setValue(sum)
-                            gridMain.find { it == cell }?.setValue(0)
-                            break
-                        }
-                        0 -> {
-                            gridMain.find { it == neighbour }?.setValue(cellValue)
-                            gridMain.find { it == cell }?.setValue(0)
-                            cell = neighbour
-                            cellValue = neighbourValue
-                            neighbour = neighbour.getNeighbour(direction)
-                            neighbourValue = it.getNeighbourValue(direction, grid)
-                            sum = neighbourValue?.plus(cellValue!!)
-                        }
-                        else -> break
-                    }
-                }
-            }
-            gridResult = gridReversed.reversed()
-        }
-        gridResult = addValue(gridResult)
-        return gridResult
+        if (direction == Direction.UP || direction == Direction.LEFT)
+            gridResult = gridResult.reversed().toMutableList()
+        return addValue(gridResult.toList())
     }
 
 }

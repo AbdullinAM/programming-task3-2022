@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
@@ -214,12 +215,17 @@ fun Board() {
                         })
                     Button(
                         onClick = {
+                            // grid = Grid().createGrid() doesn't work
                             MainActivity().recreate()
                         },
                         modifier = Modifier
                             .width(150.dp)
                             .height(60.dp)
                             .align(CenterHorizontally)
+                            .alpha(
+                                if (gameLost || gameWon) 0f
+                                else 1f
+                            )
                     ) {
                         Text(text = "RESTART")
                     }
