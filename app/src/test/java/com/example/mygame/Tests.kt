@@ -17,20 +17,6 @@ class Test {
     }
 
     @Test
-    fun inGrid() {
-        val cell1 = Grid.Cell(2, 3)
-        val cell2 = Grid.Cell(0, 0)
-        val cell3 = Grid.Cell(3, 3)
-        val cell4 = Grid.Cell(-1, -2)
-        val cell5 = Grid.Cell(4, 3)
-        assertTrue(cell1.inGrid())
-        assertTrue(cell2.inGrid())
-        assertTrue(cell3.inGrid())
-        assertFalse(cell4.inGrid())
-        assertFalse(cell5.inGrid())
-    }
-
-    @Test
     fun cellNeighbour() {
         val cell1 = Grid.Cell(0, 0)
         cell1.setValue(2)
