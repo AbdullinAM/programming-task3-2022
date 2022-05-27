@@ -1,60 +1,55 @@
 package FirstGUI.Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static FirstGUI.Model.ChipColor.*;
 
 public class Field {
 
     /*Следующая структура данных появилась с идеей что удобно будет иметь возможность легко обращаться к четвертям поля,
     * но потом это так и не понадобилось. Переделаю в arrayList как руки дойдут*/
-    private final GroupOfChips[][] field = {{
+    private final List<GroupOfChips> field = new ArrayList<>();
+
+    public Field() {
+        field.addAll(List.of(
                 new GroupOfChips(15, ChipColor.WHITE),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
-                new GroupOfChips(0, null)
-            }
-            ,
-            {
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
-                new GroupOfChips(0, null)
-            }
-            ,
-            {
+                new GroupOfChips(0, null),
+                new GroupOfChips(0, null),
                 new GroupOfChips(15, ChipColor.BLACK),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
-                new GroupOfChips(0, null)
-            },
-            {
+                new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null),
                 new GroupOfChips(0, null)
-            }
-    };
-
-    public GroupOfChips[] getQuarter(int idx) {
-        return field[idx];
+                )
+        );
     }
 
     public GroupOfChips get(int idx){
         if(idx<0) idx = 24 + idx%24;
         if(idx>23) idx = idx%24;
-        return field[idx/6][idx%6];
+        return field.get(idx);
     }
 
     public void set(int idx, GroupOfChips chips){
         if (idx > 23) idx = idx%24;
-        field[idx/6][idx%6] = chips;
+        field.set(idx, chips);
     }
 
     public void moveChip(int from, int to){
