@@ -6,12 +6,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class tests {
 
-    /*getPossibleTurns - major and most used method, let's check it's working properly*/
+    @Test
+    void checkBasics() {
+        Model model = new Model();
+        model.listener = new EmptyModelListener();
+        model.restart();
+        Field field = model.getField();
+        model.setTurnsLeft(new ArrayList<>(List.of(5,6)));
+        model.makeTurn(0,5);
+        model.makeTurn(0,6);
+        assertTrue(model.isNoTurnsLeft());
+        assertEquals(13, field.get(0).getQuantity());
+        assertEquals(1, field.get(5).getQuantity());
+        assertEquals(1, field.get(6).getQuantity());
+        model.setTurnsLeft(new ArrayList<>(List.of(6)));
+        assertThrowsExactly(IllegalArgumentException.class, () -> model.makeTurn(6,12));
+        model.makeTurn(5,11);
+        assertTrue(model.isNoTurnsLeft());
+        assertEquals(0, field.get(5).getQuantity());
+        assertEquals(null, field.get(5).getColor());
+    }
+
+    /*getPossibleTurns - major and most used method, let's check if it's working properly*/
 
     /*Check that first turn rules are followed*/
     @Test
@@ -126,11 +146,32 @@ class tests {
 
         /* Теперь моделируем ситуацию когда можно ставить 6 подряд, и это не будет считаться блоком потому что
          *  будет находиться на стыке начала и конца пути для противоположной команды.
-         *  Например, ставим блок белыми так, чтобы частью он приходился на конец пути черных, а частью на начало. */
+         *  (Например, ставим блок белыми так, чтобы частью он приходился на конец пути черных, а частью на начало) */
         model.restart();
-
-        field.set(12, new GroupOfChips(1,ChipColor.WHITE));
-        //Надо дописать
+        field.set(9, new GroupOfChips(1,ChipColor.WHITE));
+        field.set(10, new GroupOfChips(1,ChipColor.WHITE));
+        field.set(11, new GroupOfChips(1,ChipColor.WHITE));
+        field.set(12, new GroupOfChips());
+        field.set(13, new GroupOfChips(1,ChipColor.WHITE));
+        field.set(14, new GroupOfChips(1,ChipColor.WHITE));
+        model.setTurnsLeft(new ArrayList<>(List.of(12)));
+        assertFalse(model.getPossibleTurns(0).isEmpty());
+        model.makeTurn(11,12);
+        model.setTurnsLeft(new ArrayList<>(List.of(11)));
+        assertFalse(model.getPossibleTurns(0).isEmpty());
+        /*Теперь для чёрных*/
+        model.restart();
+        field.set(21, new GroupOfChips(1,ChipColor.BLACK));
+        field.set(22, new GroupOfChips(1,ChipColor.BLACK));
+        field.set(23, new GroupOfChips(1,ChipColor.BLACK));
+        field.set(0, new GroupOfChips());
+        field.set(1, new GroupOfChips(1,ChipColor.BLACK));
+        field.set(2, new GroupOfChips(1,ChipColor.BLACK));
+        model.setTurnsLeft(new ArrayList<>(List.of(12)));
+        assertFalse(model.getPossibleTurns(12).isEmpty());
+        model.makeTurn(23,0);
+        model.setTurnsLeft(new ArrayList<>(List.of(11)));
+        assertFalse(model.getPossibleTurns(12).isEmpty());
     }
 
 //    @Test

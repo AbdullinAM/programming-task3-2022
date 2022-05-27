@@ -1,5 +1,7 @@
 package FirstGUI.Controller;
 
+import static FirstGUI.Model.ChipColor.*;
+import FirstGUI.Controller.Buttons.OfferTurnButton;
 import FirstGUI.Model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -11,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
@@ -48,7 +51,7 @@ public class Cntrllr implements ModelListener {
     @FXML
     private GridPane quarter4;
 
-    public GridPane[] quartersOfField() {
+    public GridPane[] getGridPanes() {
         return new GridPane[] {quarter1,quarter2,quarter3,quarter4};
     }
 
@@ -57,6 +60,12 @@ public class Cntrllr implements ModelListener {
 
     @FXML
     private Label diceLabel2;
+
+    @FXML
+    private Rectangle whiteExit;
+
+    @FXML
+    private Rectangle blackExit;
 
     @FXML
     private void diceButtonClicked(){
@@ -79,59 +88,63 @@ public class Cntrllr implements ModelListener {
 
     public void updateBoard(){
         Field field = model.getField();
+        GridPane[] gridPanes = getGridPanes();
         Color green = new Color(0.0,1.0,0.0,1.0);
         Color yellow = new Color(1.0, 1.0, 0.0, 1.0);
         boolean atLeastOneOfferTurnButtonAdded = false;
         /* Clear the field */
-        for (int i = 0; i < 4; i++) {
-            quartersOfField()[i].getChildren().clear();
+        for (GridPane gridPane : gridPanes) {
+            gridPane.getChildren().clear();
         }
         /* for column of field */
         for (int i = 0; i < 24; i++) {
             GroupOfChips chipsInColumn = field.get(i);
             int numberOfChips = chipsInColumn.getQuantity();
             if (numberOfChips > 0) {
-                List<Integer> probableTurns = model.getPossibleTurns(i);
                 ChipColor colorOfChips = chipsInColumn.getColor();
                 /* for chip in column */
                 for (int k = 0; k < numberOfChips; k++) {
                     /*Рисуем круги фишек*/
-                    quartersOfField()[i/6].add(new Circle(13, chipImagesMap.get(colorOfChips)), i%6, 14 - k);
+                    gridPanes[i/6].add(new Circle(13, chipImagesMap.get(colorOfChips)), i%6, 14 - k);
                 }
                 /*Рисуем зелёные круги для кнопок предложения хода если ещё не выбрана никакая колонка фишек.
                  *По нажатию упомянутой кнопки индекс её колонки будет запомнен в поле selectedColumn. */
-                if (selectedColumn == -1)
-                    if (colorOfChips == model.getCurrentTurn() && !probableTurns.isEmpty()) {
-                        Button lastChipButton = new Buttons.OfferTurnButton(i, model, this);
-                        quartersOfField()[i/6].add(new Circle(9, green), i%6, 15 - numberOfChips);
-                        quartersOfField()[i/6].add(lastChipButton, i%6, 15 - numberOfChips);
+                if (selectedColumn == -1 && colorOfChips == model.getCurrentTurn()) {
+                    if (!model.getPossibleTurns(i).isEmpty()) {
+                        Button lastChipButton = new OfferTurnButton(i, model, this);
+                        gridPanes[i / 6].add(new Circle(9, green), i % 6, 15 - numberOfChips);
+                        gridPanes[i / 6].add(lastChipButton, i % 6, 15 - numberOfChips);
                         atLeastOneOfferTurnButtonAdded = true;
                     }
+                }
                 /*Если какая-то колонка выбрана для хода, то выделяем её жёлтым цветом*/
                 if (selectedColumn == i) {
-                    quartersOfField()[i/6].add(new Circle(9, yellow), i%6, 15 - numberOfChips);
+                    gridPanes[i/6].add(new Circle(9, yellow), i%6, 15 - numberOfChips);
                 }
             }
 
         }
-
-        /*Winning conditions*/
-        if (field.winnerIs() != null) winnerAlert(field.winnerIs());
         /*Если какая-то колонка выбрана для хода, то рисуем зелёные круги в местах куда можно cходить.*/
         if (selectedColumn > -1) {
             List<Integer> probableTurns = model.getPossibleTurns(selectedColumn);
-            probableTurns.forEach(position ->
-                    quartersOfField()[position/6].add(new Circle(10, green),position%6, 14-field.get(position).getQuantity()));
-            quartersOfField()[selectedColumn/6].add(
+            probableTurns.forEach(position -> {
+                        if (position == 24)
+                            openExit(field.get(selectedColumn).getColor());
+                        else
+                            gridPanes[position / 6].add(new Circle(10, green), position % 6, 14 - field.get(position).getQuantity());
+                    });
+            gridPanes[selectedColumn/6].add(
                     new Buttons.RefuseTurnButton(this),selectedColumn%6,15-field.get(selectedColumn).getQuantity());
         } else {
             /*Если игроку нечем походить (не добавлено ни одной offerTurnButton), а ходы (turnsLeft) у него остались,
              * то ход передаём оппоненту, и выводим предупреждение.*/
-            if (!atLeastOneOfferTurnButtonAdded && !model.getTurnsLeft().isEmpty()) {
+            if (!atLeastOneOfferTurnButtonAdded && !model.isNoTurnsLeft()) {
                 model.passTheTurn();
                 passTurnAlert();
             }
         }
+        if (field.winnerIs() != null) winnerAlert(field.winnerIs());
+
     }
 
     private void updateTurns(){
@@ -146,7 +159,23 @@ public class Cntrllr implements ModelListener {
         if (!turnsLeft.contains(currentNumberInLabel2)) diceLabel2.setOpacity(0.1); else diceLabel2.setOpacity(1.0);
     }
 
+    void openExit(ChipColor color){
+        Rectangle exit = color == WHITE? whiteExit : blackExit;
+        exit.setOpacity(1);
+        exit.setOnMouseClicked(event -> {
+            List<Integer> turns = model.getTurnsLeft();
+            model.makeTurn(selectedColumn, 24);
+            closeExit(color);
+        });
+    }
 
+    void closeExit(ChipColor color) {
+        selectedColumn = -1;
+        Rectangle exit = color == WHITE? whiteExit : blackExit;
+        exit.setOpacity(0.0);
+        exit.setOnMouseClicked(event -> {});
+        updateBoard();
+    }
 
 
     public void passTurnAlert (){

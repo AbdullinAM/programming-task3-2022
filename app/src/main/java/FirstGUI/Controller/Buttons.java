@@ -3,6 +3,9 @@ package FirstGUI.Controller;
 import FirstGUI.Model.Model;
 import javafx.scene.control.Button;
 
+import static FirstGUI.Model.ChipColor.BLACK;
+import static FirstGUI.Model.ChipColor.WHITE;
+
 public class Buttons {
 
     public static class OfferTurnButton extends Button{
@@ -15,10 +18,16 @@ public class Buttons {
                 cntrllr.setSelectedColumn(column);
                 cntrllr.updateBoard();
                 model.getPossibleTurns(column)
-                        .forEach(possibleTurn ->
-                                cntrllr.quartersOfField()[possibleTurn / 6]
-                                        .add(new ConfirmTurnButton(column, possibleTurn, model, cntrllr), possibleTurn % 6, 14 - model.howManyChipsInColumn(possibleTurn)));
-            });
+                        .forEach(possibleTurn -> {
+                                if(possibleTurn != 24)
+                                cntrllr.getGridPanes()[possibleTurn / 6]
+                                        .add(new ConfirmTurnButton(column, possibleTurn, model, cntrllr),
+                                                possibleTurn % 6, 14 - model.howManyChipsInColumn(possibleTurn));
+                                else cntrllr.openExit(model.getCurrentTurn());
+                        });
+
+            }
+            );
         }
 
     }
@@ -31,7 +40,10 @@ public class Buttons {
             this.setOnMouseClicked(event -> {
                 cntrllr.setSelectedColumn(-1);
                 cntrllr.updateBoard();
-            });
+                cntrllr.closeExit(WHITE);
+                cntrllr.closeExit(BLACK);
+            }
+            );
         }
 
     }
@@ -43,9 +55,9 @@ public class Buttons {
             this.setOpacity(0.0);
             this.setOnMouseClicked(event -> {
                         cntrllr.setSelectedColumn(-1);
-                        cntrllr.updateBoard();
                         model.makeTurn(startColumn,targetColumn);
-                    }
+                        cntrllr.closeExit(model.getCurrentTurn());
+            }
             );
         }
     }

@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="618.0" prefWidth="603.0" style="-fx-background-color: 000000;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FirstGUI.Controller.Cntrllr">
@@ -74,6 +75,7 @@
                         </GridPane>
                      </children>
                   </VBox>
+                  <Rectangle fx:id="whiteExit" arcHeight="5.0" arcWidth="5.0" fill="#00ff00" height="233.0" layoutX="14.0" layoutY="43.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="42.0" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="238.0" prefHeight="600.0" prefWidth="220.0" style="-fx-background-size: 100% 100%;">
@@ -136,6 +138,7 @@
                         </GridPane>
                      </children>
                   </VBox>
+                  <Rectangle fx:id="blackExit" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="233.0" layoutX="181.0" layoutY="438.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="20.0" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="190.0" AnchorPane.rightAnchor="10.0" />
                </children>
             </AnchorPane>
          </children>

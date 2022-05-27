@@ -1,7 +1,11 @@
 package FirstGUI.Model;
 
+import static FirstGUI.Model.ChipColor.*;
+
 public class Field {
 
+    /*Следующая структура данных появилась с идеей что удобно будет иметь возможность легко обращаться к четвертям поля,
+    * но потом это так и не понадобилось. Переделаю в arrayList как руки дойдут*/
     private final GroupOfChips[][] field = {{
                 new GroupOfChips(15, ChipColor.WHITE),
                 new GroupOfChips(0, null),
@@ -38,8 +42,8 @@ public class Field {
             }
     };
 
-    public GroupOfChips[][] getQuarters() {
-        return field;
+    public GroupOfChips[] getQuarter(int idx) {
+        return field[idx];
     }
 
     public GroupOfChips get(int idx){
@@ -49,20 +53,19 @@ public class Field {
     }
 
     public void set(int idx, GroupOfChips chips){
+        if (idx > 23) idx = idx%24;
         field[idx/6][idx%6] = chips;
     }
 
-    public void moveChip(int from, int to, boolean whiteExitOpened, boolean blackExitOpened){
-        if(from>24) from = from%24;
+    public void moveChip(int from, int to){
+        if (to == 24) {
+            get(from).decreaseQuantity();
+            return;
+        }
+        if(from>=24) from = from%24;
         if(to>24) to = to%24;
-        GroupOfChips start = get(from);
-        GroupOfChips end = get(to);
-        end.increaseQuantity(start.getColor());
-        // Когда игрок завел все фишки в последнюю четверть и выводит с поля, просто удаляем фишки
-        if (whiteExitOpened && start.getColor() == ChipColor.WHITE && to >= 0 & to < 17) end.decreaseQuantity();
-        if (blackExitOpened && start.getColor() == ChipColor.BLACK && to >= 12) end.decreaseQuantity();
-        start.decreaseQuantity();
-
+        get(to).increaseQuantity(get(from).getColor());
+        get(from).decreaseQuantity();
     }
 
     /*Проверяет нарушит ли какой-то ход запрет преграждения пути шестью шашками*/
@@ -81,20 +84,20 @@ public class Field {
                     if (similarChipsCounter > 5) {
                         willItBlock = true;
                         for (int j = i; j < 24; j++) {
-                            if (get(j).getColor() == ChipColor.WHITE) willItBlock = false;
+                            if (get(j).getColor() == WHITE) willItBlock = false;
                         }
                     }
                 }
             }
             case WHITE -> {
                 /*Идём по пути черных и если находим 6 белых подряд то проверяем чтобы спереди них уже была черная, иначе block*/
-                for (int i = 11; i < 35; i++) {
+                for (int i = 11; i < 36; i++) {
                     if(get(i).getColor() == color) similarChipsCounter++;
-                    else similarChipsCounter = 0;
+                        else similarChipsCounter = 0;
                     if (similarChipsCounter > 5) {
                         willItBlock = true;
                         for (int j = i; j < 35; j++) {
-                            if (get(j).getColor() == ChipColor.BLACK) willItBlock = false;
+                            if (get(j).getColor() == BLACK) willItBlock = false;
                         }
                     }
                 }
@@ -104,49 +107,17 @@ public class Field {
         get(startPos).increaseQuantity(color);
         get(targetPos).decreaseQuantity();
         return willItBlock;
-//        for (int i = 1; i < 6; i++) {
-//            if (get(targetPos-i).getColor()==color) {
-//                if(color == ChipColor.WHITE && targetPos-i == 12) break;
-//                if(color == ChipColor.BLACK && (targetPos-i)%24 == 0) break;
-//                similarChipsCounter += 1;
-//            } else break;
-//        }
-//        for (int i = 1; i < 6; i++) {
-//            if (get(targetPos+i).getColor()==color){
-//                if(color == ChipColor.WHITE && targetPos+i == 12) break;
-//                if(color == ChipColor.BLACK && (targetPos+i)%24 == 0) break;
-//                similarChipsCounter += 1;
-//            } else break;
-//        }
-//        if (similarChipsCounter >= 5) {
-//            if (color == ChipColor.BLACK){
-//                for (int i = targetPos; i < 24; i++) {
-//                    if (get(i).getColor() == ChipColor.WHITE) return false;
-//                }
-//                return true;
-//            }
-//            if (targetPos <= 11)
-//                for (int i = targetPos; i <= 11; i++) {
-//                    if (get(i).getColor()== ChipColor.BLACK) return false;
-//                }
-//            else
-//                for (int i = targetPos; i <= 35; i++) {
-//                    if (get(i).getColor()== ChipColor.BLACK) return false;
-//                }
-//            return true;
-//        }
-//        return false;
     }
 
     public ChipColor winnerIs () {
         boolean whiteWON = true;
         boolean blackWON = true;
         for (int i = 0; i <= 23; i++) {
-            if (get(i).getColor() == ChipColor.WHITE) whiteWON = false;
-            if (get(i).getColor() == ChipColor.BLACK) blackWON = false;
+            if (get(i).getColor() == WHITE) whiteWON = false;
+            if (get(i).getColor() == BLACK) blackWON = false;
         }
-        if (whiteWON) return ChipColor.WHITE;
-        if (blackWON) return ChipColor.BLACK;
+        if (whiteWON) return WHITE;
+        if (blackWON) return BLACK;
         return null;
     }
 
@@ -154,8 +125,8 @@ public class Field {
         for (int i = 1; i < 24; i++) {
             get(i).setColor(null).setQuantity(0);
         }
-        get(0).setQuantity(15).setColor(ChipColor.WHITE);
-        get(12).setQuantity(15).setColor(ChipColor.BLACK);
+        get(0).setQuantity(15).setColor(WHITE);
+        get(12).setQuantity(15).setColor(BLACK);
     }
 
 }
