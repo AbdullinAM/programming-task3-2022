@@ -2,13 +2,16 @@ package main;
 
 import core.Cell;
 import core.Field;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -48,14 +51,15 @@ public class Viev {
     private final Alert alertHelp = new Alert(Alert.AlertType.INFORMATION);
     private final Alert alertDefeat = new Alert(Alert.AlertType.INFORMATION);
     private final Alert alertWin = new Alert(Alert.AlertType.INFORMATION);
-    AtomicInteger correctMarkMines = new AtomicInteger();
-    AtomicInteger totalMarkMines = new AtomicInteger();
-
+    private final AtomicInteger correctMarkMines = new AtomicInteger();
+    private final AtomicInteger totalMarkMines = new AtomicInteger();
+    private final Label amountLeftMines = new Label();
     //setting the value of the radius of the hexagon depending on their number
-    public double setRadius(int x, int y) {
+    private double setRadius(int x, int y) {
         double r = 10;
         if (x <= 10 && y <= 10) r = 30;
         else if (x <= 20 && y <= 20) r = 15;
+        else if (x <= 50 && y<= 50) r = 7;
         return r;
     }
 
@@ -77,18 +81,19 @@ public class Viev {
     }
 
     //cell filling
-    public void fillingTile(Field field, Polygon tile, int x, int y) {
-        if (field.getMineAround(x, y) == 0) tile.setFill(patternImage_0);
-        if (field.getMineAround(x, y) == 1) tile.setFill(patternImage_1);
-        if (field.getMineAround(x, y) == 2) tile.setFill(patternImage_2);
-        if (field.getMineAround(x, y) == 3) tile.setFill(patternImage_3);
-        if (field.getMineAround(x, y) == 4) tile.setFill(patternImage_4);
-        if (field.getMineAround(x, y) == 5) tile.setFill(patternImage_5);
-        if (field.getMineAround(x, y) == 6) tile.setFill(patternImage_6);
+    private void fillingTile(Field field, Polygon tile, int x, int y) {
+        int mineAround = field.getMineAround(x, y);
+        if (mineAround == 0) tile.setFill(patternImage_0);
+        if (mineAround == 1) tile.setFill(patternImage_1);
+        if (mineAround == 2) tile.setFill(patternImage_2);
+        if (mineAround == 3) tile.setFill(patternImage_3);
+        if (mineAround == 4) tile.setFill(patternImage_4);
+        if (mineAround == 5) tile.setFill(patternImage_5);
+        if (mineAround == 6) tile.setFill(patternImage_6);
     }
 
     //draws the given cell
-    public void showAroundHelper(Field field, int x, int y, double TILE_WIDTH, double TILE_HEIGHT, double shiftX, double shiftY, double n, double r) {
+    private void showAroundHelper(Field field, int x, int y, double TILE_WIDTH, double TILE_HEIGHT, double shiftX, double shiftY, double n, double r) {
         double xCord = x * TILE_WIDTH + (y % 2) * n + shiftX;
         double yCord = y * TILE_HEIGHT * 0.75 + shiftY;
         Polygon tile = new Tile(xCord, yCord, TILE_WIDTH, n, r);
@@ -100,7 +105,7 @@ public class Viev {
     }
 
     //draws cells around the given
-    public void showAround(Field field, int col, int row, double TILE_WIDTH, double TILE_HEIGHT, double shiftX, double shiftY, double n, double r) {
+    private void showAround(Field field, int col, int row, double TILE_WIDTH, double TILE_HEIGHT, double shiftX, double shiftY, double n, double r) {
         int x = field.getCol();
         int y = field.getRow();
         if (col - 1 >= 0) showAroundHelper( field,col - 1, row, TILE_WIDTH, TILE_HEIGHT, shiftX, shiftY, n, r);
@@ -117,7 +122,7 @@ public class Viev {
     }
 
     //recursively opens cells around
-    public void updateFieldAround(Field field, int col, int row, double TILE_WIDTH, double TILE_HEIGHT, double shiftX, double shiftY, double n, double r) {
+    private void updateFieldAround(Field field, int col, int row, double TILE_WIDTH, double TILE_HEIGHT, double shiftX, double shiftY, double n, double r) {
         if (field.getMineAround(col, row) == 0) {
             field.openAroundCell(col, row);
             showAround(field, col, row, TILE_WIDTH, TILE_HEIGHT, shiftX, shiftY, n, r);
@@ -150,10 +155,10 @@ public class Viev {
     }
 
     //draws the field and responds to interaction with it
-    public void updateField(Field field, int col, int row, double TILE_WIDTH, double TILE_HEIGHT, double shiftX, double shiftY, double n, double r) {
+    private void updateField(Field field, int col, int row, double TILE_WIDTH, double TILE_HEIGHT, double shiftX, double shiftY, double n, double r) {
         correctMarkMines.set(0);
         totalMarkMines.set(0);
-        int amountMine = field.getAmountMine();
+        int amountMines = field.getAmountMine();
         for (int x = 0; x < col; x++) {
             for (int y = 0; y < row; y++) {
                 double xCord = x * TILE_WIDTH + (y % 2) * n + shiftX;
@@ -179,16 +184,21 @@ public class Viev {
                                     totalMarkMines.getAndDecrement();
                                     if (cell.getState() == Cell.State.Mine) correctMarkMines.getAndDecrement();
                                 }
+                                int leftMines = amountMines - totalMarkMines.get();
+                                if (leftMines >= 0) amountLeftMines.setText(Integer.toString(leftMines));
+                                else amountLeftMines.setText("ERR");
                             }
 
-                            if (correctMarkMines.get() == (amountMine) && correctMarkMines.get() == totalMarkMines.get()) defeat = false;
-                            if (correctMarkMines.get() != (amountMine) || correctMarkMines.get() != totalMarkMines.get()) defeat = true;
+                            if (correctMarkMines.get() == (amountMines) && correctMarkMines.get() == totalMarkMines.get()) defeat = false;
+                            if (correctMarkMines.get() != (amountMines) || correctMarkMines.get() != totalMarkMines.get()) defeat = true;
                         }
 
                         case Explode -> {
+                            defeat = true;
                             tile.setFill(patternBombExploded);
+                            amountLeftMines.setText("FAIL");
                             alertDefeat.showAndWait();
-                            showAll(field, col, row, true, TILE_WIDTH, TILE_HEIGHT, shiftX, shiftY, n, r);
+                            showAll(field, col, row, defeat, TILE_WIDTH, TILE_HEIGHT, shiftX, shiftY, n, r);
                         }
 
                         case Open -> {
@@ -196,7 +206,7 @@ public class Viev {
                             if (cell.getState() == Cell.State.Empty && !cell.isMark() && field.getMineAround(finalX, finalY) == 0) {
                                 updateFieldAround(field, finalX, finalY, TILE_WIDTH, TILE_HEIGHT, shiftX, shiftY, n, r);
                             }
-                            if (amountMine == 0) {
+                            if (amountMines == 0) {
                                 defeat = false;
                             }
                         }
@@ -207,7 +217,7 @@ public class Viev {
     }
 
     //draws the entire field at the end of the game
-    public void showAll(Field field,int col, int row, boolean defeat, double TILE_WIDTH, double TILE_HEIGHT, double shiftX, double shiftY, double n, double r) {
+    private void showAll(Field field,int col, int row, boolean defeat, double TILE_WIDTH, double TILE_HEIGHT, double shiftX, double shiftY, double n, double r) {
         for (int x = 0; x < col; x++) {
             for (int y = 0; y < row; y++) {
                 double xCord = x * TILE_WIDTH + (y % 2) * n + shiftX;
@@ -262,17 +272,24 @@ public class Viev {
 
         Text settings = new Text("Field size: "  + col + "x" + row + "; Mines: " + amountMines + System.lineSeparator() + "Press Q to Confirm; R to Restart; H for Help");
         settings.setFill(Color.BROWN);
-        settings.setStyle("-fx-font: 22 arial;");
+        settings.setStyle("-fx-font: 22 arial");
+
+        HBox leftMines = new HBox();
+        Text textLeftMines = new Text("LEFT: ");
+        textLeftMines.setFill(Color.RED);
+        amountLeftMines.setText(Integer.toString(amountMines));
+        amountLeftMines.setTextFill(Color.RED);
+        leftMines.setStyle("-fx-font: 22 arial");
+        leftMines.setPadding(new Insets(0, 0, 0, 310));
+        leftMines.getChildren().addAll(textLeftMines, amountLeftMines);
 
         HBox menu = new HBox();
+        FlowPane toolBar = new FlowPane();
         menu.setSpacing(30);
-        menu.getChildren().add(confirm);
-        menu.getChildren().add(restart);
-        menu.getChildren().add(help);
-        menu.getChildren().add(close);
-        menu.getChildren().add(settings);
+        menu.getChildren().addAll(confirm, restart, help, close, settings);
+        toolBar.getChildren().addAll(menu, leftMines);
 
-        root.getChildren().addAll(menu, tileMap);
+        root.getChildren().addAll(toolBar, tileMap);
         scene.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.R)) {
                 restart.fire();
@@ -291,11 +308,18 @@ public class Viev {
         restart.setOnAction(e -> {
             field.set(new Field(col, row, amountMines));
             updateField(field.get(), col, row, TILE_WIDTH, TILE_HEIGHT, shiftX, shiftY, n, r);
+            amountLeftMines.setText(Integer.toString(amountMines));
         });
 
         confirm.setOnAction(event -> {
-           if (defeat) alertDefeat.showAndWait();
-           else alertWin.showAndWait();
+            if (defeat) {
+                amountLeftMines.setText("FAIL");
+                alertDefeat.showAndWait();
+            }
+            else {
+                amountLeftMines.setText("WIN");
+                alertWin.showAndWait();
+            }
             showAll(field.get(), col, row, defeat, TILE_WIDTH, TILE_HEIGHT, shiftX, shiftY, n, r);
         });
         close.setOnAction(event -> primaryStage.close());
