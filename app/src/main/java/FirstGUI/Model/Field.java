@@ -53,6 +53,8 @@ public class Field {
     }
 
     public void moveChip(int from, int to){
+        if (get(from).getQuantity() == 0 || get(from).getColor() == null)
+            throw new IllegalArgumentException("Trying to make turn from position that's empty");
         if (to == 24) {
             get(from).decreaseQuantity();
             return;

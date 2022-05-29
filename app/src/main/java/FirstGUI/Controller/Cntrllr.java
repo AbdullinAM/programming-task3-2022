@@ -25,13 +25,12 @@ import java.util.Optional;
 public class Cntrllr implements ModelListener {
 
     public Cntrllr() {
-        model.listener = this;
         chipImagesMap.put(ChipColor.WHITE, new ImagePattern(new Image("white3.png")));
         chipImagesMap.put(ChipColor.BLACK, new ImagePattern(new Image("black1.png")));
     }
 
 //  Поля и методы для основного окна
-    private final Model model = new Model();
+    private final Model model = new Model().setModelListener(this);
 
     public Scoreboard scrboard;
 

@@ -12,10 +12,9 @@ class tests {
 
     @Test
     void checkBasics() {
-        Model model = new Model();
-        model.listener = new EmptyModelListener();
-        model.restart();
+        Model model = new Model().setModelListener(new EmptyModelListener());
         Field field = model.getField();
+        /* Делаем два обычных хода с головы и проверяем что фишки убавились и появились где надо */
         model.setTurnsLeft(new ArrayList<>(List.of(5,6)));
         model.makeTurn(0,5);
         model.makeTurn(0,6);
@@ -23,23 +22,59 @@ class tests {
         assertEquals(13, field.get(0).getQuantity());
         assertEquals(1, field.get(5).getQuantity());
         assertEquals(1, field.get(6).getQuantity());
-        model.setTurnsLeft(new ArrayList<>(List.of(6)));
-        assertThrowsExactly(IllegalArgumentException.class, () -> model.makeTurn(6,12));
-        model.makeTurn(5,11);
+        assertEquals(ChipColor.WHITE, field.get(5).getColor());
+        assertEquals(ChipColor.WHITE, field.get(6).getColor());
         assertTrue(model.isNoTurnsLeft());
+        /* Делаем ход не с головы и всё проверяем*/
+        model.setTurnsLeft(new ArrayList<>(List.of(3)));
+        model.makeTurn(5,8);
         assertEquals(0, field.get(5).getQuantity());
         assertEquals(null, field.get(5).getColor());
+        assertEquals(1, field.get(8).getQuantity());
+        assertEquals(ChipColor.WHITE, field.get(8).getColor());
+        assertTrue(model.isNoTurnsLeft());
+        /* Проверяем что нельзя походить на фишку оппонента */
+        assertThrowsExactly(IllegalArgumentException.class, () -> model.makeTurn(6,12));
+        /* Проверяем что нельзя сделать ход из колонки в которой нет фишек */
+        assertThrowsExactly(IllegalArgumentException.class, () -> model.makeTurn(2,3));
+        /* Теперь для чёрных, делаем два хода с головы*/
+        model.setTurnsLeft(new ArrayList<>(List.of(5,6)));
+        model.makeTurn(12,17);
+        model.makeTurn(12,18);
+        assertTrue(model.isNoTurnsLeft());
+        assertEquals(13, field.get(12).getQuantity());
+        assertEquals(1, field.get(17).getQuantity());
+        assertEquals(1, field.get(18).getQuantity());
+        assertEquals(ChipColor.BLACK, field.get(17).getColor());
+        assertEquals(ChipColor.BLACK, field.get(18).getColor());
+        assertTrue(model.isNoTurnsLeft());
+        /* Делаем ход не с головы и всё проверяем*/
+        model.setTurnsLeft(new ArrayList<>(List.of(3)));
+        model.makeTurn(17,20);
+        assertEquals(0, field.get(17).getQuantity());
+        assertEquals(null, field.get(17).getColor());
+        assertEquals(1, field.get(20).getQuantity());
+        assertEquals(ChipColor.BLACK, field.get(20).getColor());
+        assertTrue(model.isNoTurnsLeft());
+        /* Ещё проверим что нормально делаются ходы когда приходится
+         * перескакивать в начало списка (например 20 -> 0).*/
+        model.setTurnsLeft(new ArrayList<>(List.of(4)));
+        field.set(0, new GroupOfChips());
+        model.makeTurn(20, 0);
+        assertEquals(0, field.get(20).getQuantity());
+        assertEquals(null, field.get(20).getColor());
+        assertEquals(1, field.get(0).getQuantity());
+        assertEquals(ChipColor.BLACK, field.get(0).getColor());
+        assertTrue(model.isNoTurnsLeft());
     }
 
-    /*getPossibleTurns - major and most used method, let's check if it's working properly*/
+    /*getPossibleTurns - major and most used method, let's check that it's following all game rules */
 
     /*Check that first turn rules are followed*/
     @Test
     void checkFirstTurnRules () {
         /*Init the field*/
-        Model model = new Model();
-        model.listener = new EmptyModelListener();
-        model.restart();
+        Model model = new Model().setModelListener(new EmptyModelListener());
         Field field = model.getField();
         /*If you made one turn from base, but you can't move this chip further, you can make second turn from the base.*/
         model.setTurnsLeft(new ArrayList<>(Arrays.asList(6,6,6,6)));
@@ -62,9 +97,7 @@ class tests {
     @Test
     void CantGoThroughClosedExit() {
         /*Init and Clear the field*/
-        Model model = new Model();
-        model.listener = new EmptyModelListener();
-        model.restart();
+        Model model = new Model().setModelListener(new EmptyModelListener());
         Field field = model.getField();
         field.set(0, new GroupOfChips(0, null));
         field.set(12, new GroupOfChips(0, null));
@@ -85,9 +118,7 @@ class tests {
 
     @Test
     void checkBlockRules() {
-        Model model = new Model();
-        model.listener = new EmptyModelListener();
-        model.restart();
+        Model model = new Model().setModelListener(new EmptyModelListener());
         Field field = model.getField();
         /* Сначала тривиальные ситуации для обоих цветов */
         /* Пока черные не сделали ни одного хода, белые не могут поставить блок нигде*/
@@ -174,10 +205,19 @@ class tests {
         assertFalse(model.getPossibleTurns(12).isEmpty());
     }
 
-//    @Test
-//    void () {
-//    }
-
+    @Test
+    void quantityDecreasesWhenChipExitsField() {
+        Model model = new Model().setModelListener(new EmptyModelListener());
+        Field field = model.getField();
+        field.set(20, new GroupOfChips(15, ChipColor.WHITE));
+        field.set(10, new GroupOfChips(15,ChipColor.BLACK));
+        model.makeTurn(10, 24);
+        model.makeTurn(20, 24);
+        assertEquals(14, field.get(10).getQuantity());
+        assertEquals(14, field.get(20).getQuantity());
+        /* (makeTurn не должна следить за тем открыты ли уже выходы с поля,
+         * за этим следит getPossibleTurns и тесты это уже покрывают)*/
+    }
 
 
 

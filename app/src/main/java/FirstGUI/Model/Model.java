@@ -184,7 +184,12 @@ public class Model {
         listener.turnMade();
     }
 
-    public ModelListener listener;
+    private ModelListener listener;
+
+    public Model setModelListener(ModelListener l){
+        listener = l;
+        return this;
+    }
 
     /*Окончание игры*/
 

@@ -18,7 +18,7 @@ public class GroupOfChips {
         if(quantity >= 0 && quantity < 16){
             this.quantity = quantity;
         } else {
-            throw new IllegalArgumentException();}
+            throw new IllegalArgumentException("Quantity of chips should be 0..15");}
         return this;
     }
 
@@ -39,7 +39,7 @@ public class GroupOfChips {
 
     public void increaseQuantity(ChipColor color) {
         if(this.color == color.opposite())
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Tried to make turn into opponent's position");
         if (quantity==0){
             this.color = color;
         }
