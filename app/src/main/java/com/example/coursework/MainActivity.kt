@@ -1,36 +1,36 @@
 package com.example.coursework
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Size
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.drawscope.DrawTransform
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.coursework.core.Cell
 import com.example.coursework.core.Directions
 import com.example.coursework.logic.*
 import com.example.coursework.ui.theme.CourseworkTheme
 import com.example.coursework.ui.theme.Shapes
+import kotlinx.coroutines.launch
 import java.lang.Math.abs
 
 class MainActivity : ComponentActivity() {
@@ -50,41 +50,53 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DrawGrid() {
-        var gameGrid by remember { mutableStateOf(createStartGrid()) }
-        var color by remember { mutableStateOf(Color(0xffebe7e1)) }
-        var direction by remember { mutableStateOf(-1) }
-        Box (
-            Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDrag = { change, dragAmount ->
-                            change.consumeAllChanges()
-                            val (x, y) = dragAmount
-                            if (kotlin.math.abs(x) > kotlin.math.abs(y)) {
-                                when {
-                                    x > 0 -> direction = 0
-                                    x < 0 -> direction = 1
-                                }
-                            } else when {
-                                y > 0 -> direction = 2
-                                y < 0 -> direction = 3
+    val game by remember { mutableStateOf(Game()) }
+    var gameScore by remember { mutableStateOf(0) }
+    var color by remember { mutableStateOf(Color(0xffebe7e1)) }
+    var direction by remember { mutableStateOf(-1) }
+    Box (
+        Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDrag = { change, dragAmount ->
+                        change.consumeAllChanges()
+                        val (x, y) = dragAmount
+                        if (kotlin.math.abs(x) > kotlin.math.abs(y)) {
+                            when {
+                                x > 0 -> direction = 0
+                                x < 0 -> direction = 1
                             }
-                        },
-                        onDragEnd = {
-                            when (direction) {
-                                0 -> gameGrid = moveGrid(Directions.RIGHT)
-                                1 -> gameGrid = moveGrid(Directions.LEFT)
-                                2 -> gameGrid = moveGrid(Directions.DOWN)
-                                3 -> gameGrid = moveGrid(Directions.UP)
+                        } else when {
+                            y > 0 -> direction = 2
+                            y < 0 -> direction = 3
+                        }
+                    },
+                    onDragEnd = {
+                        when (direction) {
+                            0 -> {
+                                game.moveGrid(Directions.RIGHT)
+                            }
+                            1 -> {
+                                game.moveGrid(Directions.LEFT)
+                            }
+                            2 -> {
+                                game.moveGrid(Directions.DOWN)
+
+                            }
+                            3 -> {
+                                game.moveGrid(Directions.UP)
                             }
                         }
-                    )
-                }
+                        gameScore = game.getScore()
+                    }
+                )
+            }
         ) {
             Column() {
                 LazyVerticalGrid(
@@ -96,9 +108,9 @@ fun DrawGrid() {
                         bottom = 16.dp
                     ),
                     content = {
-                        items(gameGrid.size) { index ->
-                            val value = gameGrid.toList()[index].second
-                            color = getCellColor(value)
+                        items(game.getGrid().size) { index ->
+                            val value = game.getGrid().toList()[index].second
+                            color = game.getCellColor(value)
                             Card(
                                 backgroundColor = color,
                                 modifier = Modifier
@@ -118,11 +130,60 @@ fun DrawGrid() {
                         }
                     }
                 )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(100.dp)
+                            .background(Color(0xffebe7e1))
+                            .wrapContentSize(
+                                Alignment.Center
+                            )
+                    ) {
+                        Text(
+                            text = "$gameScore"
+                        )
+                    }
+
+                    Button(
+                        onClick = {
+                            game.createStartGrid()
+                            gameScore = 0
+                            game.setScore(0)
+                        },
+                        modifier = Modifier
+                            .background(Color(0xffebe7e1))
+                            .wrapContentSize(Alignment.Center)
+                    ) {
+                        Text(
+                            text = "Restart"
+                        )
+                    } 
+                } 
             }
-        }
     }
+}
 
 
+
+
+@Composable
+fun ScoreBox(score: Int) {
+    Box(
+        modifier = Modifier
+            .size(100.dp)
+            .background(Color(0xffebe7e1)),
+        contentAlignment = Alignment.BottomStart
+    ) {
+        Text(
+            modifier = Modifier.wrapContentSize(Alignment.Center),
+            text = "Score:\n$score"
+        )
+    }
+}
 
 
 @Preview(showBackground = true)
