@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static FirstGUI.Model.ChipColor.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class tests {
@@ -22,16 +23,16 @@ class tests {
         assertEquals(13, field.get(0).getQuantity());
         assertEquals(1, field.get(5).getQuantity());
         assertEquals(1, field.get(6).getQuantity());
-        assertEquals(ChipColor.WHITE, field.get(5).getColor());
-        assertEquals(ChipColor.WHITE, field.get(6).getColor());
+        assertEquals(WHITE, field.get(5).getColor());
+        assertEquals(WHITE, field.get(6).getColor());
         assertTrue(model.isNoTurnsLeft());
         /* Делаем ход не с головы и всё проверяем*/
         model.setTurnsLeft(new ArrayList<>(List.of(3)));
         model.makeTurn(5,8);
         assertEquals(0, field.get(5).getQuantity());
-        assertEquals(null, field.get(5).getColor());
+        assertEquals(NO_COLOR, field.get(5).getColor());
         assertEquals(1, field.get(8).getQuantity());
-        assertEquals(ChipColor.WHITE, field.get(8).getColor());
+        assertEquals(WHITE, field.get(8).getColor());
         assertTrue(model.isNoTurnsLeft());
         /* Проверяем что нельзя походить на фишку оппонента */
         assertThrowsExactly(IllegalArgumentException.class, () -> model.makeTurn(6,12));
@@ -45,16 +46,16 @@ class tests {
         assertEquals(13, field.get(12).getQuantity());
         assertEquals(1, field.get(17).getQuantity());
         assertEquals(1, field.get(18).getQuantity());
-        assertEquals(ChipColor.BLACK, field.get(17).getColor());
-        assertEquals(ChipColor.BLACK, field.get(18).getColor());
+        assertEquals(BLACK, field.get(17).getColor());
+        assertEquals(BLACK, field.get(18).getColor());
         assertTrue(model.isNoTurnsLeft());
         /* Делаем ход не с головы и всё проверяем*/
         model.setTurnsLeft(new ArrayList<>(List.of(3)));
         model.makeTurn(17,20);
         assertEquals(0, field.get(17).getQuantity());
-        assertEquals(null, field.get(17).getColor());
+        assertEquals(NO_COLOR, field.get(17).getColor());
         assertEquals(1, field.get(20).getQuantity());
-        assertEquals(ChipColor.BLACK, field.get(20).getColor());
+        assertEquals(BLACK, field.get(20).getColor());
         assertTrue(model.isNoTurnsLeft());
         /* Ещё проверим что нормально делаются ходы когда приходится
          * перескакивать в начало списка (например 20 -> 0).*/
@@ -62,9 +63,9 @@ class tests {
         field.set(0, new GroupOfChips());
         model.makeTurn(20, 0);
         assertEquals(0, field.get(20).getQuantity());
-        assertEquals(null, field.get(20).getColor());
+        assertEquals(NO_COLOR, field.get(20).getColor());
         assertEquals(1, field.get(0).getQuantity());
-        assertEquals(ChipColor.BLACK, field.get(0).getColor());
+        assertEquals(BLACK, field.get(0).getColor());
         assertTrue(model.isNoTurnsLeft());
     }
 
@@ -93,23 +94,22 @@ class tests {
         assertTrue(turns.isEmpty());
     }
 
-    /*Check exits properly working*/
     @Test
     void CantGoThroughClosedExit() {
         /*Init and Clear the field*/
         Model model = new Model().setModelListener(new EmptyModelListener());
         Field field = model.getField();
-        field.set(0, new GroupOfChips(0, null));
-        field.set(12, new GroupOfChips(0, null));
+        field.set(0, new GroupOfChips());
+        field.set(12, new GroupOfChips());
         /*Put some chips in the last quarter except one chip => chips can't go out of field*/
-        field.set(23, new GroupOfChips(3, ChipColor.WHITE));
-        field.set(10, new GroupOfChips(1, ChipColor.WHITE));
+        field.set(23, new GroupOfChips(3, WHITE));
+        field.set(10, new GroupOfChips(1, WHITE));
         model.rollNewTurns();
         model.openExitsIfPossible();
         List<Integer> turns = model.getPossibleTurns(23);
         assertTrue( turns.isEmpty());
         /*Removing chip which not in last quarter => chips from last quarter can exit the field*/
-        field.set(10, new GroupOfChips(0,null));
+        field.set(10, new GroupOfChips());
         model.openExitsIfPossible();
         turns = model.getPossibleTurns(23);
         assertFalse(turns.isEmpty());
@@ -179,12 +179,12 @@ class tests {
          *  будет находиться на стыке начала и конца пути для противоположной команды.
          *  (Например, ставим блок белыми так, чтобы частью он приходился на конец пути черных, а частью на начало) */
         model.restart();
-        field.set(9, new GroupOfChips(1,ChipColor.WHITE));
-        field.set(10, new GroupOfChips(1,ChipColor.WHITE));
-        field.set(11, new GroupOfChips(1,ChipColor.WHITE));
+        field.set(9, new GroupOfChips(1,WHITE));
+        field.set(10, new GroupOfChips(1,WHITE));
+        field.set(11, new GroupOfChips(1,WHITE));
         field.set(12, new GroupOfChips());
-        field.set(13, new GroupOfChips(1,ChipColor.WHITE));
-        field.set(14, new GroupOfChips(1,ChipColor.WHITE));
+        field.set(13, new GroupOfChips(1,WHITE));
+        field.set(14, new GroupOfChips(1,WHITE));
         model.setTurnsLeft(new ArrayList<>(List.of(12)));
         assertFalse(model.getPossibleTurns(0).isEmpty());
         model.makeTurn(11,12);
@@ -192,12 +192,12 @@ class tests {
         assertFalse(model.getPossibleTurns(0).isEmpty());
         /*Теперь для чёрных*/
         model.restart();
-        field.set(21, new GroupOfChips(1,ChipColor.BLACK));
-        field.set(22, new GroupOfChips(1,ChipColor.BLACK));
-        field.set(23, new GroupOfChips(1,ChipColor.BLACK));
+        field.set(21, new GroupOfChips(1,BLACK));
+        field.set(22, new GroupOfChips(1,BLACK));
+        field.set(23, new GroupOfChips(1,BLACK));
         field.set(0, new GroupOfChips());
-        field.set(1, new GroupOfChips(1,ChipColor.BLACK));
-        field.set(2, new GroupOfChips(1,ChipColor.BLACK));
+        field.set(1, new GroupOfChips(1,BLACK));
+        field.set(2, new GroupOfChips(1,BLACK));
         model.setTurnsLeft(new ArrayList<>(List.of(12)));
         assertFalse(model.getPossibleTurns(12).isEmpty());
         model.makeTurn(23,0);
@@ -209,8 +209,8 @@ class tests {
     void quantityDecreasesWhenChipExitsField() {
         Model model = new Model().setModelListener(new EmptyModelListener());
         Field field = model.getField();
-        field.set(20, new GroupOfChips(15, ChipColor.WHITE));
-        field.set(10, new GroupOfChips(15,ChipColor.BLACK));
+        field.set(20, new GroupOfChips(15, WHITE));
+        field.set(10, new GroupOfChips(15,BLACK));
         model.makeTurn(10, 24);
         model.makeTurn(20, 24);
         assertEquals(14, field.get(10).getQuantity());

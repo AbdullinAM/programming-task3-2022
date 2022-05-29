@@ -14,29 +14,29 @@ public class Field {
     public Field() {
         field.addAll(List.of(
                 new GroupOfChips(15, ChipColor.WHITE),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
                 new GroupOfChips(15, ChipColor.BLACK),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null),
-                new GroupOfChips(0, null)
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips(),
+                new GroupOfChips()
                 )
         );
     }
@@ -53,7 +53,7 @@ public class Field {
     }
 
     public void moveChip(int from, int to){
-        if (get(from).getQuantity() == 0 || get(from).getColor() == null)
+        if (get(from).getQuantity() == 0 || get(from).getColor() == NO_COLOR)
             throw new IllegalArgumentException("Trying to make turn from position that's empty");
         if (to == 24) {
             get(from).decreaseQuantity();
@@ -120,7 +120,7 @@ public class Field {
 
     public void clear(){
         for (int i = 1; i < 24; i++) {
-            get(i).setColor(null).setQuantity(0);
+            get(i).setColor(NO_COLOR).setQuantity(0);
         }
         get(0).setQuantity(15).setColor(WHITE);
         get(12).setQuantity(15).setColor(BLACK);

@@ -1,4 +1,5 @@
 package FirstGUI.Model;
+import static FirstGUI.Model.ChipColor.*;
 
 public class GroupOfChips {
     private Integer quantity;
@@ -6,7 +7,7 @@ public class GroupOfChips {
     private ChipColor color;
 
     public GroupOfChips(){
-        this.quantity = 0;
+        this(0, NO_COLOR);
     }
 
     public GroupOfChips(Integer quantity, ChipColor color) {
@@ -34,7 +35,7 @@ public class GroupOfChips {
     public void decreaseQuantity(){
         quantity -= 1;
         if (quantity==0){
-            color = null;
+            color = NO_COLOR;
         }}
 
     public void increaseQuantity(ChipColor color) {

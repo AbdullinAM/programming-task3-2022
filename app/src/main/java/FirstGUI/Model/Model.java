@@ -3,8 +3,7 @@ package FirstGUI.Model;
 import java.util.ArrayList;
 import java.util.List;
 
-import static FirstGUI.Model.ChipColor.BLACK;
-import static FirstGUI.Model.ChipColor.WHITE;
+import static FirstGUI.Model.ChipColor.*;
 
 public class Model {
 
@@ -65,7 +64,7 @@ public class Model {
     public List<Integer> getPossibleTurns (int position) {
         List<Integer> result = new ArrayList<>();
         ChipColor color = field.get(position).getColor();
-        if (turnsLeft.isEmpty() || color == null) return result;
+        if (turnsLeft.isEmpty() || color == NO_COLOR) return result;
         if (turnFromBaseHappened && (position == 0 || position == 12)) return result;
         /*Добавляем ходы исходя из стартовой позиции и имеющихся ходов (TurnsLeft)*/
         /*Если ходов 2 и более */
@@ -121,7 +120,7 @@ public class Model {
         ChipColor targetColor = field.get(target).getColor();
         boolean exitOpened = baseColor == WHITE? whiteExitOpened : blackExitOpened;
         /*Если выход закрыт, то просто добавляем ход (проверки на правила будут позже)*/
-        if ((targetColor == baseColor || targetColor == null) && !exitOpened)
+        if ((targetColor == baseColor || targetColor == NO_COLOR) && !exitOpened)
             result.add((target) % 24);
         /*Если выход открыт и в результате хода фишка может выйти с поля, то добавляем 24 */
         if (baseColor == WHITE && whiteExitOpened)
