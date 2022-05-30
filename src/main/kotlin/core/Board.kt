@@ -5,7 +5,7 @@ open class Board (private val width: Int = 8, private val height: Int = 8) {
 
     var chooseCell: Cell? = null
 
-    private val checkers: MutableMap<Cell, Checker?> = mutableMapOf()
+    private val checkers: MutableMap<Cell, Checker> = mutableMapOf()
 
     fun getAllCheckers() = checkers
 
@@ -68,7 +68,7 @@ open class Board (private val width: Int = 8, private val height: Int = 8) {
                     val queen = Queen(turn)
                     queen.setMainBoard(this)
                     checkers[cell] = queen
-                } else checkers[cell] = checkers[chooseCell]
+                } else checkers[cell] = checkers[chooseCell]!!
                 checkers.remove(chooseCell)
                 cells.add(chooseCell!!)
                 cells.add(cell)
