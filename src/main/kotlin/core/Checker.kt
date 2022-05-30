@@ -1,15 +1,9 @@
 package core
 
-open class Checker(val color: Color) {
+open class Checker(val color: Color, private var mainBoard: Board) {
 
     companion object {
         val DIRECTIONS = arrayOf(Cell(1,-1), Cell(-1,-1), Cell(1,1), Cell(-1,1))
-    }
-
-    private var mainBoard: Board? = null
-
-    fun setMainBoard(board: Board) {
-        this.mainBoard = board
     }
 
     fun isOpposite(other: Checker?) = other != null && other.color != this.color
@@ -18,7 +12,7 @@ open class Checker(val color: Color) {
         return cell.x in 0 until 8 && cell.y in 0 until 8
     }
 
-    fun getCheckers() = mainBoard!!.getAllCheckers()
+    fun getCheckers() = mainBoard.getAllCheckers()
 
     open fun possibleTurns(cell : Cell): Pair<Boolean, List<Cell>> {
         val checkers = getCheckers()

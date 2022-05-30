@@ -19,15 +19,11 @@ open class Board (private val width: Int = 8, private val height: Int = 8) {
                 val cell = Cell(x, y)
                 when {
                     (y <= 2) && ((y + x) % 2 == 1) -> {
-                        val checker = Checker(Color.BLACK).also {
-                            it.setMainBoard(this)
-                        }
+                        val checker = Checker(Color.BLACK, this)
                         checkers[cell] = checker
                     }
                     (y >= 5) && (x + y) % 2 == 1 -> {
-                        val checker = Checker(Color.WHITE).also {
-                            it.setMainBoard(this)
-                        }
+                        val checker = Checker(Color.WHITE, this)
                         checkers[cell] = checker
                     }
                 }
@@ -47,7 +43,7 @@ open class Board (private val width: Int = 8, private val height: Int = 8) {
     fun playerShouldEat() : List<Cell> {
         val result = mutableListOf<Cell>()
         for ((cell, checker) in checkers)
-            if (checker!!.color == turn)
+            if (checker.color == turn)
                 if (possibleTurns(cell).first) result.add(cell)
         return result
     }
@@ -65,8 +61,7 @@ open class Board (private val width: Int = 8, private val height: Int = 8) {
             if (possibleMoves.contains(cell)) {
                 val cells = mutableListOf<Cell>()
                 if ((turn == Color.WHITE && cell.y == 0) || (turn == Color.BLACK && cell.y == 7)) {
-                    val queen = Queen(turn)
-                    queen.setMainBoard(this)
+                    val queen = Queen(turn, this)
                     checkers[cell] = queen
                 } else checkers[cell] = checkers[chooseCell]!!
                 checkers.remove(chooseCell)
@@ -128,13 +123,11 @@ open class Board (private val width: Int = 8, private val height: Int = 8) {
                 val cell = Cell(x, y)
                 when {
                     (y <= 2) && ((y + x) % 2 == 1) -> {
-                        val checker = Checker(Color.BLACK)
-                        checker.setMainBoard(this)
+                        val checker = Checker(Color.BLACK, this)
                         checkers[cell] = checker
                     }
                     (y >= 5) && (x + y) % 2 == 1 -> {
-                        val checker = Checker(Color.WHITE)
-                        checker.setMainBoard(this)
+                        val checker = Checker(Color.WHITE, this)
                         checkers[cell] = checker
                     }
                 }
@@ -150,7 +143,7 @@ open class Board (private val width: Int = 8, private val height: Int = 8) {
         var checkBlack = false
         var checkWhite = false
         for (value in checkers.values) {
-            if (value!!.color == Color.WHITE) checkWhite = true
+            if (value.color == Color.WHITE) checkWhite = true
             if (value.color == Color.BLACK) checkBlack = true
         }
         if (checkBlack && !checkWhite) return Color.BLACK

@@ -68,9 +68,9 @@ class TestCheckersMoves {
 
     @Test
     fun checkerMoves() {
-        checkers[Cell(3, 4)] = Checker(Color.WHITE)
+        checkers[Cell(3, 4)] = Checker(Color.WHITE, Board())
         checkers[Cell(2, 5)] = null
-        checkers[Cell(4, 3)] = Checker(Color.BLACK)
+        checkers[Cell(4, 3)] = Checker(Color.BLACK, Board())
         checkers[Cell(5, 2)] = null
         assertEquals(listOf(Cell(5, 2)), possibleTurnsCheckerTest(Cell(3, 4)).second)
         assertEquals(true, possibleTurnsCheckerTest(Cell(3, 4)).first)
@@ -80,19 +80,19 @@ class TestCheckersMoves {
     @Test
     fun queenMoves() {
         checkers = mutableMapOf()
-        checkers[Cell(0, 1)] = Queen(Color.WHITE)
+        checkers[Cell(0, 1)] = Queen(Color.WHITE, Board())
         assertEquals(listOf(Cell(1, 0), Cell(1, 2), Cell(2, 3), Cell(3, 4), Cell(4, 5),
             Cell(5, 6), Cell(6, 7), ), possibleTurnsQueenTest(Cell(0, 1)).second)
-        checkers[Cell(5, 0)] = Queen(Color.WHITE)
+        checkers[Cell(5, 0)] = Queen(Color.WHITE, Board())
         assertEquals(listOf(Cell(6, 1), Cell(7, 2), Cell(4, 1), Cell(3, 2), Cell(2, 3),
             Cell(1, 4), Cell(0, 5)), possibleTurnsQueenTest(Cell(5, 0)).second)
         assertEquals(false, possibleTurnsQueenTest(Cell(5, 0)).first)
-        checkers[Cell(4, 5)] = Checker(Color.BLACK)
+        checkers[Cell(4, 5)] = Checker(Color.BLACK, Board())
         assertEquals(listOf(Cell(5, 6), Cell(6, 7)), possibleTurnsQueenTest(Cell(0, 1)).second)
         assertEquals(true, possibleTurnsQueenTest(Cell(0, 1)).first)
         assertEquals(false, possibleTurnsQueenTest(Cell(5, 0)).first)
-        checkers[Cell(4, 1)] = Checker(Color.BLACK)
-        checkers[Cell(6, 1)] = Checker(Color.BLACK)
+        checkers[Cell(4, 1)] = Checker(Color.BLACK, Board())
+        checkers[Cell(6, 1)] = Checker(Color.BLACK, Board())
         assertEquals(listOf(Cell(7, 2), Cell(3, 2), Cell(2, 3),
             Cell(1, 4), Cell(0, 5)), possibleTurnsQueenTest(Cell(5, 0)).second)
         assertEquals(true, possibleTurnsQueenTest(Cell(5, 0)).first)

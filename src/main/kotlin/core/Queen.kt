@@ -1,6 +1,6 @@
 package core
 
-class Queen(color: Color): Checker(color) {
+class Queen(color: Color, board: Board): Checker(color, board) {
     override fun possibleTurns(cell: Cell): Pair<Boolean, List<Cell>> {
         val checkers = getCheckers()
         val result = mutableListOf<Cell>()

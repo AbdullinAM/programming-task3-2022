@@ -15,10 +15,10 @@ class Test: Board() {
 
     @Test
     fun testOpposite() {
-        assertEquals(true, Checker(Color.WHITE).isOpposite(Checker(Color.BLACK)))
-        assertEquals(false, Checker(Color.BLACK).isOpposite(Checker(Color.BLACK)))
-        assertEquals(false, Checker(Color.BLACK).isOpposite(Queen(Color.BLACK)))
-        assertEquals(true, Queen(Color.BLACK).isOpposite(Queen(Color.WHITE)))
+        assertEquals(true, Checker(Color.WHITE, this).isOpposite(Checker(Color.BLACK, this)))
+        assertEquals(false, Checker(Color.BLACK, this).isOpposite(Checker(Color.BLACK, this)))
+        assertEquals(false, Checker(Color.BLACK, this).isOpposite(Queen(Color.BLACK, this)))
+        assertEquals(true, Queen(Color.BLACK, this).isOpposite(Queen(Color.WHITE, this)))
     }
 
     @Test
