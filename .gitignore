@@ -2,7 +2,11 @@
 .idea
 /build/
 /target/
-
+/local.properties
+.DS_Store
+/captures
+.externalNativeBuild
+.cxx
 # Ignore Gradle GUI config
 gradle-app.setting
 
@@ -16,3 +20,4 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 *.iml
+
