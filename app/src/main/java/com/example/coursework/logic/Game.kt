@@ -3,10 +3,6 @@ package com.example.coursework.logic
 import androidx.compose.ui.graphics.Color
 import com.example.coursework.core.Cell
 import com.example.coursework.core.Directions
-import com.example.coursework.core.Moves
-import com.example.coursework.core.Vector
-import org.jetbrains.annotations.NotNull
-import java.util.*
 import kotlin.random.Random
 
 class Game constructor(

@@ -166,7 +166,6 @@ fun DrawGrid() {
                         )
                     }
                 }
-
                 if (gameOver) GameOverAttention()
             }
     }
