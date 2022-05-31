@@ -6,84 +6,108 @@ import com.example.coursework.core.Directions
 import com.example.coursework.core.Moves
 import com.example.coursework.core.Vector
 import org.jetbrains.annotations.NotNull
+import java.util.*
 import kotlin.random.Random
 
 class Game constructor(
     private var grid: MutableMap<Cell, Int?> = mutableMapOf(),
-    private var score: Int = 0
+    private var score: Int = 0,
+    private var isGameOver: Boolean = false
 ) {
 
     init {
         createStartGrid()
     }
 
-    fun getGrid(): MutableMap<Cell, Int?> {
-        return grid
-    }
-
-    fun getScore(): Int {
-        return score
-    }
-
-    fun setScore(score: Int) {
-        this.score = score
-    }
-
     fun moveGrid(directions: Directions) {
-        var scoreToAdd = 0
+        if (!isGameOver) {
+            val startGrid = grid.toMap()
+            var scoreToAdd = 0
 
-        var wasReversed = false
-        if (directions == Directions.DOWN || directions == Directions.RIGHT) {
-            wasReversed = true
-            grid = reverseGrid()
-        }
+            var wasReversed = false
+            if (directions == Directions.DOWN || directions == Directions.RIGHT) {
+                wasReversed = true
+                grid = reverseGrid()
+            }
 
-        grid.forEach { (cell, value) ->
-            if (value != null) {
-                val allowedNeighbor = getClosestCell(directions, cell)
-                if (grid[allowedNeighbor] == null) {
-                    grid[allowedNeighbor] = value
-                    grid[cell] = null
-                } else if (grid[allowedNeighbor] == value) {
-                    if (allowedNeighbor != cell) {
-                        grid[allowedNeighbor] = grid[allowedNeighbor]?.times(2)
-                        scoreToAdd += grid[allowedNeighbor]!!
-                        grid[cell] = null
-                    }
-                } else {
-                    grid[allowedNeighbor.moveForward(getOpposite(directions).getVector())] = value
-                    if (allowedNeighbor.moveForward(getOpposite(directions).getVector()) != cell) {
-                        grid[cell] = null
+            grid.forEach { (cell, value ) ->
+                if (value != null) {
+                    val allowedNeighbor = getClosestCell(directions, cell)
+                    when (grid[allowedNeighbor]) {
+                        null -> {
+                            grid[allowedNeighbor] = value
+                            grid[cell] = null
+                        }
+                        value -> {
+                            if (allowedNeighbor != cell) {
+                                grid[allowedNeighbor] = grid[allowedNeighbor]?.times(2)
+                                scoreToAdd += grid[allowedNeighbor]!!
+                                grid[cell] = null
+                            }
+                        }
+                        else -> {
+                            val closestEmptyCell = allowedNeighbor.moveForward(directions.getOpposite().getVector())
+                            grid[closestEmptyCell] = value
+                            if (closestEmptyCell != cell) grid[cell] = null
+                        }
                     }
                 }
             }
-        }
-
-        score += scoreToAdd
-        if (wasReversed) grid = reverseGrid()
-
-        val newCell = spawnCell()
-        grid[newCell!!.first] = newCell.second
-    }
 
 
-    fun getOpposite(directions: Directions): Directions {
-        return when (directions) {
-            Directions.UP -> Directions.DOWN
-            Directions.DOWN -> Directions.UP
-            Directions.RIGHT -> Directions.LEFT
-            else -> Directions.RIGHT
+            score += scoreToAdd
+            if (wasReversed) grid = reverseGrid()
+
+            if (grid != startGrid) {
+                val newCell = spawnCell()
+                grid[newCell!!.first] = newCell.second
+            }
+
+            checkGameOver()
         }
     }
 
-    fun reverseGrid(): MutableMap<Cell, Int?> {
-        val result = mutableMapOf<Cell, Int?>()
-        val mapToList = grid.toList().reversed()
-        for (i in mapToList.indices) {
-            result[mapToList[i].first] = mapToList[i].second
-        }
-        return result
+
+    fun createStartGrid() {
+        createEmptyGrid()
+        val firstCell = spawnCell()
+        val secondCell = spawnCell()
+        grid[firstCell!!.first] = firstCell.second
+        grid[secondCell!!.first] = secondCell.second
     }
+
+    private fun createEmptyGrid() {
+        for (y in 0 until GRID_SIZE) {
+            for (x in 0 until GRID_SIZE) {
+                val cell = Cell(x, y)
+                grid[cell] = null
+            }
+        }
+    }
+
+    fun getEmptyCells(): List<Cell> {
+        val emptyCells = mutableListOf<Cell>()
+        for (y in 0 until GRID_SIZE) {
+            for (x in 0 until GRID_SIZE) {
+                val cell = Cell(x, y)
+                if (grid[cell] != null) continue
+                emptyCells.add(cell)
+            }
+        }
+        return emptyCells
+    }
+
+    fun spawnCell(): Pair<Cell, Int>? {
+        val emptyCells = getEmptyCells()
+        if (emptyCells.isEmpty()) return null
+        val chosenCell = emptyCells[Random.nextInt(0, emptyCells.size)]
+        val value = if ((0..9).random() > 0) 2 else 4
+        return chosenCell to value
+    }
+
+
+    fun isInGrid(cell: Cell): Boolean = cell.row < GRID_SIZE && cell.column < GRID_SIZE
+            && cell.row >= 0 && cell.column >= 0
 
 
     fun getClosestCell(directions: Directions, cell: Cell): Cell {
@@ -101,46 +125,43 @@ class Game constructor(
         return result
     }
 
-    fun isInGrid(cell: Cell): Boolean = cell.row < 4 && cell.column < 4
-            && cell.row >= 0 && cell.column >= 0
 
-    fun createStartGrid() {
-        createEmptyGrid()
-        val firstCell = spawnCell()
-        val secondCell = spawnCell()
-        grid[firstCell!!.first] = firstCell.second
-        grid[secondCell!!.first] = secondCell.second
+    fun getClosestCells(cell: Cell): List<Cell> {
+        val result = mutableListOf<Cell>()
+        enumValues<Directions>().forEach {
+            result.add(getClosestCell(it, cell))
+        }
+        return result
     }
 
-    fun createEmptyGrid() {
-        for (y in 0 until 4) {
-            for (x in 0 until 4) {
-                val cell = Cell(x, y)
-                grid[cell] = null
+
+    private fun reverseGrid(): MutableMap<Cell, Int?> {
+        val result = mutableMapOf<Cell, Int?>()
+        val mapToList = grid.toList().reversed()
+        for (i in mapToList.indices) {
+            result[mapToList[i].first] = mapToList[i].second
+        }
+        return result
+    }
+
+
+    fun checkGameOver() {
+        var flag = false
+        if (getEmptyCells().isEmpty()) {
+            grid.forEach { (cell, value) ->
+                for (option in getClosestCells(cell)) {
+                    if (option != cell) {
+                        if (grid[option] == value) flag = true
+                    }
+                }
             }
+            if (!flag) isGameOver = true
         }
     }
 
-    fun spawnCell(): Pair<Cell, Int>? {
-        val emptyCells = getEmptyCells()
-        if (emptyCells.isEmpty()) return null
-        val chosenCell = emptyCells[Random.nextInt(0, emptyCells.size)]
-        val value = if ((0..9).random() > 0) 2 else 4
-        return chosenCell to value
-    }
 
-    fun getEmptyCells(): List<Cell> {
-        val emptyCells = mutableListOf<Cell>()
-        for (y in 0 until 4) {
-            for (x in 0 until 4) {
-                val cell = Cell(x, y)
-                if (grid[cell] != null) continue
-                emptyCells.add(cell)
-            }
-        }
-        return emptyCells
-    }
-
+    companion object{
+        const val GRID_SIZE = 4
 
         fun getCellColor(number: Int?): Color {
             when (number) {
@@ -157,13 +178,31 @@ class Game constructor(
                 2048 -> return Color(0xffffc22e)
                 4096 -> return Color(0xff6882f9)
                 8192 -> return Color(0xff3355f7)
+                else -> return Color(0xffebe7e1)
             }
-            return Color(0xffebe7e1)
         }
     }
 
+    fun getGameOver(): Boolean {
+        return isGameOver
+    }
 
+    fun setGameOver(isGameOver: Boolean) {
+        this.isGameOver = isGameOver
+    }
 
+    fun getGrid(): MutableMap<Cell, Int?> {
+        return grid
+    }
+
+    fun getScore(): Int {
+        return score
+    }
+
+    fun setScore(score: Int) {
+        this.score = score
+    }
+}
 
 
 

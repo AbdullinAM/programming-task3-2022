@@ -16,6 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
@@ -25,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.coursework.core.Cell
 import com.example.coursework.core.Directions
 import com.example.coursework.logic.*
@@ -55,9 +57,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DrawGrid() {
     val game by remember { mutableStateOf(Game()) }
+    var gameOver by remember { mutableStateOf(false) }
     var gameScore by remember { mutableStateOf(0) }
     var color by remember { mutableStateOf(Color(0xffebe7e1)) }
     var direction by remember { mutableStateOf(-1) }
+
     Box (
         Modifier
             .fillMaxSize()
@@ -94,11 +98,12 @@ fun DrawGrid() {
                             }
                         }
                         gameScore = game.getScore()
+                        gameOver = game.getGameOver()
                     }
                 )
             }
         ) {
-            Column() {
+            Column {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(4),
                     contentPadding = PaddingValues(
@@ -110,7 +115,7 @@ fun DrawGrid() {
                     content = {
                         items(game.getGrid().size) { index ->
                             val value = game.getGrid().toList()[index].second
-                            color = game.getCellColor(value)
+                            color = Game.getCellColor(value)
                             Card(
                                 backgroundColor = color,
                                 modifier = Modifier
@@ -130,60 +135,89 @@ fun DrawGrid() {
                         }
                     }
                 )
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(100.dp)
-                            .background(Color(0xffebe7e1))
-                            .wrapContentSize(
-                                Alignment.Center
-                            )
-                    ) {
-                        Text(
-                            text = "$gameScore"
-                        )
-                    }
+
+                    ScoreBox(gameScore = gameScore)
 
                     Button(
                         onClick = {
                             game.createStartGrid()
                             gameScore = 0
                             game.setScore(0)
+                            gameOver = false
+                            game.setGameOver(false)
                         },
                         modifier = Modifier
-                            .background(Color(0xffebe7e1))
-                            .wrapContentSize(Alignment.Center)
+                            .wrapContentSize(Alignment.Center),
+                        shape = RoundedCornerShape(4.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(0xffffb278)
+                        )
                     ) {
                         Text(
-                            text = "Restart"
+                            text = "Restart",
+                            color = Color.White,
+                            fontWeight = FontWeight.ExtraBold
                         )
-                    } 
-                } 
+                    }
+                }
+
+                if (gameOver) GameOverAttention()
             }
     }
 }
 
 
-
-
 @Composable
-fun ScoreBox(score: Int) {
+fun ScoreBox(gameScore: Int) {
     Box(
         modifier = Modifier
             .size(100.dp)
-            .background(Color(0xffebe7e1)),
-        contentAlignment = Alignment.BottomStart
+            .background(Color(0xfff77b61))
+            .wrapContentSize(
+                Alignment.Center
+            )
     ) {
         Text(
-            modifier = Modifier.wrapContentSize(Alignment.Center),
-            text = "Score:\n$score"
+            text = "$gameScore",
+            color = Color.White,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.ExtraBold
         )
     }
 }
+
+@Composable
+fun GameOverAttention() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+           modifier = Modifier
+               .fillMaxSize()
+               .padding(10.dp)
+               .background(Color(0xffffc22e))
+               .wrapContentSize(Alignment.Center)
+        ) {
+            Text(
+                text = "GAME OVER! Press the restart button to start over!",
+                fontWeight = FontWeight.ExtraBold,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+
 
 
 @Preview(showBackground = true)
