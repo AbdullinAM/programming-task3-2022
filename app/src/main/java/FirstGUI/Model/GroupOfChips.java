@@ -19,31 +19,38 @@ public class GroupOfChips {
         if(quantity >= 0 && quantity < 16){
             this.quantity = quantity;
         } else {
-            throw new IllegalArgumentException("Quantity of chips should be 0..15");}
+            throw new IllegalArgumentException("Quantity of chips should be 0..15");
+        }
         return this;
     }
 
-    public Integer getQuantity() { return quantity; }
+    public Integer getQuantity() {
+        return quantity;
+    }
 
     public GroupOfChips setColor(ChipColor color) {
         this.color = color;
         return this;
     }
 
-    public ChipColor getColor() { return color; }
+    public ChipColor getColor() {
+        return color;
+    }
 
     public void decreaseQuantity(){
         quantity -= 1;
         if (quantity==0){
             color = NO_COLOR;
-        }}
+        }
+    }
 
     public void increaseQuantity(ChipColor color) {
-        if(this.color == color.opposite())
+        if(this.color == color.opposite()) {
             throw new IllegalArgumentException("Tried to make turn into opponent's position");
+        }
         if (quantity==0){
             this.color = color;
         }
         quantity +=1;
-        }
+    }
 }

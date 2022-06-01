@@ -1,6 +1,5 @@
 package FirstGUI.Controller;
 
-import static FirstGUI.Model.ChipColor.*;
 import FirstGUI.Controller.Buttons.OfferTurnButton;
 import FirstGUI.Model.*;
 import javafx.fxml.FXML;
@@ -21,12 +20,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static FirstGUI.Model.ChipColor.*;
+import static FirstGUI.Model.Field.fieldSize;
+import static FirstGUI.Model.Field.exit;
+
 /*Контроллер и отрисовщик */
 public class Cntrllr implements ModelListener {
 
     public Cntrllr() {
-        chipImagesMap.put(ChipColor.WHITE, new ImagePattern(new Image("white3.png")));
-        chipImagesMap.put(ChipColor.BLACK, new ImagePattern(new Image("black1.png")));
+        chipImagesMap.put(WHITE, new ImagePattern(new Image("white3.png")));
+        chipImagesMap.put(BLACK, new ImagePattern(new Image("black1.png")));
     }
 
 //  Поля и методы для основного окна
@@ -61,10 +64,10 @@ public class Cntrllr implements ModelListener {
     private Label diceLabel2;
 
     @FXML
-    private Rectangle whiteExit;
+    private Rectangle whiteExitRectangle;
 
     @FXML
-    private Rectangle blackExit;
+    private Rectangle blackExitRectangle;
 
     @FXML
     private void diceButtonClicked(){
@@ -96,7 +99,7 @@ public class Cntrllr implements ModelListener {
             gridPane.getChildren().clear();
         }
         /* for column of field */
-        for (int i = 0; i < 24; i++) {
+        for (int i = 0; i < fieldSize; i++) {
             GroupOfChips chipsInColumn = field.get(i);
             int numberOfChips = chipsInColumn.getQuantity();
             if (numberOfChips > 0) {
@@ -127,10 +130,12 @@ public class Cntrllr implements ModelListener {
         if (selectedColumn > -1) {
             List<Integer> probableTurns = model.getPossibleTurns(selectedColumn);
             probableTurns.forEach(position -> {
-                        if (position == 24)
+                        if (position == exit){
                             openExit(field.get(selectedColumn).getColor());
-                        else
+                        }
+                        else {
                             gridPanes[position / 6].add(new Circle(10, green), position % 6, 14 - field.get(position).getQuantity());
+                        }
                     });
             gridPanes[selectedColumn/6].add(
                     new Buttons.RefuseTurnButton(this),selectedColumn%6,15-field.get(selectedColumn).getQuantity());
@@ -142,7 +147,9 @@ public class Cntrllr implements ModelListener {
                 passTurnAlert();
             }
         }
-        if (field.winnerIs() != null) winnerAlert(field.winnerIs());
+        if (field.winnerIs() != null) {
+            winnerAlert(field.winnerIs());
+        }
 
     }
 
@@ -154,23 +161,31 @@ public class Cntrllr implements ModelListener {
         }
         Integer currentNumberInLabel1 = Integer.parseInt(diceLabel1.getText());
         Integer currentNumberInLabel2 = Integer.parseInt(diceLabel2.getText());
-        if (!turnsLeft.contains(currentNumberInLabel1)) diceLabel1.setOpacity(0.1); else diceLabel1.setOpacity(1.0);
-        if (!turnsLeft.contains(currentNumberInLabel2)) diceLabel2.setOpacity(0.1); else diceLabel2.setOpacity(1.0);
+        if (!turnsLeft.contains(currentNumberInLabel1)) {
+            diceLabel1.setOpacity(0.1);
+        } else {
+            diceLabel1.setOpacity(1.0);
+        }
+        if (!turnsLeft.contains(currentNumberInLabel2)) {
+            diceLabel2.setOpacity(0.1);
+        } else {
+            diceLabel2.setOpacity(1.0);
+        }
     }
 
     void openExit(ChipColor color){
-        Rectangle exit = color == WHITE? whiteExit : blackExit;
-        exit.setOpacity(1);
-        exit.setOnMouseClicked(event -> {
+        Rectangle exitRect = color == WHITE? whiteExitRectangle : blackExitRectangle;
+        exitRect.setOpacity(1);
+        exitRect.setOnMouseClicked(event -> {
             List<Integer> turns = model.getTurnsLeft();
-            model.makeTurn(selectedColumn, 24);
+            model.makeTurn(selectedColumn, exit);
             closeExit(color);
         });
     }
 
     void closeExit(ChipColor color) {
         selectedColumn = -1;
-        Rectangle exit = color == WHITE? whiteExit : blackExit;
+        Rectangle exit = color == WHITE? whiteExitRectangle : blackExitRectangle;
         exit.setOpacity(0.0);
         exit.setOnMouseClicked(event -> {});
         updateBoard();

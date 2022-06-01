@@ -1,5 +1,6 @@
 package FirstGUI.View;
 
+import FirstGUI.Controller.Buttons;
 import FirstGUI.Controller.Cntrllr;
 import FirstGUI.Controller.CntrllrOfStartDialog;
 import FirstGUI.Model.ChipColor;
@@ -7,18 +8,22 @@ import FirstGUI.Model.Dice;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Dialog;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+
+import java.util.Optional;
 
 public class Launcher extends javafx.application.Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        //        Стартовый диалог
+//                Стартовый диалог
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/startDialog.fxml"));
-        Dialog preGameDialog = new Dialog();
+        Dialog<ButtonType> preGameDialog = new Dialog<>();
         preGameDialog.setDialogPane(loader.load());
         preGameDialog.setTitle("Pregame settings");
         preGameDialog.showAndWait();
@@ -32,7 +37,6 @@ public class Launcher extends javafx.application.Application {
         Cntrllr controllerOfMainScene = loader.getController();
         controllerOfMainScene.scrboard = controllerOfStartDialog;
         controllerOfMainScene.updateBoard();
-
 
           //Алерт говорящий кто ходит первым
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
