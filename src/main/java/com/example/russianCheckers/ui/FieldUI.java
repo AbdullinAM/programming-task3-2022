@@ -155,16 +155,47 @@ public class FieldUI implements Runnable {
                     }
 
                     // render checkers
-                    checkerUI.entrySet().stream().filter(checker -> !checker.getKey().getPosition().equals(FieldModifier.coordinatesToPosition(checker.getValue().getCenterX() + ((double) CELL_LENGTH) / 2, checker.getValue().getCenterY() + ((double) CELL_LENGTH) / 2))).forEach(checker -> {
-                        checker.getValue().setCenterX(FieldModifier.getXFromPosition(checker.getKey().getPosition()) - ((double) CELL_LENGTH) / 2);
-                        checker.getValue().setCenterY(FieldModifier.getYFromPosition(checker.getKey().getPosition()) - ((double) CELL_LENGTH) / 2);
+                    checkerUI
+                            .entrySet()
+                            .stream()
+                            .filter(checker -> !checker
+                                    .getKey()
+                                    .getPosition()
+                                    .equals(
+                                            FieldModifier.coordinatesToPosition(
+                                            checker.getValue().getCenterX() + ((double) CELL_LENGTH) / 2,
+                                            checker.getValue().getCenterY() + ((double) CELL_LENGTH) / 2)
+                                    ))
+                            .forEach(checker -> {
+                                checker
+                                        .getValue()
+                                        .setCenterX(FieldModifier
+                                                .getXFromPosition(checker.getKey().getPosition()) - ((double) CELL_LENGTH) / 2);
+                                checker
+                                        .getValue()
+                                        .setCenterY(FieldModifier
+                                                .getYFromPosition(checker.getKey().getPosition()) - ((double) CELL_LENGTH) / 2);
                     });
 
                     // render ate checkers
-                    checkerUI.entrySet().stream().filter(checker -> checker.getKey().getCheckerStatus() == CheckerStatus.FREE).forEach(checkerUI -> checkerUI.getValue().setRadius(0));
+                    checkerUI
+                            .entrySet()
+                            .stream()
+                            .filter(checker -> checker.getKey().getCheckerStatus() == CheckerStatus.FREE)
+                            .forEach(checkerUI -> checkerUI.getValue().setRadius(0));
                     // render superChecker
-                    checkerUI.entrySet().stream().filter(checker -> checker.getKey().isSuperChecker()).filter(checker -> checker.getKey().getCheckerStatus() == CheckerStatus.WHITE).forEach(checker -> checker.getValue().setFill(SUPER_CHECKER_COLOR_WHITE));
-                    checkerUI.entrySet().stream().filter(checker -> checker.getKey().isSuperChecker()).filter(checker -> checker.getKey().getCheckerStatus() == CheckerStatus.BLACK).forEach(checker -> checker.getValue().setFill(SUPER_CHECKER_COLOR_BLACK));
+                    checkerUI
+                            .entrySet()
+                            .stream()
+                            .filter(checker -> checker.getKey().isSuperChecker())
+                            .filter(checker -> checker.getKey().getCheckerStatus() == CheckerStatus.WHITE)
+                            .forEach(checker -> checker.getValue().setFill(SUPER_CHECKER_COLOR_WHITE));
+                    checkerUI
+                            .entrySet()
+                            .stream()
+                            .filter(checker -> checker.getKey().isSuperChecker())
+                            .filter(checker -> checker.getKey().getCheckerStatus() == CheckerStatus.BLACK)
+                            .forEach(checker -> checker.getValue().setFill(SUPER_CHECKER_COLOR_BLACK));
                 } catch (Exception ignore) {}
             }
         }
