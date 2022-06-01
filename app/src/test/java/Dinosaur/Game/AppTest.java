@@ -3,12 +3,13 @@
  */
 package Dinosaur.Game;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
     @Test
@@ -59,5 +60,21 @@ class AppTest {
         dino.jump();
         Dino expected = new Dino(0,20,50,50);
         Assertions.assertEquals(dino, expected);
+    }
+
+    @Test
+    void test7() throws FileNotFoundException {
+        Dino dino = new Dino(0,0,0,0);
+        FileInputStream fileInputStream = new FileInputStream("/Users/vladalodocnikova/IdeaProjects/programming-task3-2022/app/src/main/resources/Image/charmander.png");
+        Image image;
+        image = new Image(fileInputStream);
+        ImageView imageView = new ImageView(image);
+        dino.setImageView(imageView);
+
+        Dino expected = new Dino(0,0,0,0, imageView);
+
+        Assertions.assertEquals(dino, expected);
+
+
     }
 }

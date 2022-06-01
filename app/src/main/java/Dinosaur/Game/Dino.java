@@ -56,6 +56,14 @@ public class Dino {
         this.height = height;
     }
 
+    public Dino (int X, int Y, int width, int height,ImageView imageView){
+        posX=X;
+        posY=Y;
+        this.width = width;
+        this.height = height;
+        this.imageView=imageView;
+    }
+
     public Group getRoot() {
         return root;
     }
@@ -124,11 +132,11 @@ public class Dino {
         if (o == null || getClass() != o.getClass()) return false;
         Dino dino = (Dino) o;
         return width == dino.width && height == dino.height && posX == dino.posX && posY == dino.posY &&
-                health == dino.health;
+                health == dino.health && imageView == dino.imageView;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(width, height, posX, posY, health);
+        return Objects.hash(width, height, posX, posY, health,imageView);
     }
 }
