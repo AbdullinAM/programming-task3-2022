@@ -8,13 +8,21 @@ import java.util.Map;
 @Data
 public class Field {
 
-    private static Map<String, Checker> cells = new HashMap<>();
+    private Map<String, Checker> cells = new HashMap<>();
+
+    private static Field instance;
+
+    public static Field getInstance() {
+        return instance;
+    }
+    private Field() {}
 
     static {
-        refreshField();
+        instance = new Field();
+        instance.refreshField();
     }
 
-    public static void refreshField() {
+    public void refreshField() {
         cells.clear();
         cells.put("F1", Checker.newBuilder().setIsSuperChecker(false).setPosition("F1").setCheckerStatus(CheckerStatus.WHITE).build());
         cells.put("F3", Checker.newBuilder().setIsSuperChecker(false).setPosition("F3").setCheckerStatus(CheckerStatus.WHITE).build());
@@ -52,8 +60,8 @@ public class Field {
         cells.put("C8", Checker.newBuilder().setIsSuperChecker(false).setPosition("C8").setCheckerStatus(CheckerStatus.BLACK).build());
     }
 
-    public static Map<String, Checker> getCells() {
-        return Field.cells;
+    public Map<String, Checker> getCells() {
+        return this.cells;
     }
 
 }

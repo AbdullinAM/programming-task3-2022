@@ -42,25 +42,25 @@ public class FieldModifierTests {
 
     @Test
     public void findAvailableStepsTest() {
-        Field.refreshField();
-        Checker checker1 = Field.getCells().get("C2");
+        Field.getInstance().refreshField();
+        Checker checker1 = Field.getInstance().getCells().get("C2");
         checker1.setSuperChecker(true);
         assertEquals(3, FieldModifier.findAvailableSteps(checker1, false).size());
 
-        Checker checker2 = Field.getCells().get("A2");
+        Checker checker2 = Field.getInstance().getCells().get("A2");
         assertEquals(0, FieldModifier.findAvailableSteps(checker2, false).size());
 
 
-        Checker checker3 = Field.getCells().get("F3");
+        Checker checker3 = Field.getInstance().getCells().get("F3");
         assertEquals(2, FieldModifier.findAvailableSteps(checker3, true).size());
     }
 
     @Test
     public void checkSuperCheckerTest() {
-        FieldModifier.setSelectedChecker(Field.getCells().get("F3"));
+        FieldModifier.setSelectedChecker(Field.getInstance().getCells().get("F3"));
         assertFalse(FieldModifier.checkNewSuperChecker());
 
-        Checker checker = Field.getCells().get("A2");
+        Checker checker = Field.getInstance().getCells().get("A2");
         checker.setCheckerStatus(CheckerStatus.WHITE);
         FieldModifier.setSelectedChecker(checker);
         assertTrue(FieldModifier.checkNewSuperChecker());
@@ -68,12 +68,12 @@ public class FieldModifierTests {
 
     @Test
     public void tryChangeSideTest() {
-        FieldModifier.setSelectedChecker(Field.getCells().get("F3"));
+        FieldModifier.setSelectedChecker(Field.getInstance().getCells().get("F3"));
         FieldModifier.tryChangeSide("F3", "E4");
         assertFalse(FieldModifier.isWhiteStep());
 
         FieldModifier.setIsWhiteStep(true);
-        Field.getCells().get("E4").setCheckerStatus(CheckerStatus.BLACK);
+        Field.getInstance().getCells().get("E4").setCheckerStatus(CheckerStatus.BLACK);
         FieldModifier.tryChangeSide("F3", "D5");
         assertFalse(FieldModifier.isWhiteStep());
     }

@@ -116,7 +116,7 @@ public class FieldUI implements Runnable {
 
     private void printCheckers(Group group) {
         checkerUI.clear();
-        for (Map.Entry<String, Checker> checkerEntry: Field.getCells().entrySet()) {
+        for (Map.Entry<String, Checker> checkerEntry: Field.getInstance().getCells().entrySet()) {
             Circle circle = new Circle();
             circle.setRadius(35);
             circle.setCenterX(FieldModifier.getXFromPosition(checkerEntry.getKey()) - CELL_LENGTH / 2);

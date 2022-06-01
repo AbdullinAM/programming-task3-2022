@@ -35,13 +35,13 @@ public class FieldModifier {
         pos = vertical.apply(pos);
         pos = horizontal.apply(pos);
         while (insideDesk(pos)) {
-            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE) result.add(pos);
-            if (Field.getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && (isPreviousBlack || isPreviousWhite)) return;
-            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.BLACK) isPreviousBlack = true;
-            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.WHITE) isPreviousWhite = true;
-            if (Field.getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && isAlreadyAte) return;
-            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isPreviousBlack && checker.getCheckerStatus() == CheckerStatus.WHITE && !isAlreadyAte) { isAlreadyAte = true; result.add(pos); }
-            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isPreviousWhite && checker.getCheckerStatus() == CheckerStatus.BLACK && !isAlreadyAte) { isAlreadyAte = true; result.add(pos); }
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE) result.add(pos);
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && (isPreviousBlack || isPreviousWhite)) return;
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.BLACK) isPreviousBlack = true;
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.WHITE) isPreviousWhite = true;
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && isAlreadyAte) return;
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isPreviousBlack && checker.getCheckerStatus() == CheckerStatus.WHITE && !isAlreadyAte) { isAlreadyAte = true; result.add(pos); }
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isPreviousWhite && checker.getCheckerStatus() == CheckerStatus.BLACK && !isAlreadyAte) { isAlreadyAte = true; result.add(pos); }
             pos = vertical.apply(pos);
             pos = horizontal.apply(pos);
         }
@@ -51,12 +51,12 @@ public class FieldModifier {
         String pos = checker.getPosition();
         pos = vertical.apply(pos);
         pos = horizontal.apply(pos);
-        if (Field.getCells().get(pos) != null && Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && !lockBeckStep)
+        if (Field.getInstance().getCells().get(pos) != null && Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && !lockBeckStep)
             result.add(pos);
-        else if (Field.getCells().get(pos) != null && Field.getCells().get(pos).getCheckerStatus() == enemy) {
+        else if (Field.getInstance().getCells().get(pos) != null && Field.getInstance().getCells().get(pos).getCheckerStatus() == enemy) {
             pos = vertical.apply(pos);
             pos = horizontal.apply(pos);
-            if (Field.getCells().get(pos) != null && Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE)
+            if (Field.getInstance().getCells().get(pos) != null && Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE)
                 result.add(pos);
         }
     }
@@ -114,8 +114,10 @@ public class FieldModifier {
 
         List<String> positions = calculateRangePositions(positionBefore, positionAfter);
 
-        if (isWhiteStep && positions.stream().map(pos -> Field.getCells().get(pos)).anyMatch(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK)) {
-
+        if (isWhiteStep && positions
+                .stream()
+                .map(pos -> Field.getInstance().getCells().get(pos))
+                .anyMatch(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK)) {
             eat(positions);
             availablePositions.clear();
             availablePositions.addAll(findAvailableStepsAfterEat(selectedChecker, isWhiteStep));
@@ -127,7 +129,10 @@ public class FieldModifier {
             return;
         }
 
-        if (!isWhiteStep && positions.stream().map(pos -> Field.getCells().get(pos)).anyMatch(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE)) {
+        if (!isWhiteStep && positions
+                .stream()
+                .map(pos -> Field.getInstance().getCells().get(pos))
+                .anyMatch(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE)) {
             eat(positions);
             availablePositions.clear();
             availablePositions.addAll(findAvailableStepsAfterEat(selectedChecker, isWhiteStep));
@@ -152,13 +157,21 @@ public class FieldModifier {
         pos = vertical.apply(pos);
         pos = horizontal.apply(pos);
         while (insideDesk(pos)) {
-            if (Field.getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && (isPreviousBlack || isPreviousWhite)) return;
-            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isAlreadyAte) result.add(pos);
-            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.BLACK) isPreviousBlack = true;
-            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.WHITE) isPreviousWhite = true;
-            if (Field.getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && isAlreadyAte) return;
-            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isPreviousBlack && checker.getCheckerStatus() == CheckerStatus.WHITE && !isAlreadyAte) { isAlreadyAte = true; result.add(pos); }
-            if (Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isPreviousWhite && checker.getCheckerStatus() == CheckerStatus.BLACK && !isAlreadyAte) { isAlreadyAte = true; result.add(pos); }
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && (isPreviousBlack || isPreviousWhite)) return;
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE && isAlreadyAte) result.add(pos);
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.BLACK) isPreviousBlack = true;
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.WHITE) isPreviousWhite = true;
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() != CheckerStatus.FREE && isAlreadyAte) return;
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE &&
+                    isPreviousBlack && checker.getCheckerStatus() == CheckerStatus.WHITE && !isAlreadyAte) {
+                isAlreadyAte = true;
+                result.add(pos);
+            }
+            if (Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE &&
+                    isPreviousWhite && checker.getCheckerStatus() == CheckerStatus.BLACK && !isAlreadyAte) {
+                isAlreadyAte = true;
+                result.add(pos);
+            }
             pos = vertical.apply(pos);
             pos = horizontal.apply(pos);
         }
@@ -168,16 +181,19 @@ public class FieldModifier {
         String pos = checker.getPosition();
         pos = vertical.apply(pos);
         pos = horizontal.apply(pos);
-        if (Field.getCells().get(pos) != null && Field.getCells().get(pos).getCheckerStatus() == enemy) {
+        if (Field.getInstance().getCells().get(pos) != null && Field.getInstance().getCells().get(pos).getCheckerStatus() == enemy) {
             pos = vertical.apply(pos);
             pos = horizontal.apply(pos);
-            if (Field.getCells().get(pos) != null && Field.getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE)
+            if (Field.getInstance().getCells().get(pos) != null && Field.getInstance().getCells().get(pos).getCheckerStatus() == CheckerStatus.FREE)
                 result.add(pos);
         }
     }
 
     private static void eat(List<String> positions) {
-        positions.stream().map(pos -> Field.getCells().get(pos)).forEach(checker -> checker.setCheckerStatus(CheckerStatus.FREE));
+        positions
+                .stream()
+                .map(pos -> Field.getInstance().getCells().get(pos))
+                .forEach(checker -> checker.setCheckerStatus(CheckerStatus.FREE));
     }
     private static List<String> calculateRangePositions(String positionOne, String positionTwo) {
         List<String> result = new ArrayList<>();
@@ -239,8 +255,8 @@ public class FieldModifier {
     public static void tryFinalizeGame() {
         // one side has no available positions or no checkers
         if (
-                Field.getCells().entrySet().stream().noneMatch(checker -> checker.getValue().getCheckerStatus() == CheckerStatus.BLACK) ||
-                Field.getCells().entrySet().stream().noneMatch(checker -> checker.getValue().getCheckerStatus() == CheckerStatus.WHITE) ||
+                Field.getInstance().getCells().entrySet().stream().noneMatch(checker -> checker.getValue().getCheckerStatus() == CheckerStatus.BLACK) ||
+                Field.getInstance().getCells().entrySet().stream().noneMatch(checker -> checker.getValue().getCheckerStatus() == CheckerStatus.WHITE) ||
                 !hasAnyAvailableStep()) {
             FieldUI.getFieldUI().renderEndGamePage();
         }
@@ -249,23 +265,34 @@ public class FieldModifier {
     public static boolean isNeedOnlyEat() {
         AtomicBoolean takeAllPos = new AtomicBoolean(false);
         if (isWhiteStep) {
-            Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE).forEach(checker -> {
-                findAvailableSteps(checker, true).forEach(pos -> {
-                    if (calculateRangePositions(checker.getPosition(), pos).stream()
-                            .anyMatch(btwPos -> Field.getCells().get(btwPos).getCheckerStatus() == CheckerStatus.BLACK)) {
-                        takeAllPos.set(true);
-                    }
-                });
-            });
+            Field
+                    .getInstance()
+                    .getCells()
+                    .values()
+                    .stream()
+                    .filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE)
+                    .forEach(checker ->
+                            findAvailableSteps(checker, true).forEach(pos -> {
+                                if (calculateRangePositions(checker.getPosition(), pos)
+                                        .stream()
+                                        .anyMatch(btwPos -> Field.getInstance().getCells().get(btwPos).getCheckerStatus() == CheckerStatus.BLACK))
+                                    takeAllPos.set(true);
+
+                }));
         } else {
-            Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK).forEach(checker -> {
-                findAvailableSteps(checker, false).forEach(pos -> {
-                    if (calculateRangePositions(checker.getPosition(), pos).stream()
-                            .anyMatch(btwPos -> Field.getCells().get(btwPos).getCheckerStatus() == CheckerStatus.WHITE)) {
-                        takeAllPos.set(true);
-                    }
-                });
-            });
+            Field
+                    .getInstance()
+                    .getCells()
+                    .values()
+                    .stream()
+                    .filter(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK)
+                    .forEach(checker ->
+                            findAvailableSteps(checker, false).forEach(pos -> {
+                                if (calculateRangePositions(checker.getPosition(), pos).stream()
+                                        .anyMatch(btwPos -> Field.getInstance().getCells().get(btwPos).getCheckerStatus() == CheckerStatus.WHITE))
+                                    takeAllPos.set(true);
+                })
+            );
         }
         return takeAllPos.get();
     }
@@ -275,10 +302,10 @@ public class FieldModifier {
 
         AtomicBoolean takeAllPos = new AtomicBoolean(true);
         if (isWhiteStep) {
-            Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE).forEach(checker -> {
+            Field.getInstance().getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE).forEach(checker -> {
                 findAvailableSteps(checker, true).forEach(pos -> {
                             if (calculateRangePositions(checker.getPosition(), pos).stream()
-                                    .anyMatch(btwPos -> Field.getCells().get(btwPos).getCheckerStatus() == CheckerStatus.BLACK)) {
+                                    .anyMatch(btwPos -> Field.getInstance().getCells().get(btwPos).getCheckerStatus() == CheckerStatus.BLACK)) {
                                 takeAllPos.set(false);
                                 result.add(checker.getPosition());
                             }
@@ -286,17 +313,19 @@ public class FieldModifier {
             });
             if (takeAllPos.get()) {
                 result.addAll(Field
+                        .getInstance()
                         .getCells()
                         .values()
                         .stream()
-                        .filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE).map(Checker::getPosition)
+                        .filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE)
+                        .map(Checker::getPosition)
                         .toList());
             }
         } else {
-            Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK).forEach(checker -> {
+            Field.getInstance().getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK).forEach(checker -> {
                 findAvailableSteps(checker, false).forEach(pos -> {
                     if (calculateRangePositions(checker.getPosition(), pos).stream()
-                            .anyMatch(btwPos -> Field.getCells().get(btwPos).getCheckerStatus() == CheckerStatus.WHITE)) {
+                            .anyMatch(btwPos -> Field.getInstance().getCells().get(btwPos).getCheckerStatus() == CheckerStatus.WHITE)) {
                         takeAllPos.set(false);
                         result.add(checker.getPosition());
                     }
@@ -304,6 +333,7 @@ public class FieldModifier {
             });
             if (takeAllPos.get()) {
                 result.addAll(Field
+                        .getInstance()
                         .getCells()
                         .values()
                         .stream()
@@ -316,12 +346,14 @@ public class FieldModifier {
 
     public static boolean hasAnyAvailableStep() {
         return
-                (Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE).anyMatch(checker -> findAvailableSteps(checker, true).size() > 0) &&
-                Field.getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK).anyMatch(checker -> findAvailableSteps(checker, false).size() > 0));
+                (Field.getInstance().getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.WHITE)
+                        .anyMatch(checker -> findAvailableSteps(checker, true).size() > 0) &&
+                Field.getInstance().getCells().values().stream().filter(checker -> checker.getCheckerStatus() == CheckerStatus.BLACK)
+                        .anyMatch(checker -> findAvailableSteps(checker, false).size() > 0));
     }
 
     public static void restartGame() {
-        Field.refreshField();
+        Field.getInstance().refreshField();
         FieldModifier.selectedChecker = null;
         FieldModifier.availablePositions.clear();
         FieldModifier.currentPosition = null;
