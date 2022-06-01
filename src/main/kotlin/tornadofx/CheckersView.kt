@@ -71,7 +71,7 @@ class CheckersView : View(), BoardListener {
                 }
             }
             bottom {
-                statusLabel = label("")
+                statusLabel = label()
             }
         }
         updateBoardAndStatus()

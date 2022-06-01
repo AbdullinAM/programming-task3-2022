@@ -31,8 +31,6 @@ open class Board (private val width: Int = 8, private val height: Int = 8) {
         }
     }
 
-    operator fun get(x: Int, y: Int): Checker? = get(Cell(x, y))
-
     operator fun get(cell: Cell): Checker? = checkers[cell]
 
     fun possibleTurns(cell: Cell): Pair<Boolean, List<Cell>> {
