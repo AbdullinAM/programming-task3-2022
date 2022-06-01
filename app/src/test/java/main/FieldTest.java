@@ -38,7 +38,6 @@ class FieldTest {
         assertThrows(NumberFormatException.class, () -> new Field(10, 10, 101));
         assertDoesNotThrow(() -> new Field(10, 10, 100));
         assertDoesNotThrow(() -> new Field(7, 1, 5));
-
     }
 
     @Test
@@ -114,6 +113,4 @@ class FieldTest {
         expected.put(2, new Pair<>(1, 0));
         assertEquals(expected, field.getNeighbours(1,1));
     }
-
-
 }
