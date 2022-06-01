@@ -7,10 +7,8 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -18,13 +16,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import static main.Constants.WINDOW_HEIGHT;
-import static main.Constants.WINDOW_WIDTH;
+import static main.Constants.*;
+
 
 public class MineSweeper extends Application {
-    private final Alert alertIncorrectInput = new Alert(Alert.AlertType.ERROR);
-    private final Image icon = new Image("icon.png");
-    private final Text greeting = new Text("Welcome to the game Minesweeper," + System.lineSeparator() + "please select the game board options");
 
     public static void main(String[] args) {
         launch(args);
@@ -34,8 +29,7 @@ public class MineSweeper extends Application {
     public void start(Stage primaryStage) {
         alertIncorrectInput.setTitle("Error");
         alertIncorrectInput.setHeaderText("Incorrect input");
-        alertIncorrectInput.setContentText("Perhaps you should fill in these fields. By the way, the field must exist, it cannot be null." +
-                System.lineSeparator() + "And the number of mines cannot exceed the size of the field" + System.lineSeparator());
+        alertIncorrectInput.setContentText(incorrectInputText);
         greeting.setFill(Color.GREEN);
         greeting.setStyle("-fx-font-weight: bold");
         Group root = new Group();
@@ -95,7 +89,7 @@ public class MineSweeper extends Application {
                 int intCol = Integer.parseInt(col.getText());
                 int intRow = Integer.parseInt(row.getText());
                 int intAmountMines = Integer.parseInt(amountMines.getText());
-                new Viev().start(primaryStage, intCol, intRow, intAmountMines);
+                new UI().start(primaryStage, intCol, intRow, intAmountMines);
                 primaryStage.show();
             } catch (NumberFormatException e) {
                 alertIncorrectInput.showAndWait();

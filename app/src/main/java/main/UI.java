@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static main.Constants.*;
 
-public class Viev {
+public class UI {
     private AnchorPane tileMap;
 
     //setting the value of the radius of the hexagon depending on their number
@@ -111,7 +111,7 @@ public class Viev {
                 double xCord = x * TILE_WIDTH + (y % 2) * n + shiftX;
                 double yCord = y * TILE_HEIGHT * 0.75 + shiftY;
                 Polygon tile = new Tile(xCord, yCord, TILE_WIDTH, n, r);
-                tileMap.getChildren().addAll(tile);
+                tileMap.getChildren().add(tile);
                 int finalX = x;
                 int finalY = y;
 
@@ -160,19 +160,18 @@ public class Viev {
                 double yCord = y * TILE_HEIGHT * 0.75 + shiftY;
                 Polygon tile = new Tile(xCord, yCord, TILE_WIDTH, n, r);
                 Cell cell = field.getCell(x, y);
-                switch (cell.getState()) {
-                    case Empty -> fillingTile(field, tile, x, y);
-                    default -> {
-                        if (field.checkGameOver()) tile.setFill(patternBombExploded);
-                        else tile.setFill(patternBomb);
-                    }
+                if (cell.getState() == Cell.State.Empty) {
+                    fillingTile(field, tile, x, y);
+                } else {
+                    if (field.checkGameOver()) tile.setFill(patternBombExploded);
+                    else tile.setFill(patternBomb);
                 }
                 tileMap.getChildren().add(tile);
             }
         }
     }
 
-    public void remainingBombsCounter(Field field) {
+    private void remainingBombsCounter(Field field) {
         int leftMines = field.getAmountMine() - field.getTotalMarkMines();
         if (leftMines >= 0) amountLeftMines.setText(Integer.toString(leftMines));
         else amountLeftMines.setText("ERR");
@@ -202,6 +201,7 @@ public class Viev {
         tileMap = new AnchorPane();
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         primaryStage.setScene(scene);
+        updateField(field.get(), col, row, TILE_WIDTH, TILE_HEIGHT, shiftX, shiftY, n, r);
 
         Button restart = new Button("Restart");
         Button confirm = new Button("Confirm");
@@ -262,6 +262,5 @@ public class Viev {
         });
         close.setOnAction(event -> primaryStage.close());
         help.setOnAction(event -> alertHelp.showAndWait());
-        updateField(field.get(), col, row, TILE_WIDTH, TILE_HEIGHT, shiftX, shiftY, n, r);
     }
 }

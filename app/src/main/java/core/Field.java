@@ -17,10 +17,10 @@ public class Field {
     public Field(int x, int y, int amountMine) {
         this.x = x;
         this.y = y;
+        if (x <= 0 || y <= 0 || x * y < amountMine) throw new NumberFormatException();
         this.amountMine = amountMine;
         this.field = new Cell[x][y];
         this.minesAround = new int[x][y];
-        if (x == 0 || y == 0 || x * y < amountMine) throw new NumberFormatException();
         int k = 0;
 
         //field initialization
@@ -94,13 +94,14 @@ public class Field {
         field[x][y].openCell();
     }
 
-    //opens cells around the given
-    public void openAroundCell(int col, int row) {
-        Map<Integer, Pair<Integer, Integer>> neighbours = getNeighbours(col, row);
-        for (int i = 0; i < 6; i++) {
-            Pair<Integer, Integer> cords = neighbours.get(i);
-            if (cords != null) openCell(cords.getKey(), cords.getValue());
-        }
+    public int getTotalMarkMines() {
+        markCounter();
+        return totalMarkMines;
+    }
+
+    public int getCorrectMarkMines() {
+        markCounter();
+        return correctMarkMines;
     }
 
     //returns a map with the coordinates of neighboring cells
@@ -115,30 +116,29 @@ public class Field {
         if (correctColRight) neighbours.put(1, new Pair<>(col + 1, row));
         if (correctRowLeft) neighbours.put(2, new Pair<>(col, row - 1));
         if (correctRowRight) neighbours.put(3, new Pair<>(col, row + 1));
-            if (row % 2 == 0) {
-                if (correctColLeft && correctRowLeft) neighbours.put(4, new Pair<>(col - 1, row - 1));
-                if (correctColLeft && correctRowRight) neighbours.put(5, new Pair<>(col - 1, row + 1));
-            } else {
-                if (correctColRight && correctRowLeft) neighbours.put(4, new Pair<>(col + 1, row - 1));
-                if (correctColRight && correctRowRight) neighbours.put(5, new Pair<>(col + 1, row + 1));
-            }
+        if (row % 2 == 0) {
+            if (correctColLeft && correctRowLeft) neighbours.put(4, new Pair<>(col - 1, row - 1));
+            if (correctColLeft && correctRowRight) neighbours.put(5, new Pair<>(col - 1, row + 1));
+        } else {
+            if (correctColRight && correctRowLeft) neighbours.put(4, new Pair<>(col + 1, row - 1));
+            if (correctColRight && correctRowRight) neighbours.put(5, new Pair<>(col + 1, row + 1));
+        }
 
-            return neighbours;
+        return neighbours;
+    }
+
+    //opens cells around the given
+    public void openAroundCell(int col, int row) {
+        Map<Integer, Pair<Integer, Integer>> neighbours = getNeighbours(col, row);
+        for (int i = 0; i < 6; i++) {
+            Pair<Integer, Integer> cords = neighbours.get(i);
+            if (cords != null) openCell(cords.getKey(), cords.getValue());
+        }
     }
 
     //true -- lose, false -- win
     public boolean checkGameOver() {
         return correctMarkMines != totalMarkMines || totalMarkMines != amountMine;
-    }
-
-    public int getTotalMarkMines() {
-        markCounter();
-        return totalMarkMines;
-    }
-
-    public int getCorrectMarkMines() {
-        markCounter();
-        return correctMarkMines;
     }
 
     public void markCounter() {

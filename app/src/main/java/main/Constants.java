@@ -4,6 +4,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.text.Text;
 
 public class Constants {
     public final static int WINDOW_WIDTH = 800;
@@ -13,6 +14,13 @@ public class Constants {
     public static final Alert alertDefeat = new Alert(Alert.AlertType.INFORMATION);
     public static final Alert alertWin = new Alert(Alert.AlertType.INFORMATION);
     public static final Label amountLeftMines = new Label();
+    public static final Alert alertIncorrectInput = new Alert(Alert.AlertType.ERROR);
+
+    public static final Text greeting = new Text("Welcome to the game Minesweeper,"
+            + System.lineSeparator() + "please select the game board options");
+
+    public static final String incorrectInputText = "Perhaps you should fill in these fields. By the way, the field must exist, it cannot be null." +
+            System.lineSeparator() + "And the number of mines cannot exceed the size of the field" + System.lineSeparator();
 
     public final static String helpText = "So, on LMB you open a cell, on RMB - put or remove the flag. " +
             System.lineSeparator() + "Your task is to mark all the cells in which the mine is located, " +
@@ -25,6 +33,7 @@ public class Constants {
     public final static String winText = "WIN!!!"+ System.lineSeparator() +
             "You can RESTART the game(press \"R\") or EXIT(press \"Esc\")";
 
+    public static final Image icon = new Image("icon.png");
     public static final Image imageBombExploded = new Image("image_bomb_exploded.png");
     public static final ImagePattern patternBombExploded = new ImagePattern(imageBombExploded);
     public static final Image imageBomb = new Image("image_bomb.png");
