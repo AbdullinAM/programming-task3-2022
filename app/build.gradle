@@ -18,15 +18,13 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-
-    // This dependency is used by the application.
 
     javafx {
         version = "11.0.2"
         modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing' ]
     }
+
 }
 
 
