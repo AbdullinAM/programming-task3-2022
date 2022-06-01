@@ -3,12 +3,61 @@
  */
 package Dinosaur.Game;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.io.FileNotFoundException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
-//    @Test void appHasAGreeting() {
-//        App classUnderTest = new App();
-//        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
-//    }
+    @Test
+    void test1() {
+        Dino dino = new Dino();
+        dino.setPosX(dino.getPosX()+2);
+        Dino expected = new Dino(2,0,50,50);
+
+        Assertions.assertEquals(dino,expected);
+    }
+
+    @Test
+    void test2() {
+        Cactus cactus = new Cactus();
+        cactus.setPosX(cactus.getPosX()+10);
+        Cactus expected = new Cactus(10,0,50,50);
+
+        Assertions.assertEquals(cactus, expected);
+    }
+
+    @Test
+    void test3() {
+        Clouds clouds = new Clouds();
+        clouds.setPosY(clouds.getPosY() + 50);
+        Clouds expected = new Clouds(500, 50);
+        Assertions.assertEquals(clouds, expected);
+    }
+
+    @Test
+    void test4() {
+        Dino dino = new Dino();
+        dino.setWidth(dino.getWidth() + 50);
+        Dino expected = new Dino(0,0, 100,50);
+        Assertions.assertEquals(dino, expected);
+    }
+
+    @Test
+    void test5() {
+        Cactus cactus = new Cactus();
+        cactus.setHeight(cactus.getHeight() + 50);
+        Cactus expected = new Cactus(0,0,50,100);
+        Assertions.assertEquals(cactus, expected);
+    }
+
+    @Test
+    void test6() {
+        Dino dino = new Dino(0,200,50,50);
+        dino.jump();
+        Dino expected = new Dino(0,20,50,50);
+        Assertions.assertEquals(dino, expected);
+    }
 }

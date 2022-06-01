@@ -6,10 +6,11 @@ import javafx.scene.image.ImageView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 
 public class Cactus {
     private Group root;
-    private ImageView imageView;
+    private ImageView imageView = new ImageView();
     private int width = 50;//ширина
     private int height = 50;//высота
     private int posX = 0;
@@ -44,6 +45,13 @@ public class Cactus {
 
     public Cactus(){
 
+    }
+
+    public Cactus (int X, int Y, int width, int height){
+        posX = X;
+        posY = Y;
+        this.height = height;
+        this.width = width;
     }
 
     public Group getRoot() {
@@ -96,5 +104,18 @@ public class Cactus {
     public void setPosY(int posY) {
         this.posY = posY;
         imageView.setTranslateY(this.posY);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cactus cactus = (Cactus) o;
+        return width == cactus.width && height == cactus.height && posX == cactus.posX && posY == cactus.posY;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, height, posX, posY);
     }
 }

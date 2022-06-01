@@ -6,10 +6,11 @@ import javafx.scene.image.ImageView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 
 public class Clouds {
     private Group root;
-    private ImageView imageView;
+    private ImageView imageView = new ImageView();
     private int width = 70;//ширина
     private int height = 70;//высота
     private int posX = 500;
@@ -30,6 +31,17 @@ public class Clouds {
         imageView.setFitWidth(width);
     }
 
+    public Clouds () {
+
+    }
+
+    public Clouds(ImageView imageView){
+        this.imageView = imageView;
+    }
+    public Clouds(int X, int Y){
+        posX = X;
+        posY = Y;
+    }
     public ImageView getImageView() {
         return imageView;
     }
@@ -78,5 +90,18 @@ public class Clouds {
     public void setPosY(int posY) {
         this.posY = posY;
         imageView.setY(this.posY);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Clouds clouds = (Clouds) o;
+        return width == clouds.width && height == clouds.height && posX == clouds.posX && posY == clouds.posY;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, height, posX, posY);
     }
 }

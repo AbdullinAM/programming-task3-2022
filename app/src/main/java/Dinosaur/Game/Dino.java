@@ -6,10 +6,11 @@ import javafx.scene.image.ImageView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 
 public class Dino {
     private Group root; //контейнер, в котором хранятся
-    private ImageView imageView;
+    private ImageView imageView = new ImageView();
     private int width = 50;//ширина
     private int height = 50;//высота
     private  int posX = 0;
@@ -47,6 +48,14 @@ public class Dino {
     public Dino(){
 
     }
+
+    public Dino (int X, int Y, int width, int height){
+        posX=X;
+        posY=Y;
+        this.width = width;
+        this.height = height;
+    }
+
     public Group getRoot() {
         return root;
     }
@@ -107,5 +116,19 @@ public class Dino {
 
     public void jump() { // прыжок
        posY = posY - 180;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Dino dino = (Dino) o;
+        return width == dino.width && height == dino.height && posX == dino.posX && posY == dino.posY &&
+                health == dino.health;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, height, posX, posY, health);
     }
 }
