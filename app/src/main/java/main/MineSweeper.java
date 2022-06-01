@@ -18,6 +18,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import static main.Constants.WINDOW_HEIGHT;
+import static main.Constants.WINDOW_WIDTH;
+
 public class MineSweeper extends Application {
     private final Alert alertIncorrectInput = new Alert(Alert.AlertType.ERROR);
     private final Image icon = new Image("icon.png");
@@ -71,7 +74,7 @@ public class MineSweeper extends Application {
 
         settings.getChildren().add(buttons);
 
-        Scene scene = new Scene(root, Viev.WINDOW_WIDTH / 3.7, Viev.WINDOW_HEIGHT / 3.9);
+        Scene scene = new Scene(root, WINDOW_WIDTH / 3.7, WINDOW_HEIGHT / 3.9);
         primaryStage.setScene(scene);
         primaryStage.setTitle("MineSweeper");
         primaryStage.getIcons().add(icon);

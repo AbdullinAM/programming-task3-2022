@@ -1,8 +1,5 @@
 package core;
 
-import javafx.scene.input.MouseButton;
-
-
 public class Cell {
     private final int x;
     private final int y;
@@ -33,9 +30,9 @@ public class Cell {
         if (isMine) this.state = State.Mine;
     }
 
-    public ClickResult clickResult(MouseButton mouseButton) {
-        if (isHidden) {
-            if (mouseButton == MouseButton.PRIMARY && !this.isMark) {
+    public ClickResult clickResult(String mouseButton) {
+        if (this.isHidden) {
+            if (mouseButton.equals("PRIMARY") && !this.isMark) {
                 if (this.state == State.Mine) {
                     this.state = State.MineExploded;
                     return ClickResult.Explode;
@@ -45,19 +42,20 @@ public class Cell {
                     this.isHidden = false;
                     return ClickResult.Open;
                 }
-            } else if (mouseButton == MouseButton.SECONDARY) {
+            } else if (mouseButton.equals("SECONDARY")) {
                 this.isMark = !this.isMark;
             }
         }
+
         return ClickResult.Default;
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getY() {
-        return  y;
+        return  this.y;
     }
 
     public State getState() {
@@ -66,6 +64,10 @@ public class Cell {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public void setMark(Boolean mark) {
+        this.isMark = mark;
     }
 
     public boolean isHidden() {

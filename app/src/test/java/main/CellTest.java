@@ -1,6 +1,5 @@
 package main;
 import core.Cell;
-import javafx.scene.input.MouseButton;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,12 +9,12 @@ public class CellTest {
     void testCellState() {
         Cell cell = new Cell(2,5, true);
         assertSame(Cell.State.Mine, cell.getState());
-        cell.clickResult(MouseButton.PRIMARY);
+        cell.clickResult("PRIMARY");
         assertSame(Cell.State.MineExploded, cell.getState());
 
         cell.setState(Cell.State.Empty);
         assertSame(Cell.State.Empty, cell.getState());
-        cell.clickResult(MouseButton.PRIMARY);
+        cell.clickResult("PRIMARY");
         assertSame(Cell.State.Empty, cell.getState());
     }
 
@@ -60,17 +59,17 @@ public class CellTest {
         Cell cell = new Cell(5, 5, true); //mine cell
         assertTrue(cell.isHidden()); //hidden
         assertFalse(cell.isMark()); //not flagged
-        assertSame(Cell.ClickResult.Default, cell.clickResult(MouseButton.SECONDARY));
+        assertSame(Cell.ClickResult.Default, cell.clickResult("SECONDARY"));
         assertTrue(cell.isMark()); //flagged
-        assertSame(Cell.ClickResult.Default, cell.clickResult(MouseButton.PRIMARY)); //can't explode, because it  was flagged
-        assertSame(Cell.ClickResult.Default, cell.clickResult(MouseButton.SECONDARY));
+        assertSame(Cell.ClickResult.Default, cell.clickResult("PRIMARY")); //can't explode, because it  was flagged
+        assertSame(Cell.ClickResult.Default, cell.clickResult("SECONDARY"));
         assertFalse(cell.isMark()); //unflagged
-        assertSame(Cell.ClickResult.Explode, cell.clickResult(MouseButton.PRIMARY)); //explode
+        assertSame(Cell.ClickResult.Explode, cell.clickResult("PRIMARY")); //explode
 
         cell = new Cell(2, 0, false); //empty cell
         assertTrue(cell.isHidden());
         assertFalse(cell.isMark());
-        assertSame(Cell.ClickResult.Open, cell.clickResult(MouseButton.PRIMARY));
+        assertSame(Cell.ClickResult.Open, cell.clickResult("PRIMARY"));
         assertFalse(cell.isHidden());
     }
 }

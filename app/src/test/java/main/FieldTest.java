@@ -5,7 +5,12 @@ package main;
 
 import core.Cell;
 import core.Field;
+import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FieldTest {
@@ -66,5 +71,49 @@ class FieldTest {
         field.openCell(5, 5);
         assertFalse(field.getCell(5, 5).isHidden()); //not hidden
     }
+
+    @Test
+    public void testFieldEndGame() {
+        Field field = new Field(2, 2, 0);
+        field.markCounter();
+        assertSame(0, field.getCorrectMarkMines()); //no correct marked cells
+        assertSame(0, field.getTotalMarkMines()); //no marked cells
+        assertFalse(field.checkGameOver()); //its win
+
+        field.getCell(1, 1).setMark(true); //marked cell(1, 1)
+        assertSame(1, field.getTotalMarkMines()); //this cell is marked but incorrect
+        assertSame(0, field.getCorrectMarkMines());
+        assertTrue(field.checkGameOver()); //it's a loss
+
+        field.getCell(1, 0).setMark(true); //and again
+        assertSame(2, field.getTotalMarkMines());
+        assertTrue(field.checkGameOver());
+
+        field = new Field(2, 2, 4); //a new field where all cells are mines
+        field.getCell(0, 0).setMark(true);
+        field.getCell(0, 1).setMark(true);
+        field.getCell(1, 0).setMark(true); //marked 3 of 4 cells
+
+        assertSame(3, field.getCorrectMarkMines()); //all mines --> 3 correct
+        assertTrue(field.checkGameOver()); //but not 4 --> loss
+        field.getCell(1, 1).setMark(true);
+        assertSame(4, field.getTotalMarkMines());
+        assertFalse(field.checkGameOver()); //4 of 4 marked --> win
+    }
+
+    @Test
+    public void testFieldNeighbours() {
+        Field field = new Field(2, 2, 0);
+        Map<Integer, Pair<Integer, Integer>> expected = new LinkedHashMap<>();
+        expected.put(1, new Pair<>(1, 0));
+        expected.put(3, new Pair<>(0, 1));
+        assertEquals(expected, field.getNeighbours(0, 0));
+        expected.clear();
+
+        expected.put(0, new Pair<>(0, 1));
+        expected.put(2, new Pair<>(1, 0));
+        assertEquals(expected, field.getNeighbours(1,1));
+    }
+
 
 }
