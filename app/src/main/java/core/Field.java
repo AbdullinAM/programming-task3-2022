@@ -17,8 +17,8 @@ public class Field {
     public Field(int x, int y, int amountMine) {
         this.x = x;
         this.y = y;
-        if (x <= 0 || y <= 0 || x * y < amountMine) throw new NumberFormatException();
         this.amountMine = amountMine;
+        if (x <= 0 || y <= 0 || x * y < amountMine || amountMine < 0) throw new NumberFormatException();
         this.field = new Cell[x][y];
         this.minesAround = new int[x][y];
         int k = 0;
