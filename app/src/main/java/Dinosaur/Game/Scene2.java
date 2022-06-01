@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,22 +23,22 @@ public class Scene2 extends Application {
     private Group root = new Group();
     private Dino dino;
     private double random;
-    private int n = 10;
+    private int n = 100;
     private Cactus cactus;
-    //private int m = 100;
     private int res ;
     private ArrayList<Cactus> cactuses = new ArrayList<Cactus>();
     private Clouds cloud;
     private ArrayList<Clouds> clouds = new ArrayList<Clouds>();
-    private boolean flag = false;
+    private boolean flag = false;//для жизни
     private int score = 0;
     private Label scoreLabel = new Label("Score: " + score);
     private Label healthLabel;
-    private Label endLabel = new Label();
     private int level = 2;
     private Label levelLabel = new Label("Lavel: " + (level-1));
     private Label gameOver = new Label();
-
+    private int a = -1;//для жизни
+    private int flag2;// для жизни
+    private Button btn = new Button();
 
     public Scene2() throws FileNotFoundException {
 
@@ -50,8 +51,8 @@ public class Scene2 extends Application {
         stage.setMaxHeight(625);
         stage.setMaxWidth(600);
 
-        gameOver();
         setBackGround();
+        theEnd();
         createContent();
 
         scene = new Scene(root, 600, 600, Color.WHITE);
@@ -72,7 +73,17 @@ public class Scene2 extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                upDate();
+                if (dino.getHealth() != 0){
+                    upDate();
+                } else {
+                    gameOver.setVisible(true);//видимая надпись
+                }
+                if (flag) {
+                    if (a != flag2) {
+                        dino.setHealth(dino.getHealth() - 1);
+                    }
+                    a = flag2;
+                }
             }
         };
         timer.start();
@@ -100,7 +111,7 @@ public class Scene2 extends Application {
         levelLabel.setTranslateX(545);
         levelLabel.setTranslateY(30);
 
-        root.getChildren().addAll(scoreLabel, healthLabel,levelLabel);
+        root.getChildren().addAll(scoreLabel, healthLabel, levelLabel);
 
         for (int i = 0; i < n; i++) { //добавление облаков и кактусов
             cactus = new Cactus(root, 70,70);
@@ -131,7 +142,7 @@ public class Scene2 extends Application {
     public void upDate(){
         flag = false;
         if (dino.getPosY() < 530) {//гравитация
-            if (level > 2) {
+            if (level > 3) {
                 dino.setPosY(dino.getPosY() + 2);
             } else {
                 dino.setPosY(dino.getPosY() + 1);
@@ -147,15 +158,24 @@ public class Scene2 extends Application {
             clouds.get(i).setPosX(clouds.get(i).getPosX()-1);
 
             if (cactuses.get(i).getPosX() == dino.getPosX()) {
-                score += 1;
-                if (score % 2 == 0) { //каждые 15 очков - увеличивается скорость
+               score += 1;
+
+                if (score % 10 == 0) {//каждые 10 очков - увеличивается скорость
                     level += 1;
                 }
+            }
+
+            if (dino.getPosX() > cactuses.get(i).getPosX() - dino.getWidth() &&
+                    dino.getPosX() < cactuses.get(i).getPosX() + cactuses.get(i).getWidth() &&
+                    dino.getPosY() > cactuses.get(i).getPosY() - dino.getHeight() &&
+                    dino.getPosY() < cactuses.get(i).getPosY() + cactuses.get(i).getHeight()) {
+                flag = true;
+                flag2 = i;
             }
         }
     }
 
-    public void gameOver() throws FileNotFoundException { //конец игры
+    public void theEnd() throws FileNotFoundException { //конец игры
         gameOver.setVisible(false);//невидимая
         root.getChildren().add(gameOver);
         FileInputStream fileInputStream = new FileInputStream("/Users/vladalodocnikova/IdeaProjects/Runner/src/main/resources/image/gameOver.png");
@@ -167,6 +187,5 @@ public class Scene2 extends Application {
         gameOver.setTranslateX(200);
         gameOver.setGraphic(imageView);
         gameOver.toFront();
-        //root.getChildren().add(gameOver);
     }
 }
