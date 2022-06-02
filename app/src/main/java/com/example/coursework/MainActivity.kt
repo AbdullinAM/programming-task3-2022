@@ -83,19 +83,10 @@ fun DrawGrid() {
                     },
                     onDragEnd = {
                         when (direction) {
-                            0 -> {
-                                game.moveGrid(Directions.RIGHT)
-                            }
-                            1 -> {
-                                game.moveGrid(Directions.LEFT)
-                            }
-                            2 -> {
-                                game.moveGrid(Directions.DOWN)
-
-                            }
-                            3 -> {
-                                game.moveGrid(Directions.UP)
-                            }
+                            0 -> game.moveGrid(Directions.RIGHT)
+                            1 -> game.moveGrid(Directions.LEFT)
+                            2 -> game.moveGrid(Directions.DOWN)
+                            3 -> game.moveGrid(Directions.UP)
                         }
                         gameScore = game.getScore()
                         gameOver = game.getGameOver()
@@ -105,7 +96,7 @@ fun DrawGrid() {
         ) {
             Column {
                 LazyVerticalGrid(
-                    cells = GridCells.Fixed(4),
+                    cells = GridCells.Fixed(Game.GRID_SIZE),
                     contentPadding = PaddingValues(
                         start = 10.dp,
                         top = 16.dp,
@@ -166,7 +157,10 @@ fun DrawGrid() {
                         )
                     }
                 }
-                if (gameOver) GameOverAttention()
+
+                if (gameOver) {
+                    GameOverAttention()
+                }
             }
     }
 }

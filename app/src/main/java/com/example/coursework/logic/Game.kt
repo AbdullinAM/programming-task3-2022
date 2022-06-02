@@ -52,7 +52,9 @@ class Game constructor(
 
 
             score += scoreToAdd
-            if (wasReversed) grid = reverseGrid()
+            if (wasReversed) {
+                grid = reverseGrid()
+            }
 
             if (grid != startGrid) {
                 val newCell = spawnCell()
@@ -151,7 +153,9 @@ class Game constructor(
                     }
                 }
             }
-            if (!flag) isGameOver = true
+            if (!flag) {
+                isGameOver = true
+            }
         }
     }
 
