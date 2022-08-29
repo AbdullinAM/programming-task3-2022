@@ -4,7 +4,6 @@ import controller.BoardListener
 
 open class Board() {
 
-    private val board = Board()
     private var chosenPosition: Int? = null
     private var listener: BoardListener? = null
 
@@ -12,7 +11,7 @@ open class Board() {
     var currentTurn = Color.WHITE
 
 
-    private val listOfPositions = mutableListOf<PositionOnBoard>()
+    open val listOfPositions = mutableListOf<PositionOnBoard>()
 
     init {
         for (x in 0..23) {

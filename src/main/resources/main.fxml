@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane prefHeight="744.0" prefWidth="754.0" style="-fx-background-image: url(background.jpg);" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BoardController">
+   <children>
+      <GridPane fx:id="gridTwo" gridLinesVisible="true" layoutX="45.0" prefHeight="190.0" prefWidth="286.0" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="67.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="5" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="4" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="3" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="2" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" />
+         </children>
+      </GridPane>
+      <GridPane fx:id="gridOne" gridLinesVisible="true" layoutX="408.0" layoutY="67.0" prefHeight="190.0" prefWidth="286.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="5" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="2" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="3" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="4" />
+         </children>
+      </GridPane>
+      <GridPane fx:id="gridThree" gridLinesVisible="true" layoutX="45.0" layoutY="499.0" prefHeight="190.0" prefWidth="286.0" rotate="180.0" AnchorPane.bottomAnchor="54.599999999999994">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="2" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="3" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="4" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="5" />
+         </children>
+      </GridPane>
+      <GridPane fx:id="gridFour" gridLinesVisible="true" layoutX="408.0" layoutY="499.0" prefHeight="190.0" prefWidth="286.0" rotate="180.0" AnchorPane.bottomAnchor="54.599999999999994">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="2" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="3" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="4" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="190.0" prefWidth="48.0" text="Button" GridPane.columnIndex="5" />
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>

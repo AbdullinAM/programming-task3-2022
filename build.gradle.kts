@@ -17,7 +17,7 @@ plugins {
 
 javafx {
     version = "11.0.2"
-    modules = listOf("javafx.controls", "javafx.graphics")
+    modules = listOf("javafx.controls", "javafx.graphics", "javafx.fxml")
 }
 repositories {
     // Use Maven Central for resolving dependencies.
