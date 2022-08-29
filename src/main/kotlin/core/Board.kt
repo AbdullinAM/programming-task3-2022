@@ -2,16 +2,16 @@ package core
 
 import controller.BoardListener
 
-open class Board() {
+class Board {
 
     private var chosenPosition: Int? = null
     private var listener: BoardListener? = null
 
 
-    var currentTurn = Color.WHITE
+    private var currentTurn = Color.WHITE
 
 
-    open val listOfPositions = mutableListOf<PositionOnBoard>()
+    val listOfPositions = mutableListOf<PositionOnBoard>()
 
     init {
         for (x in 0..23) {
@@ -24,7 +24,7 @@ open class Board() {
         listOfPositions[12].count = 15
     }
 
-    fun move(from: Int, to: Int) {
+    private fun move(from: Int, to: Int) {
         if (listOfPositions[to].color == listOfPositions[from].color && listOfPositions[to].color == Color.NEUTRAL) {
 
             listOfPositions[to].count += 1
@@ -37,11 +37,11 @@ open class Board() {
         }
     }
 
-    fun getColorOfPosition(position: Int): Color {
+    private fun getColorOfPosition(position: Int): Color {
         return listOfPositions[position % 24].color
     }
 
-    val turns: MutableList<Int> = Dices().rollDices()
+    private val turns: MutableList<Int> = Dices().rollDices()
 
     fun possibleMoves(from: Int): List<Int> {
         val result = mutableListOf<Int>()

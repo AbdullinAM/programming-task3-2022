@@ -23,7 +23,6 @@ class BoardController {
     @FXML
     var gridFour: GridPane = GridPane()
 
-//    var listOfGrids = listOf(gridOne, gridTwo, gridThree, gridFour)
     private fun getListOfGrids(): List<GridPane> {
         return listOf(gridOne, gridTwo, gridThree, gridFour)
     }
@@ -39,15 +38,26 @@ class BoardController {
         return Pair(number / 6, number % 6)
     }
 
+
+    private fun getColor(i: Int): Color {
+        val listOfPos = board.listOfPositions
+        var currentColor = Color(0.0,0.0,0.0,0.0)
+        when (listOfPos[i].color) {
+            core.Color.BLACK -> currentColor = Color(0.0, 0.0, 0.0, 1.0)
+            core.Color.WHITE -> currentColor = Color(1.0, 1.0, 1.0, 1.0)
+        }
+        return currentColor
+    }
+
     fun updateBoard() {
         val listOfPos = board.listOfPositions
         for (i in listOfPos.indices) {
             if (listOfPos[i].isNotEmpty()) {
                 val convertedIndex = convertIndicesForGridPane(i)
                 for (j in 0 until listOfPos[i].count) {
-                        getListOfGrids()[convertedIndex.first].add(
-                            Circle(13.0, Color(1.0, 1.0, 1.0, 1.0)),
-                            convertedIndex.second, j)
+                    getListOfGrids()[convertedIndex.first].add(
+                        Circle(13.0, getColor(i)),
+                        convertedIndex.second + 5, j)
                 }
             }
         }
