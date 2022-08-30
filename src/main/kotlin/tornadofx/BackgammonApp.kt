@@ -20,6 +20,7 @@ lateinit var actionTarget: Text
 //        val root = FXMLLoader.load<Parent>(this::class.java.classLoader.getResource("main.fxml"))
         val root = loader.load<Parent>()
         val scene = Scene(root, 744.0, 754.0)
+        stage.isResizable = false
         val controller = loader.getController<BoardController>()
         println(root.getChildList())
         stage.title = "Backgammon game"

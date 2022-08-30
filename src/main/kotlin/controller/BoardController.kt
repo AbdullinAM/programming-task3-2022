@@ -2,6 +2,7 @@ package controller
 
 import core.Board
 import javafx.fxml.FXML
+import javafx.scene.control.Button
 import javafx.scene.image.Image
 
 import javafx.scene.layout.GridPane
@@ -9,7 +10,8 @@ import javafx.scene.layout.GridPane
 import javafx.scene.paint.ImagePattern
 
 import javafx.scene.shape.Circle
-
+import tornadofx.Stylesheet.Companion.button
+import tornadofx.action
 
 
 class BoardController {
@@ -50,11 +52,42 @@ class BoardController {
         return currentColor
     }
 
+    fun addMakeMoveButton(convertedIndex: Pair<Int, Int>, to: Int, from: Int) {
+        val button = Button()
+        button.action {
+            board.makeMove(from, to)
+            selectedColumn = -1
+            updateBoard()
+        }
+        getListOfGrids()[convertedIndex.first].add(button, convertedIndex.second, 0)
+    }
+
+    private var selectedColumn = -1
+
+    private fun addPossibleMoveButton(convertedIndex: Pair<Int, Int>, from: Int) {
+        val button = Button()
+        button.action {
+            for (i in board.possibleMoves(from)) {
+                addMakeMoveButton(convertIndicesForGridPane(i), i, from)
+                selectedColumn = from
+            }
+        }
+        getListOfGrids()[convertedIndex.first].add(button, convertedIndex.second, 0)
+    }
+
+    private fun clearGridPanes() {
+        for (i in getListOfGrids()) {
+            i.children.clear()
+        }
+    }
+
     fun updateBoard() {
         val listOfPos = board.listOfPositions
+        clearGridPanes()
         for (i in listOfPos.indices) {
             if (listOfPos[i].isNotEmpty()) {
                 val convertedIndex = convertIndicesForGridPane(i)
+                addPossibleMoveButton(convertedIndex, i)
                 for (j in 0 until listOfPos[i].count) {
                     getListOfGrids()[convertedIndex.first].add(
                         Circle(13.0, getColor(i)),
@@ -62,18 +95,5 @@ class BoardController {
                 }
             }
         }
-
-//        for (i in 1..15) {
-//            gridOne.add(Circle(13.0, Color(1.0,1.0,1.0,1.0)), 5, i)
-//        }
-//        for (i in 1..15) {
-//            gridThree.add(Circle(13.0, Color(0.0,0.0,0.0,1.0)), 5, i)
-//        }
-    }
-
-    private var selectedColumn = -1
-
-    fun setSelectedColumn(column: Int) {
-        selectedColumn = column
     }
 }

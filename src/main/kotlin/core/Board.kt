@@ -4,7 +4,6 @@ import controller.BoardListener
 
 class Board {
 
-    private var chosenPosition: Int? = null
     private var listener: BoardListener? = null
 
 
@@ -25,7 +24,7 @@ class Board {
     }
 
     private fun move(from: Int, to: Int) {
-        if (listOfPositions[to].color == listOfPositions[from].color && listOfPositions[to].color == Color.NEUTRAL) {
+        if (listOfPositions[to].color == listOfPositions[from].color || listOfPositions[to].color == Color.NEUTRAL) {
 
             listOfPositions[to].count += 1
             listOfPositions[to].color = listOfPositions[from].color
@@ -48,14 +47,20 @@ class Board {
         val fromColor = getColorOfPosition(from)
 
         if (getColorOfPosition(from + turns.first()) == fromColor ||
-            getColorOfPosition(from + turns.first()) == Color.NEUTRAL) result.add(from + turns.first())
+            getColorOfPosition(from + turns.first()) == Color.NEUTRAL) {
+            result.add(from + turns.first())
+        }
 
         if (getColorOfPosition(from + turns[1]) == fromColor ||
-            getColorOfPosition(from + turns[1]) == Color.NEUTRAL) result.add(from + turns[1])
+            getColorOfPosition(from + turns[1]) == Color.NEUTRAL) {
+            result.add(from + turns[1])
+        }
 
         if (getColorOfPosition(from + turns.first() + turns[1]) == fromColor ||
             getColorOfPosition(from + turns.first() + turns[1]) == Color.NEUTRAL)
+        {
             result.add(from + turns.first() + turns[1])
+        }
 
         for (i in result.indices) {
             if (result[i] >= 24) {
@@ -83,20 +88,20 @@ class Board {
     fun makeMove(from: Int, to: Int) {
         var deferenceBetweenToAndFrom = 0
         if (to - from < 0) {
-            deferenceBetweenToAndFrom = to - from + 24 } else deferenceBetweenToAndFrom = to - from
+            deferenceBetweenToAndFrom = to - from + 24
+        } else {
+            deferenceBetweenToAndFrom = to - from
+        }
        /* if (positionOnBoard is Checker && chosenPosition == null) {
             chosenPosition = from
             listener!!.turnMade(mutableListOf())
             return
             }
         */
-        if (chosenPosition == from) {
-            if (possibleMoves(chosenPosition!!).contains(to)) {
-                move(from, to)
-                turns.remove(deferenceBetweenToAndFrom)
-            }
-            if (turns.isEmpty()) currentTurn = currentTurn.opposite()
-        }
+        move(from, to)
+        turns.remove(deferenceBetweenToAndFrom)
+
+        if (turns.isEmpty()) currentTurn = currentTurn.opposite()
 
     }
     fun registerListener(listener: BoardListener) {
