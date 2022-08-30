@@ -2,11 +2,11 @@ package controller
 
 import core.Board
 import javafx.fxml.FXML
+import javafx.scene.image.Image
 
 import javafx.scene.layout.GridPane
-//import core.Color
 
-import javafx.scene.paint.Color
+import javafx.scene.paint.ImagePattern
 
 import javafx.scene.shape.Circle
 
@@ -35,16 +35,17 @@ class BoardController {
 //    }
 
     private fun convertIndicesForGridPane(number: Int): Pair<Int, Int> {
+        //first is number of GridPane, second is position in GridPane
         return Pair(number / 6, number % 6)
     }
 
 
-    private fun getColor(i: Int): Color {
+    private fun getColor(i: Int): ImagePattern {
         val listOfPos = board.listOfPositions
-        var currentColor = Color(0.0,0.0,0.0,0.0)
+        var currentColor = ImagePattern(Image("/noImage.png"))
         when (listOfPos[i].color) {
-            core.Color.BLACK -> currentColor = Color(0.0, 0.0, 0.0, 1.0)
-            core.Color.WHITE -> currentColor = Color(1.0, 1.0, 1.0, 1.0)
+            core.Color.BLACK -> currentColor = ImagePattern(Image("/BlackChecker.png"))
+            core.Color.WHITE -> currentColor = ImagePattern(Image("/WhiteChecker.png"))
         }
         return currentColor
     }
@@ -57,7 +58,7 @@ class BoardController {
                 for (j in 0 until listOfPos[i].count) {
                     getListOfGrids()[convertedIndex.first].add(
                         Circle(13.0, getColor(i)),
-                        convertedIndex.second + 5, j)
+                        convertedIndex.second, 14 - j)
                 }
             }
         }
