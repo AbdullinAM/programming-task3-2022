@@ -1,5 +1,5 @@
 package core
 
 interface BoardListenerInterface {
-    fun turnMade(position: MutableList<PositionOnBoard>)
+    fun showDices(firstDice: Int, secondDice: Int)
 }

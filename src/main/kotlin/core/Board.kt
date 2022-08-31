@@ -1,10 +1,8 @@
 package core
 
-import controller.BoardListener
+class Board(boardListener: BoardListenerInterface) {
 
-class Board {
-
-    private var listener: BoardListener? = null
+    private var listener: BoardListenerInterface
 
 
     private var currentTurn = Color.WHITE
@@ -13,6 +11,7 @@ class Board {
     val listOfPositions = mutableListOf<PositionOnBoard>()
 
     init {
+        listener = boardListener
         for (x in 0..23) {
                 listOfPositions.add(PositionOnBoard())
         }
@@ -40,12 +39,19 @@ class Board {
         return listOfPositions[position % 24].color
     }
 
-    private val turns: MutableList<Int> = Dices().rollDices()
+    private var turns: MutableList<Int> = mutableListOf()
+
+    fun updateTurns() {
+        if (turns.isEmpty()) {
+            turns = Dices().rollDices()
+            listener.showDices(turns[0], turns[1])
+        }
+    }
 
     fun possibleMoves(from: Int): List<Int> {
         val result = mutableListOf<Int>()
         val fromColor = getColorOfPosition(from)
-
+// if (turn.size > 1) // else{}
         if (getColorOfPosition(from + turns.first()) == fromColor ||
             getColorOfPosition(from + turns.first()) == Color.NEUTRAL) {
             result.add(from + turns.first())
@@ -99,13 +105,11 @@ class Board {
             }
         */
         move(from, to)
+        updateTurns()
         turns.remove(deferenceBetweenToAndFrom)
 
         if (turns.isEmpty()) currentTurn = currentTurn.opposite()
 
-    }
-    fun registerListener(listener: BoardListener) {
-        this.listener = listener
     }
 
     fun clear() {

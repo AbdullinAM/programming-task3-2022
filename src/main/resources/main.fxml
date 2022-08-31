@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="744.0" prefWidth="754.0" style="-fx-background-image: url(background.jpg);" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BoardController">
+<AnchorPane fx:id="anchorPane" prefHeight="744.0" prefWidth="754.0" style="-fx-background-image: url(background.jpg);" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BoardController">
    <children>
       <GridPane fx:id="gridTwo" alignment="CENTER" gridLinesVisible="true" layoutX="45.0" layoutY="79.0" prefHeight="275.0" prefWidth="294.0" rotate="180.0" AnchorPane.bottomAnchor="390.0" AnchorPane.leftAnchor="47.0" AnchorPane.rightAnchor="417.0" AnchorPane.topAnchor="79.0">
         <columnConstraints>

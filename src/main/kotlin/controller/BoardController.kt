@@ -1,20 +1,24 @@
 package controller
 
 import core.Board
+import core.BoardListenerInterface
+import core.Dices
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.image.Image
+import javafx.scene.layout.AnchorPane
 
 import javafx.scene.layout.GridPane
 
 import javafx.scene.paint.ImagePattern
 
 import javafx.scene.shape.Circle
-import tornadofx.Stylesheet.Companion.button
+import javafx.scene.shape.Rectangle
 import tornadofx.action
+import tornadofx.add
 
 
-class BoardController {
+class BoardController: BoardListenerInterface {
 
     @FXML
     var gridOne: GridPane = GridPane()
@@ -24,17 +28,15 @@ class BoardController {
     var gridThree: GridPane = GridPane()
     @FXML
     var gridFour: GridPane = GridPane()
+    @FXML
+    var anchorPane: AnchorPane = AnchorPane()
 
     private fun getListOfGrids(): List<GridPane> {
         return listOf(gridOne, gridTwo, gridThree, gridFour)
     }
 
-    private var board = Board()
+    private var board = Board(this)
 
-//    fun getImageOfChecker(color: Color): ImagePattern {
-//        if (color == Color.BLACK) return ImagePattern(Image("BlackChecker.png"))
-//        if (color == Color.WHITE) return ImagePattern(Image("WhiteChecker.png"))
-//    }
 
     private fun convertIndicesForGridPane(number: Int): Pair<Int, Int> {
         //first is number of GridPane, second is position in GridPane
@@ -52,7 +54,18 @@ class BoardController {
         return currentColor
     }
 
-    fun addMakeMoveButton(convertedIndex: Pair<Int, Int>, to: Int, from: Int) {
+    override fun showDices(firstDice: Int, secondDice: Int) {
+        val firstRectangle = Rectangle(50.0,50.0, ImagePattern(Image("/die$firstDice.png")))
+        firstRectangle.x = 348.0
+        firstRectangle.y = 400.0
+        val secondRectangle = Rectangle(50.0,50.0, ImagePattern(Image("/die$secondDice.png")))
+        secondRectangle.x = 348.0
+        secondRectangle.y = 300.0
+        anchorPane.add(firstRectangle)
+        anchorPane.add(secondRectangle)
+    }
+
+    private fun addMakeMoveButton(convertedIndex: Pair<Int, Int>, to: Int, from: Int) {
         val button = Button()
         button.action {
             board.makeMove(from, to)
@@ -84,6 +97,7 @@ class BoardController {
     fun updateBoard() {
         val listOfPos = board.listOfPositions
         clearGridPanes()
+        board.updateTurns()
         for (i in listOfPos.indices) {
             if (listOfPos[i].isNotEmpty()) {
                 val convertedIndex = convertIndicesForGridPane(i)

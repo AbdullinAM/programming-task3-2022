@@ -1,16 +1,16 @@
 package tornadofx
 
-import controller.BoardListener
-import core.Board
-import core.BoardListenerInterface
-import core.Color
-import core.PositionOnBoard
-import javafx.scene.control.Button
-import javafx.scene.control.Label
-import javafx.scene.image.ImageView
-import javafx.scene.layout.BorderPane
-import javafx.scene.layout.Priority
-import java.io.File
+//import controller.BoardListener
+//import core.Board
+//import core.BoardListenerInterface
+//import core.Color
+//import core.PositionOnBoard
+//import javafx.scene.control.Button
+//import javafx.scene.control.Label
+//import javafx.scene.image.ImageView
+//import javafx.scene.layout.BorderPane
+//import javafx.scene.layout.Priority
+//import java.io.File
 
 
 //class BackgammonView: View(), BoardListenerInterface {
