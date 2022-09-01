@@ -2,6 +2,7 @@ package controller
 
 import core.Board
 import core.BoardListenerInterface
+import core.Color
 import core.Dices
 import javafx.fxml.FXML
 import javafx.scene.control.Button
@@ -56,10 +57,10 @@ class BoardController: BoardListenerInterface {
 
     override fun showDices(firstDice: Int, secondDice: Int) {
         val firstRectangle = Rectangle(50.0,50.0, ImagePattern(Image("/die$firstDice.png")))
-        firstRectangle.x = 348.0
+        firstRectangle.x = 348.5
         firstRectangle.y = 400.0
         val secondRectangle = Rectangle(50.0,50.0, ImagePattern(Image("/die$secondDice.png")))
-        secondRectangle.x = 348.0
+        secondRectangle.x = 348.5
         secondRectangle.y = 300.0
         anchorPane.add(firstRectangle)
         anchorPane.add(secondRectangle)
@@ -101,7 +102,9 @@ class BoardController: BoardListenerInterface {
         for (i in listOfPos.indices) {
             if (listOfPos[i].isNotEmpty()) {
                 val convertedIndex = convertIndicesForGridPane(i)
-                addPossibleMoveButton(convertedIndex, i)
+                if (board.currentTurn == listOfPos[i].color) {
+                    addPossibleMoveButton(convertedIndex, i)
+                }
                 for (j in 0 until listOfPos[i].count) {
                     getListOfGrids()[convertedIndex.first].add(
                         Circle(13.0, getColor(i)),

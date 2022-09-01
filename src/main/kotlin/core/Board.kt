@@ -5,7 +5,7 @@ class Board(boardListener: BoardListenerInterface) {
     private var listener: BoardListenerInterface
 
 
-    private var currentTurn = Color.WHITE
+    var currentTurn = Color.WHITE
 
 
     val listOfPositions = mutableListOf<PositionOnBoard>()
@@ -43,6 +43,7 @@ class Board(boardListener: BoardListenerInterface) {
 
     fun updateTurns() {
         if (turns.isEmpty()) {
+            currentTurn = currentTurn.opposite()
             turns = Dices().rollDices()
             listener.showDices(turns[0], turns[1])
         }
@@ -51,21 +52,32 @@ class Board(boardListener: BoardListenerInterface) {
     fun possibleMoves(from: Int): List<Int> {
         val result = mutableListOf<Int>()
         val fromColor = getColorOfPosition(from)
-// if (turn.size > 1) // else{}
-        if (getColorOfPosition(from + turns.first()) == fromColor ||
-            getColorOfPosition(from + turns.first()) == Color.NEUTRAL) {
-            result.add(from + turns.first())
-        }
+        val firstTurn: Int
+        val secondTurn: Int
+        if (turns.size > 1) {
+            firstTurn = turns[0]
+            secondTurn = turns[1]
+            if (getColorOfPosition(from + firstTurn) == fromColor ||
+                getColorOfPosition(from + firstTurn) == Color.NEUTRAL) {
+                result.add(from + firstTurn)
+            }
 
-        if (getColorOfPosition(from + turns[1]) == fromColor ||
-            getColorOfPosition(from + turns[1]) == Color.NEUTRAL) {
-            result.add(from + turns[1])
+            if (getColorOfPosition(from + secondTurn) == fromColor ||
+                getColorOfPosition(from + secondTurn) == Color.NEUTRAL) {
+                result.add(from + secondTurn)
+            }
+            if (getColorOfPosition(from + firstTurn + secondTurn) == fromColor ||
+                getColorOfPosition(from + firstTurn + secondTurn) == Color.NEUTRAL)
+          {
+                result.add(from + firstTurn + secondTurn)
+          }
         }
-
-        if (getColorOfPosition(from + turns.first() + turns[1]) == fromColor ||
-            getColorOfPosition(from + turns.first() + turns[1]) == Color.NEUTRAL)
-        {
-            result.add(from + turns.first() + turns[1])
+        else {
+            val leftTurn = turns[0]
+            if (getColorOfPosition(from + leftTurn) == fromColor ||
+                getColorOfPosition(from + leftTurn) == Color.NEUTRAL) {
+                result.add(from + leftTurn)
+            }
         }
 
         for (i in result.indices) {
@@ -92,7 +104,7 @@ class Board(boardListener: BoardListenerInterface) {
     }
 
     fun makeMove(from: Int, to: Int) {
-        var deferenceBetweenToAndFrom = 0
+        val deferenceBetweenToAndFrom: Int
         if (to - from < 0) {
             deferenceBetweenToAndFrom = to - from + 24
         } else {
@@ -105,11 +117,8 @@ class Board(boardListener: BoardListenerInterface) {
             }
         */
         move(from, to)
-        updateTurns()
         turns.remove(deferenceBetweenToAndFrom)
-
-        if (turns.isEmpty()) currentTurn = currentTurn.opposite()
-
+        updateTurns()
     }
 
     fun clear() {
