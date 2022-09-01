@@ -92,13 +92,13 @@
     </MenuBar>
     <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-        <AnchorPane maxHeight="750.0" maxWidth="150.0" minHeight="750.0" minWidth="150.0" prefHeight="750.0" prefWidth="150.0" style="-fx-background-image: url(van.png);">
+        <AnchorPane fx:id="leftMenu" maxHeight="750.0" maxWidth="150.0" minHeight="750.0" minWidth="150.0" prefHeight="750.0" prefWidth="150.0">
           <children>
-            <Label alignment="CENTER" layoutX="11.0" layoutY="14.0" minWidth="60.0" prefHeight="22.0" prefWidth="129.0" style="&#10;" text="DungeonMaster" textAlignment="CENTER" textFill="WHITE" wrapText="false">
-              <font>
-                <Font size="18.0" fx:id="x1" />
-              </font>
-            </Label>
+                  <Label fx:id="showDice" alignment="CENTER" layoutX="4.0" layoutY="216.0" minWidth="60.0" prefHeight="39.0" prefWidth="142.0" style="&#10;" textAlignment="CENTER" wrapText="false">
+                     <font>
+                        <Font name="System Bold" size="49.0" fx:id="x11" />
+                     </font>
+                  </Label>
           </children>
         </AnchorPane>
       <AnchorPane id="Content" maxHeight="750.0" maxWidth="750.0" minHeight="750.0" minWidth="750.0" prefHeight="750.0" prefWidth="750.0" style="-fx-background-image: url(background.png);">

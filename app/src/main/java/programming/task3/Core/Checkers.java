@@ -7,7 +7,7 @@ import java.util.List;
 public enum Checkers {
     WHITE(new ImagePattern(new Image("/White.png"))),
     BLACK(new ImagePattern(new Image("/Black.png"))),
-    NO_COLOR(new ImagePattern(new Image("/van.png")));
+    NO_COLOR(new ImagePattern(new Image("/wood.png")));
     ImagePattern imagePattern;
 
     Checkers(ImagePattern i) {
