@@ -5,11 +5,13 @@ class Board(boardListener: BoardListenerInterface) {
     private var listener: BoardListenerInterface
 
 
-    var currentTurn = Color.WHITE
+    var currentTurn = Color.BLACK
+    var counterOfMovesFromHead = 0
 
 
     val listOfPositions = mutableListOf<PositionOnBoard>()
 
+    //задаётся стартовая расстановка
     init {
         listener = boardListener
         for (x in 0..23) {
@@ -46,6 +48,8 @@ class Board(boardListener: BoardListenerInterface) {
             currentTurn = currentTurn.opposite()
             turns = Dices().rollDices()
             listener.showDices(turns[0], turns[1])
+            // обнуление счётчика взятых шашек с головы
+            counterOfMovesFromHead = 0
         }
     }
 
@@ -60,17 +64,24 @@ class Board(boardListener: BoardListenerInterface) {
             if (getColorOfPosition(from + firstTurn) == fromColor ||
                 getColorOfPosition(from + firstTurn) == Color.NEUTRAL) {
                 result.add(from + firstTurn)
+
+                if (getColorOfPosition(from + firstTurn + secondTurn) == fromColor ||
+                    getColorOfPosition(from + firstTurn + secondTurn) == Color.NEUTRAL)
+                {
+                    result.add(from + firstTurn + secondTurn)
+                }
             }
 
             if (getColorOfPosition(from + secondTurn) == fromColor ||
                 getColorOfPosition(from + secondTurn) == Color.NEUTRAL) {
                 result.add(from + secondTurn)
+
+                if (getColorOfPosition(from + firstTurn + secondTurn) == fromColor ||
+                    getColorOfPosition(from + firstTurn + secondTurn) == Color.NEUTRAL)
+                {
+                    result.add(from + firstTurn + secondTurn)
+                }
             }
-            if (getColorOfPosition(from + firstTurn + secondTurn) == fromColor ||
-                getColorOfPosition(from + firstTurn + secondTurn) == Color.NEUTRAL)
-          {
-                result.add(from + firstTurn + secondTurn)
-          }
         }
         else {
             val leftTurn = turns[0]
@@ -79,13 +90,43 @@ class Board(boardListener: BoardListenerInterface) {
                 result.add(from + leftTurn)
             }
         }
+        if ((from == 0 && listOfPositions[from].color == Color.WHITE ||
+            from == 12 && listOfPositions[from].color == Color.BLACK)
+            && counterOfMovesFromHead > 0 ) {
+            return emptyList()
+        }
 
         for (i in result.indices) {
             if (result[i] >= 24) {
                 result[i] = result[i] % 24
             }
         }
+        //удаление ходов, которые противоречат правилам
+        unableToMoveFromHome(fromColor, result, from)
         return result
+    }
+    //функция, чтобы шашки не ходили бесконечно по кругу
+    fun unableToMoveFromHome(fromColor: Color, listOfAddedMoves: MutableList<Int>, from: Int) {
+        val copyOfListOfAddedMoves = listOfAddedMoves.toList()
+        //нужна копия т.к нельзя идти по листу и одновременно что-то в нём удалять
+        if (fromColor == Color.WHITE) {
+            if (from in 12..23) {
+               for (i in copyOfListOfAddedMoves) {
+                   if (i < 12) {
+                       listOfAddedMoves.remove(i)
+                   }
+               }
+            }
+        }
+        if (fromColor == Color.BLACK) {
+            if (from in 0..11) {
+                for (i in copyOfListOfAddedMoves) {
+                    if (i >= 12) {
+                        listOfAddedMoves.remove(i)
+                    }
+                }
+            }
+        }
     }
 
     private var canThrowBlack = false
@@ -110,14 +151,18 @@ class Board(boardListener: BoardListenerInterface) {
         } else {
             deferenceBetweenToAndFrom = to - from
         }
-       /* if (positionOnBoard is Checker && chosenPosition == null) {
-            chosenPosition = from
-            listener!!.turnMade(mutableListOf())
-            return
-            }
-        */
+        if (turns.contains(deferenceBetweenToAndFrom)) {
+            turns.remove(deferenceBetweenToAndFrom)
+        } else if (deferenceBetweenToAndFrom == turns[0] + turns[1]) {
+            turns.remove(turns[0])
+            turns.remove(turns[0])
+        }
+        //счётчик снятых с головы шашек
+        if (from == 0 && listOfPositions[from].color == Color.WHITE ||
+            from == 12 && listOfPositions[from].color == Color.BLACK) {
+            counterOfMovesFromHead += 1
+        }
         move(from, to)
-        turns.remove(deferenceBetweenToAndFrom)
         updateTurns()
     }
 
