@@ -1,6 +1,7 @@
 package programming.task3.Core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,6 +15,8 @@ public class Board {
     private final Cell[] board = new Cell[24];
 
     private final List<Integer> turns = new ArrayList<>();
+
+    private Integer turnsFromHead = 0;
 
     Dice dice = new Dice();
 
@@ -63,16 +66,43 @@ public class Board {
         board[x].setQuantity(board[x].getQuantity() - 1);
 
         if (finalPos - x > 0) {
-            turns.remove(turns.indexOf(finalPos - x));
+            if (turns.contains(finalPos - x)) {
+                turns.remove(turns.indexOf(finalPos - x));
+            } else {
+                turns.remove(0);
+                turns.remove(0);
+            }
         } else {
-            turns.remove(turns.indexOf(24 - x + finalPos));
+            if (turns.contains(24 - x + finalPos)) {
+                turns.remove(turns.indexOf(24 - x + finalPos));
+            } else {
+                turns.remove(0);
+                turns.remove(0);
+            }
         }
         if (board[x].getQuantity() == 0){
             board[x].setColour(Checkers.NO_COLOR);
         }
+        if (board[x].getColour() == Checkers.WHITE && x == 0 || board[x].getColour() == Checkers.BLACK && x == 12){
+            turnsFromHead += 1;
+        }
         if (turns.isEmpty()) {
             turn = turn.opposite();
+            turnsFromHead = 0;
             throwDices();
+        }
+    }
+
+    private void cantGoPastHouse(int x, List<Integer> allValidMoves){
+        //
+        List<Integer> allValidMovesCopy = List.copyOf(allValidMoves);
+        for (Integer i: allValidMovesCopy){
+            if (board[x].getColour() == Checkers.WHITE && x <= 23 && x > 11 && i >= 0 && i <= 11){
+                allValidMoves.remove(allValidMoves.indexOf(i));
+            }
+            if (board[x].getColour() == Checkers.BLACK && x <= 11 && i >= 12){
+                allValidMoves.remove(allValidMoves.indexOf(i));
+            }
         }
     }
 
@@ -80,14 +110,26 @@ public class Board {
         throwDices();
         List<Integer> allValidMoves = new ArrayList<>();
         Checkers color = board[x].getColour();
-
-        for (Integer t : turns){
+        if ((board[x].getColour() == Checkers.WHITE && x == 0 ||
+                board[x].getColour() == Checkers.BLACK && x == 12) && turnsFromHead > 0){
+            return Collections.emptyList();
+        }
+        for (Integer t : turns) {
             int targetCell = (t + x) % 24;
-
-            if(!board[targetCell].isOccupied() || board[targetCell].getColour() == color) {
+            if (!board[targetCell].isOccupied() || board[targetCell].getColour() == color) {
                 allValidMoves.add(targetCell);
+                if (turns.size() >= 2) {
+                    int targetCellTwoDices = (turns.get(0) + turns.get(1) + x) % 24;
+                    if (!board[targetCellTwoDices].isOccupied() || board[targetCellTwoDices].getColour() == color) {
+                        allValidMoves.add(targetCellTwoDices);
+
+
+                    }
+                }
             }
         }
+        cantGoPastHouse(x, allValidMoves);
+
 
 
         return allValidMoves;
