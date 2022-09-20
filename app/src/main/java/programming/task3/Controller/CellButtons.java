@@ -1,5 +1,4 @@
 package programming.task3.Controller;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
@@ -12,23 +11,18 @@ public class CellButtons extends Button {
         this.setOpacity(0.5);
         this.setPrefWidth(48);
         this.setPrefHeight(278);
-
     }
 
     public void clearButtons(int cell,Controller controller){
-
         for (int i = 0; i < 24 ; i++) {
             if (i != cell) {
-
-                AnchorPane ap= controller.getAnchorPaneByIndex(i);
+                AnchorPane ap = controller.getAnchorPaneByIndex(i);
                 ap.getChildren().remove(ap.lookup(".button"));
-                //изпользуем lookup для поиска кнопки в AnchorPane
             }
         }
     }
 
     public Button PossibleTurns(int cell, Board board, Controller controller){
-
         this.setOnMouseClicked(action ->{
             if (action.getButton().equals(MouseButton.PRIMARY)) {
                 controller.setSelectedCell(cell);
@@ -45,21 +39,17 @@ public class CellButtons extends Button {
             } else if (action.getButton().equals(MouseButton.SECONDARY)){
                 controller.updateBoard();
             }
-
         });
         return this;
 }
 
 
     public Button moveButton(int initialPos, int finalPos, Board board, Controller controller){
-
         this.setOnMouseClicked(action -> {
             controller.setSelectedCell(-1);
             board.move(initialPos, finalPos);
             controller.updateBoard();
         });
-
-
         return this;
     }
 

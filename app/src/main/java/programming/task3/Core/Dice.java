@@ -1,7 +1,5 @@
 package programming.task3.Core;
 
-
-
 public class Dice {
     private int dice;
 

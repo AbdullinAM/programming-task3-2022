@@ -15,15 +15,12 @@ import programming.task3.Controller.Controller;
 
 public class App extends Application {
 
-
-
-
     public void start(Stage primaryStage) throws Exception {
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gridpaneregular.fxml"));
         primaryStage.setScene(new Scene(loader.load()));
         primaryStage.setResizable(false);
         primaryStage.show();
+        ((Controller) loader.getController()).startGame();
         ((Controller) loader.getController()).updateBoard();
 }
 

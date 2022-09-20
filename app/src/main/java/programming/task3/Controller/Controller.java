@@ -9,13 +9,8 @@ import javafx.scene.shape.Circle;
 import javafx.util.Pair;
 import programming.task3.Core.Board;
 import programming.task3.Core.BoardListener;
-import programming.task3.Core.Checkers;
-
-import java.util.List;
 
 public class Controller implements BoardListener {
-
-    Board board = new Board();
 
     @FXML
     private GridPane gridPaneLeft;
@@ -24,10 +19,14 @@ public class Controller implements BoardListener {
     @FXML
     private Label showDice;
 
+    Board board = new Board();
 
     public Controller() {
         board.setBoardListener(this);
+    }
 
+    public void startGame(){
+        board.throwDices();
     }
 
     public Pair<GridPane, GridPane> getGridPanePair() {
@@ -35,7 +34,6 @@ public class Controller implements BoardListener {
     }
 
     private Integer selectedCell = -1;
-    // -1 значит, что сейчас не выбрана никакая клетка
 
     public void setSelectedCell(int cell){
         if (selectedCell < -1 || selectedCell > 23){
@@ -44,16 +42,13 @@ public class Controller implements BoardListener {
         selectedCell = cell;
     }
 
-
     public void turnMade() {
         updateBoard();
-//        updateTurns();
     }
 
     public void dicesRolled(int d1, int d2){
         showDice.setText(d1 + " - " + d2);
     }
-
 
     public AnchorPane getAnchorPaneByIndex(int x){
         Pair<GridPane, GridPane> gridPanePair = getGridPanePair();
@@ -82,6 +77,16 @@ public class Controller implements BoardListener {
         }
     }
 
+    private void skipTurn(){
+        for (int i = 0; i < 24; i++){
+            AnchorPane ap = getAnchorPaneByIndex(i);
+            if (ap.lookup(".button") != null){
+                return;
+            }
+        }
+        board.turnOpposite();
+        updateBoard();
+}
 
     public void updateBoard(){
         for (int i = 0; i < 24 ; i++) {
@@ -97,6 +102,9 @@ public class Controller implements BoardListener {
                 getAnchorPaneByIndex(i).getChildren().add(cellButtons.PossibleTurns(i, board, this));
             }
         }
+        skipTurn();
+
     }
 }
+
 

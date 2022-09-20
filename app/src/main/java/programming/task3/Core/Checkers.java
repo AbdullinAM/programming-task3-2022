@@ -2,8 +2,6 @@ package programming.task3.Core;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 
-import java.util.List;
-
 public enum Checkers {
     WHITE(new ImagePattern(new Image("/White.png"))),
     BLACK(new ImagePattern(new Image("/Black.png"))),
