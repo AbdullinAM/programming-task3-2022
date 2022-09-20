@@ -1,12 +1,10 @@
 package core
 
-import javafx.scene.layout.GridPane
-
 class Board(boardListener: BoardListenerInterface) {
 
     private var listener: BoardListenerInterface
 
-    private var turns: MutableList<Int> = mutableListOf()
+    var turns: MutableList<Int> = mutableListOf()
 
     var currentTurn = Color.BLACK
     private var counterOfMovesFromHead = 0
@@ -14,9 +12,11 @@ class Board(boardListener: BoardListenerInterface) {
     private var canThrowBlack = false
     private var canThrowWhite = false
 
+    var allWhiteCheckersAtHome = true
+    var allBlackCheckersAtHome = true
+
     val listOfPositions = mutableListOf<PositionOnBoard>()
 
-    //задаётся стартовая расстановка
     init {
         listener = boardListener
         for (x in 0..23) {
@@ -46,17 +46,11 @@ class Board(boardListener: BoardListenerInterface) {
         return listOfPositions[position % 24].color
     }
 
-    fun changeCurrentPlayer() {
-        turns.clear()
-        updateTurns()
-    }
-
     fun updateTurns() {
         if (turns.isEmpty()) {
             currentTurn = currentTurn.opposite()
             turns = Dices().rollDices()
             listener.showDices(turns[0], turns[1])
-            // обнуление счётчика взятых шашек с головы
             counterOfMovesFromHead = 0
         }
     }
@@ -138,8 +132,6 @@ class Board(boardListener: BoardListenerInterface) {
     }
 
     fun checkPossibilityOfThrowing() {
-        var allWhiteCheckersAtHome = true
-        var allBlackCheckersAtHome = true
         for (i in 12..29) {
             if (getColorOfPosition(i) == Color.BLACK) allBlackCheckersAtHome = false
         }

@@ -7,11 +7,8 @@ import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.image.Image
 import javafx.scene.layout.AnchorPane
-
 import javafx.scene.layout.GridPane
-
 import javafx.scene.paint.ImagePattern
-
 import javafx.scene.shape.Circle
 import javafx.scene.shape.Rectangle
 import tornadofx.action
@@ -56,6 +53,21 @@ class BoardController: BoardListenerInterface {
         return currentColor
     }
 
+    fun drawThrowingButton() {
+        if (board.allWhiteCheckersAtHome) {
+            val buttonForWhite = Button()
+            buttonForWhite.layoutX = 12.0
+            buttonForWhite.layoutY = 370.0
+            anchorPane.add(buttonForWhite)
+        }
+        if (board.allBlackCheckersAtHome) {
+            val buttonForBlack = Button()
+            buttonForBlack.layoutX = 715.0
+            buttonForBlack.layoutY = 370.0
+            anchorPane.add(buttonForBlack)
+        }
+    }
+
     override fun showDices(firstDice: Int, secondDice: Int) {
         val firstRectangle = Rectangle(50.0,50.0, ImagePattern(Image("/die$firstDice.png")))
         firstRectangle.x = 348.5
@@ -74,19 +86,20 @@ class BoardController: BoardListenerInterface {
             selectedColumn = -1
             updateBoard()
         }
-        getListOfGrids()[convertedIndex.first].add(button, convertedIndex.second, 0)
+        getListOfGrids()[convertedIndex.first].add(button, convertedIndex.second, 14)
     }
 
 
     private fun addPossibleMoveButton(convertedIndex: Pair<Int, Int>, from: Int) {
         val button = Button()
+        button.style = "-fx-background-color: #008000"
         button.action {
             for (i in board.possibleMoves(from)) {
                 addMakeMoveButton(convertIndicesForGridPane(i), i, from)
                 selectedColumn = from
             }
         }
-        getListOfGrids()[convertedIndex.first].add(button, convertedIndex.second, 0)
+        getListOfGrids()[convertedIndex.first].add(button, convertedIndex.second, 14)
     }
 
     private fun clearGridPanes() {
@@ -104,26 +117,34 @@ class BoardController: BoardListenerInterface {
                 }
             }
         }
-        board.changeCurrentPlayer()
+        changeCurrentPlayer()
     }
 
     fun updateBoard() {
+        board.checkPossibilityOfThrowing()
+        drawThrowingButton()
         val listOfPos = board.listOfPositions
         clearGridPanes()
         board.updateTurns()
         for (i in listOfPos.indices) {
             if (listOfPos[i].isNotEmpty()) {
                 val convertedIndex = convertIndicesForGridPane(i)
-                if (board.currentTurn == listOfPos[i].color) {
-                    addPossibleMoveButton(convertedIndex, i)
-                }
                 for (j in 0 until listOfPos[i].count) {
                     getListOfGrids()[convertedIndex.first].add(
                         Circle(13.0, getColor(i)),
                         convertedIndex.second, 14 - j)
                 }
+                if (board.currentTurn == listOfPos[i].color && board.possibleMoves(i).isNotEmpty()) {
+                    addPossibleMoveButton(convertedIndex, i)
+                }
             }
         }
         checkingMovePossibility()
+    }
+
+    fun changeCurrentPlayer() {
+        board.turns.clear()
+        board.updateTurns()
+        updateBoard()
     }
 }
