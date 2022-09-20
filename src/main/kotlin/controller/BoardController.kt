@@ -3,7 +3,6 @@ package controller
 import core.Board
 import core.BoardListenerInterface
 import core.Color
-import core.Dices
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.image.Image
@@ -32,6 +31,8 @@ class BoardController: BoardListenerInterface {
     @FXML
     var anchorPane: AnchorPane = AnchorPane()
 
+    private var selectedColumn = -1
+
     private fun getListOfGrids(): List<GridPane> {
         return listOf(gridOne, gridTwo, gridThree, gridFour)
     }
@@ -49,8 +50,8 @@ class BoardController: BoardListenerInterface {
         val listOfPos = board.listOfPositions
         var currentColor = ImagePattern(Image("/noImage.png"))
         when (listOfPos[i].color) {
-            core.Color.BLACK -> currentColor = ImagePattern(Image("/BlackChecker.png"))
-            core.Color.WHITE -> currentColor = ImagePattern(Image("/WhiteChecker.png"))
+            Color.BLACK -> currentColor = ImagePattern(Image("/BlackChecker.png"))
+            Color.WHITE -> currentColor = ImagePattern(Image("/WhiteChecker.png"))
         }
         return currentColor
     }
@@ -76,7 +77,6 @@ class BoardController: BoardListenerInterface {
         getListOfGrids()[convertedIndex.first].add(button, convertedIndex.second, 0)
     }
 
-    private var selectedColumn = -1
 
     private fun addPossibleMoveButton(convertedIndex: Pair<Int, Int>, from: Int) {
         val button = Button()
@@ -93,6 +93,18 @@ class BoardController: BoardListenerInterface {
         for (i in getListOfGrids()) {
             i.children.clear()
         }
+    }
+
+    //защита от случаев, когда остались ходы, но нет возможности походить на эту позицию т.к закрыта другой шашкой
+    private fun checkingMovePossibility() {
+        for (i in getListOfGrids()) {
+            for (j in i.children) {
+                if (j is Button) {
+                    return
+                }
+            }
+        }
+        board.changeCurrentPlayer()
     }
 
     fun updateBoard() {
@@ -112,5 +124,6 @@ class BoardController: BoardListenerInterface {
                 }
             }
         }
+        checkingMovePossibility()
     }
 }

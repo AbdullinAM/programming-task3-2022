@@ -1,13 +1,18 @@
 package core
 
+import javafx.scene.layout.GridPane
+
 class Board(boardListener: BoardListenerInterface) {
 
     private var listener: BoardListenerInterface
 
+    private var turns: MutableList<Int> = mutableListOf()
 
     var currentTurn = Color.BLACK
-    var counterOfMovesFromHead = 0
+    private var counterOfMovesFromHead = 0
 
+    private var canThrowBlack = false
+    private var canThrowWhite = false
 
     val listOfPositions = mutableListOf<PositionOnBoard>()
 
@@ -41,7 +46,10 @@ class Board(boardListener: BoardListenerInterface) {
         return listOfPositions[position % 24].color
     }
 
-    private var turns: MutableList<Int> = mutableListOf()
+    fun changeCurrentPlayer() {
+        turns.clear()
+        updateTurns()
+    }
 
     fun updateTurns() {
         if (turns.isEmpty()) {
@@ -106,7 +114,7 @@ class Board(boardListener: BoardListenerInterface) {
         return result
     }
     //функция, чтобы шашки не ходили бесконечно по кругу
-    fun unableToMoveFromHome(fromColor: Color, listOfAddedMoves: MutableList<Int>, from: Int) {
+    private fun unableToMoveFromHome(fromColor: Color, listOfAddedMoves: MutableList<Int>, from: Int) {
         val copyOfListOfAddedMoves = listOfAddedMoves.toList()
         //нужна копия т.к нельзя идти по листу и одновременно что-то в нём удалять
         if (fromColor == Color.WHITE) {
@@ -129,8 +137,6 @@ class Board(boardListener: BoardListenerInterface) {
         }
     }
 
-    private var canThrowBlack = false
-    private var canThrowWhite = false
     fun checkPossibilityOfThrowing() {
         var allWhiteCheckersAtHome = true
         var allBlackCheckersAtHome = true
