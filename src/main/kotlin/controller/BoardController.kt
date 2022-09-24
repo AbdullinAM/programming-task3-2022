@@ -4,7 +4,9 @@ import core.Board
 import core.BoardListenerInterface
 import core.Color
 import javafx.fxml.FXML
+import javafx.scene.control.Alert
 import javafx.scene.control.Button
+import javafx.scene.control.ButtonType
 import javafx.scene.image.Image
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.GridPane
@@ -53,18 +55,22 @@ class BoardController: BoardListenerInterface {
         return currentColor
     }
 
-    fun drawThrowingButton() {
-        if (board.allWhiteCheckersAtHome) {
-            val buttonForWhite = Button()
-            buttonForWhite.layoutX = 12.0
-            buttonForWhite.layoutY = 370.0
-            anchorPane.add(buttonForWhite)
+    private fun drawThrowingButton(from: Int) {
+        val button = Button()
+        button.action {
+            board.throwOutFromTheBoard(from)
+            board.updateTurns()
+            updateBoard()
         }
-        if (board.allBlackCheckersAtHome) {
-            val buttonForBlack = Button()
-            buttonForBlack.layoutX = 715.0
-            buttonForBlack.layoutY = 370.0
-            anchorPane.add(buttonForBlack)
+        if (board.currentTurn == Color.BLACK) {
+            button.layoutX = 12.0
+            button.layoutY = 370.0
+            anchorPane.add(button)
+        }
+        else if (board.currentTurn == Color.WHITE) {
+            button.layoutX = 715.0
+            button.layoutY = 370.0
+            anchorPane.add(button)
         }
     }
 
@@ -79,33 +85,47 @@ class BoardController: BoardListenerInterface {
         anchorPane.add(secondRectangle)
     }
 
-    private fun addMakeMoveButton(convertedIndex: Pair<Int, Int>, to: Int, from: Int) {
+    private fun addMakeMoveButton(to: Int, from: Int) {
         val button = Button()
         button.action {
             board.makeMove(from, to)
             selectedColumn = -1
             updateBoard()
         }
+        val convertedIndex = convertIndicesForGridPane(to)
         getListOfGrids()[convertedIndex.first].add(button, convertedIndex.second, 14)
     }
 
 
-    private fun addPossibleMoveButton(convertedIndex: Pair<Int, Int>, from: Int) {
+    private fun addPossibleMoveButton(from: Int) {
         val button = Button()
         button.style = "-fx-background-color: #008000"
         button.action {
             for (i in board.possibleMoves(from)) {
-                addMakeMoveButton(convertIndicesForGridPane(i), i, from)
+                addMakeMoveButton(i, from)
                 selectedColumn = from
             }
         }
+        val convertedIndex = convertIndicesForGridPane(from)
         getListOfGrids()[convertedIndex.first].add(button, convertedIndex.second, 14)
     }
 
-    private fun clearGridPanes() {
+    private fun addThrowingButton(from: Int) {
+        val button = Button()
+        button.style = "-fx-background-color: #ff0000"
+        button.action {
+            updateBoard()
+            drawThrowingButton(from)
+        }
+        val convertedIndex = convertIndicesForGridPane(from)
+        getListOfGrids()[convertedIndex.first].add(button, convertedIndex.second, 14)
+    }
+
+    private fun clear() {
         for (i in getListOfGrids()) {
             i.children.clear()
         }
+        anchorPane.children.remove(anchorPane.lookup(".button"))
     }
 
     //защита от случаев, когда остались ходы, но нет возможности походить на эту позицию т.к закрыта другой шашкой
@@ -117,14 +137,21 @@ class BoardController: BoardListenerInterface {
                 }
             }
         }
+        for (i in 0..24) {
+            if (board.possibleToThrow(i)) {
+                return
+            }
+        }
         changeCurrentPlayer()
     }
 
     fun updateBoard() {
+        if (board.gameOverCheck() != null) {
+            winnerAlertAndRestart(board.gameOverCheck())
+        }
         board.checkPossibilityOfThrowing()
-        drawThrowingButton()
         val listOfPos = board.listOfPositions
-        clearGridPanes()
+        clear()
         board.updateTurns()
         for (i in listOfPos.indices) {
             if (listOfPos[i].isNotEmpty()) {
@@ -135,16 +162,38 @@ class BoardController: BoardListenerInterface {
                         convertedIndex.second, 14 - j)
                 }
                 if (board.currentTurn == listOfPos[i].color && board.possibleMoves(i).isNotEmpty()) {
-                    addPossibleMoveButton(convertedIndex, i)
+                    addPossibleMoveButton(i)
+                }
+                if (board.possibleToThrow(i)) {
+                    addThrowingButton(i)
                 }
             }
         }
         checkingMovePossibility()
     }
 
-    fun changeCurrentPlayer() {
+    private fun changeCurrentPlayer() {
         board.turns.clear()
         board.updateTurns()
         updateBoard()
+    }
+
+    private fun winnerAlertAndRestart(color: Color?) {
+        val winnerAlert = Alert(Alert.AlertType.CONFIRMATION, "Нажмите ОК для рестарта")
+        val winner = when (color) {
+            Color.WHITE -> "Белые"
+            Color.BLACK -> "Чёрные"
+            else -> ""
+        }
+        winnerAlert.headerText = "Игра закончена, победитель $winner!"
+        val result = winnerAlert.showAndWait()
+        if (result.get() == ButtonType.OK) {
+            val restartAlert = Alert(Alert.AlertType.INFORMATION, "Произведён рестарт игры")
+            restartAlert.show()
+            board.clearAllBoard()
+        }
+        else {
+            winnerAlert.hide()
+        }
     }
 }

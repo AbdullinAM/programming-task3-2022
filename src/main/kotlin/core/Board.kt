@@ -12,9 +12,6 @@ class Board(boardListener: BoardListenerInterface) {
     private var canThrowBlack = false
     private var canThrowWhite = false
 
-    var allWhiteCheckersAtHome = true
-    var allBlackCheckersAtHome = true
-
     val listOfPositions = mutableListOf<PositionOnBoard>()
 
     init {
@@ -86,10 +83,10 @@ class Board(boardListener: BoardListenerInterface) {
             }
         }
         else {
-            val leftTurn = turns[0]
-            if (getColorOfPosition(from + leftTurn) == fromColor ||
-                getColorOfPosition(from + leftTurn) == Color.NEUTRAL) {
-                result.add(from + leftTurn)
+            val lastTurn = turns[0]
+            if (getColorOfPosition(from + lastTurn) == fromColor ||
+                getColorOfPosition(from + lastTurn) == Color.NEUTRAL) {
+                result.add(from + lastTurn)
             }
         }
         if ((from == 0 && listOfPositions[from].color == Color.WHITE ||
@@ -107,6 +104,46 @@ class Board(boardListener: BoardListenerInterface) {
         unableToMoveFromHome(fromColor, result, from)
         return result
     }
+
+    fun possibleToThrow(from: Int): Boolean {
+        var result = false
+        val firstTurn: Int
+        val secondTurn: Int
+        if (turns.size > 1) {
+            firstTurn = turns[0]
+            secondTurn = turns[1]
+            if (canThrowBlack && getColorOfPosition(from) == Color.BLACK) {
+                if (from + firstTurn >= 12) {
+                    result = true
+                }
+                if (from + secondTurn >= 12) {
+                    result = true
+                }
+            }
+            if (canThrowWhite && getColorOfPosition(from) == Color.WHITE) {
+                    if (from + firstTurn >= 24) {
+                        result = true
+                    }
+                    if (from + secondTurn >= 24) {
+                        result = true
+                    }
+            }
+        } else {
+            val lastTurn = turns[0]
+            if ((canThrowBlack && getColorOfPosition(from) == Color.BLACK)) {
+                if (from + lastTurn >= 12) {
+                result = true
+                }
+            }
+            if ((canThrowWhite && getColorOfPosition(from) == Color.WHITE)) {
+                if (from + lastTurn >= 24) {
+                    result = true
+                }
+            }
+        }
+        return result
+    }
+
     //функция, чтобы шашки не ходили бесконечно по кругу
     private fun unableToMoveFromHome(fromColor: Color, listOfAddedMoves: MutableList<Int>, from: Int) {
         val copyOfListOfAddedMoves = listOfAddedMoves.toList()
@@ -132,14 +169,14 @@ class Board(boardListener: BoardListenerInterface) {
     }
 
     fun checkPossibilityOfThrowing() {
+        canThrowBlack = currentTurn == Color.BLACK
         for (i in 12..29) {
-            if (getColorOfPosition(i) == Color.BLACK) allBlackCheckersAtHome = false
+            if (getColorOfPosition(i) == Color.BLACK) canThrowBlack = false
         }
+        canThrowWhite = currentTurn == Color.WHITE
         for (i in 0..17) {
-            if (getColorOfPosition(i) == Color.WHITE) allWhiteCheckersAtHome = false
+            if (getColorOfPosition(i) == Color.WHITE) canThrowWhite = false
         }
-        canThrowBlack = allBlackCheckersAtHome
-        canThrowWhite = allWhiteCheckersAtHome
     }
 
     fun makeMove(from: Int, to: Int) {
@@ -164,10 +201,34 @@ class Board(boardListener: BoardListenerInterface) {
         updateTurns()
     }
 
-    fun clear() {
+    fun throwOutFromTheBoard(from: Int) {
+        listOfPositions[from].count -= 1
+        val copyTurns = turns.sorted()
+        if (currentTurn == Color.WHITE) {
+            if (from + copyTurns[0] >= 24) {
+                turns.remove(copyTurns[0])
+            }
+            else if  (from + copyTurns[1] >= 24) {
+                turns.remove(copyTurns[1])
+            }
+        }
+        if (currentTurn == Color.BLACK) {
+            if (from + copyTurns[0] >= 12) {
+                turns.remove(copyTurns[0])
+            }
+            else if  (from + copyTurns[1] >= 12) {
+                turns.remove(copyTurns[1])
+            }
+        }
+        if (listOfPositions[from].count == 0) {
+            listOfPositions[from].color = Color.NEUTRAL
+        }
+    }
+
+    fun clearAllBoard() {
         listOfPositions.clear()
         currentTurn = Color.NEUTRAL
-        for (x in 0..23) {
+        for (i in 0..23) {
             listOfPositions.add(PositionOnBoard())
         }
         listOfPositions[0].color = Color.WHITE
@@ -182,9 +243,9 @@ class Board(boardListener: BoardListenerInterface) {
         var white = false
         var winner: Color? = null
 
-        for (x in 0..23) {
-            if (listOfPositions[x].color == Color.BLACK) black = true
-            if (listOfPositions[x].color == Color.WHITE) white = true
+        for (i in 0..23) {
+            if (listOfPositions[i].color == Color.BLACK) black = true
+            if (listOfPositions[i].color == Color.WHITE) white = true
         }
         if (!black) winner = Color.BLACK
         if (!white) winner = Color.WHITE
