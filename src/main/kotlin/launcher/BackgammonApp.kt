@@ -1,4 +1,4 @@
-package tornadofx
+package launcher
 
 import controller.BoardController
 import javafx.application.Application
@@ -8,6 +8,8 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.text.Text
 import javafx.stage.Stage
+import tornadofx.App
+import tornadofx.getChildList
 
 
 class BackgammonApp: App() {
@@ -17,7 +19,6 @@ lateinit var actionTarget: Text
 
     override fun start(stage: Stage) {
         val loader = FXMLLoader(this::class.java.classLoader.getResource("main.fxml"))
-//        val root = FXMLLoader.load<Parent>(this::class.java.classLoader.getResource("main.fxml"))
         val root = loader.load<Parent>()
         val scene = Scene(root, 744.0, 754.0)
         stage.isResizable = false

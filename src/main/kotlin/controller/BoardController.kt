@@ -38,12 +38,10 @@ class BoardController: BoardListenerInterface {
 
     private var board = Board(this)
 
-
     private fun convertIndicesForGridPane(number: Int): Pair<Int, Int> {
         //first is number of GridPane, second is position in GridPane
         return Pair(number / 6, number % 6)
     }
-
 
     private fun getColor(i: Int): ImagePattern {
         val listOfPos = board.listOfPositions
@@ -95,7 +93,6 @@ class BoardController: BoardListenerInterface {
         val convertedIndex = convertIndicesForGridPane(to)
         getListOfGrids()[convertedIndex.first].add(button, convertedIndex.second, 14)
     }
-
 
     private fun addPossibleMoveButton(from: Int) {
         val button = Button()
