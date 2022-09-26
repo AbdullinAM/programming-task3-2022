@@ -9,8 +9,8 @@ class Board(boardListener: BoardListenerInterface) {
     var currentTurn = Color.BLACK
     private var counterOfMovesFromHead = 0
 
-    private var canThrowBlack = false
-    private var canThrowWhite = false
+    var canThrowBlack = false
+    var canThrowWhite = false
 
     val listOfPositions = mutableListOf<PositionOnBoard>()
 

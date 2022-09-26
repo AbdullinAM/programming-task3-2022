@@ -98,6 +98,7 @@ class BoardController: BoardListenerInterface {
         val button = Button()
         button.style = "-fx-background-color: #008000"
         button.action {
+            updateBoard()
             for (i in board.possibleMoves(from)) {
                 addMakeMoveButton(i, from)
                 selectedColumn = from
