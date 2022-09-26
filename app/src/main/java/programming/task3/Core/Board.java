@@ -24,9 +24,9 @@ public class Board {
     public Board(){
         for (int i = 0; i < 24; i++) {board[i] = new Cell();}
         board[0].setColour(Checkers.WHITE);
-        board[0].setQuantity(1);
+        board[0].setQuantity(15);
         board[12].setColour(Checkers.BLACK);
-        board[12].setQuantity(1);
+        board[12].setQuantity(15);
 
 //        board[20].setColour(Checkers.WHITE);
 //        board[20].setQuantity(2);
