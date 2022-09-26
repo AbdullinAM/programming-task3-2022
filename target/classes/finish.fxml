@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="327.0" prefWidth="497.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.abc.finish">
+   <children>
+      <MenuBar layoutX="-7.0" layoutY="1.0" prefHeight="25.0" prefWidth="503.0">
+         <menus>
+            <Menu mnemonicParsing="false" text="Игра">
+               <items>
+                  <MenuItem fx:id="restart" mnemonicParsing="false" onAction="#restart" text="Перезапустить" />
+                  <MenuItem fx:id="finish" mnemonicParsing="false" onAction="#me" text="Об авторе" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <ImageView fx:id="win_image" fitHeight="296.0" fitWidth="389.0" layoutX="54.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img16.jpg" />
+         </image></ImageView>
+   </children>
+</AnchorPane>

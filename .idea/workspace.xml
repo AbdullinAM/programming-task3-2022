@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c24842d5-2575-4c4b-a82f-199f029dac4e" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="FxmlFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="29CHZ5ebQLkMbQiCUunHR1dDfs5" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\udalo\examplejavafx\src\main\resources" />
+      <recent name="C:\Users\udalo\examplejavafx\src\main\java\com\example\abc" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.MyApplication">
+    <configuration name="Kubik" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Kubik" />
+      <module name="RussianCheckers" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MyApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.abc.MyApplication" />
+      <module name="kube" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\udalo\javafx-sdk-18.0.1\lib&quot; --add-modules javafx.controls,javafx.fxml" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Tests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="kube" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.abc.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.abc" />
+      <option name="MAIN_CLASS_NAME" value="com.example.abc.Tests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Tests.checkLogic" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="kube" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.abc.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.abc" />
+      <option name="MAIN_CLASS_NAME" value="com.example.abc.Tests" />
+      <option name="METHOD_NAME" value="checkLogic" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="tests.checkLogic" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="kube" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.abc.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.abc" />
+      <option name="MAIN_CLASS_NAME" value="com.example.abc.tests" />
+      <option name="METHOD_NAME" value="checkLogic" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.MyApplication" />
+        <item itemvalue="JUnit.Tests" />
+        <item itemvalue="JUnit.Tests.checkLogic" />
+        <item itemvalue="JUnit.tests.checkLogic" />
+        <item itemvalue="Application.Kubik" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c24842d5-2575-4c4b-a82f-199f029dac4e" name="Changes" comment="" />
+      <created>1652610200861</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1652610200861</updated>
+      <workItem from="1652610205039" duration="161000" />
+      <workItem from="1652610513152" duration="236000" />
+      <workItem from="1652610764333" duration="258000" />
+      <workItem from="1652611042127" duration="114000" />
+      <workItem from="1652611175418" duration="1435000" />
+      <workItem from="1652866252848" duration="3000" />
+      <workItem from="1652900263950" duration="623000" />
+      <workItem from="1653399087092" duration="4317000" />
+      <workItem from="1653511710374" duration="993000" />
+      <workItem from="1653512724538" duration="194000" />
+      <workItem from="1653512946593" duration="95000" />
+      <workItem from="1653684110750" duration="566000" />
+      <workItem from="1653761325892" duration="13654000" />
+      <workItem from="1653901339327" duration="15043000" />
+      <workItem from="1653996049845" duration="31890000" />
+      <workItem from="1654423306543" duration="87000" />
+      <workItem from="1654502477670" duration="4000" />
+      <workItem from="1654502523957" duration="257000" />
+      <workItem from="1660904078897" duration="708000" />
+      <workItem from="1662628688207" duration="3385000" />
+      <workItem from="1663337414758" duration="3739000" />
+      <workItem from="1663403897817" duration="7500000" />
+      <workItem from="1663573022691" duration="7487000" />
+      <workItem from="1663680058262" duration="9428000" />
+      <workItem from="1663832332448" duration="56000" />
+      <workItem from="1663832454213" duration="61000" />
+      <workItem from="1663839995769" duration="91000" />
+      <workItem from="1663864893721" duration="4075000" />
+      <workItem from="1663947979779" duration="2754000" />
+      <workItem from="1663962058404" duration="1984000" />
+      <workItem from="1664090319143" duration="6842000" />
+      <workItem from="1664177853911" duration="10369000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
