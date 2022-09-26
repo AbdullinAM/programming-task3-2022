@@ -33,7 +33,4 @@ public class Cell {
     public boolean isOccupied() {
         return colour != NO_COLOR;
     }
-
-
-
 }

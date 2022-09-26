@@ -1,23 +1,33 @@
 package programming.task3.Controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.util.Pair;
 import programming.task3.Core.Board;
 import programming.task3.Core.BoardListener;
+import programming.task3.Core.Checkers;
+
+import java.util.Optional;
+
 
 public class Controller implements BoardListener {
 
     @FXML
-    private GridPane gridPaneLeft;
+    public GridPane gridPaneLeft;
     @FXML
-    private GridPane gridPaneRight;
+    public GridPane gridPaneRight;
     @FXML
     private Label showDice;
+    @FXML
+    private AnchorPane leftMenu;
 
     Board board = new Board();
 
@@ -62,9 +72,15 @@ public class Controller implements BoardListener {
 
     public void drawCheckers(int x){
         int quantity = board.getBoard()[x].getQuantity();
+        ImagePattern white = new ImagePattern(new Image("/White.png"));
+        ImagePattern black = new ImagePattern(new Image("/Black.png"));
         for (int i = 0; i < quantity; i++) {
             Circle circle = new Circle(20);
-            circle.setFill(board.getBoard()[x].getColour().getImagePattern());
+            if (board.getBoard()[x].getColour() == Checkers.WHITE){
+                circle.setFill(white);
+            } else {
+                circle.setFill(black);
+            }
             circle.setCenterX(24);
             if (x > 11 ){
                 circle.setCenterY(296 - 17 * i);
@@ -73,7 +89,6 @@ public class Controller implements BoardListener {
             }
             circle.setStroke(Color.GRAY);
             getAnchorPaneByIndex(x).getChildren().add(circle);
-
         }
     }
 
@@ -83,6 +98,9 @@ public class Controller implements BoardListener {
             if (ap.lookup(".button") != null){
                 return;
             }
+        }
+        if (leftMenu.lookup(".button") != null){
+            return;
         }
         board.turnOpposite();
         updateBoard();
@@ -102,8 +120,41 @@ public class Controller implements BoardListener {
                 getAnchorPaneByIndex(i).getChildren().add(cellButtons.PossibleTurns(i, board, this));
             }
         }
-        skipTurn();
+        leftMenu.getChildren().remove(leftMenu.lookup(".button"));
+        if(board.openExit()){
+            ExitButton leftMenuButton = new ExitButton();
+            leftMenu.getChildren().add(leftMenuButton.exitButton(board, this));
+            if (board.winner() != Checkers.NO_COLOR){
+                endGame(board.winner());
+            }
 
+        }
+        if (!board.openExit()) {
+            skipTurn();
+        }
+
+    }
+
+
+    private void endGame(Checkers winner){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("Press ok to restart, cancel to close the game");
+        String win;
+        if (winner == Checkers.BLACK){
+            win = "Black";
+        } else if (winner == Checkers.WHITE){
+            win = "White";
+        } else {
+            return;
+        }
+        alert.setTitle("winner is - "+ win);
+        Optional<ButtonType> restart = alert.showAndWait();
+        if (restart.get() == ButtonType.OK){
+            board.restartOfTheGame();
+            updateBoard();
+        } else if (restart.get() == ButtonType.CANCEL){
+            leftMenu.getScene().getWindow().hide();
+        }
     }
 }
 
