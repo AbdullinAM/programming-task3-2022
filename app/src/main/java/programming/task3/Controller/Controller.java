@@ -1,6 +1,8 @@
 package programming.task3.Controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -10,12 +12,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import programming.task3.Core.Board;
 import programming.task3.Core.BoardListener;
 import programming.task3.Core.Checkers;
 
+import java.io.IOException;
 import java.util.Optional;
+import java.util.Stack;
 
 
 public class Controller implements BoardListener {
@@ -25,9 +30,9 @@ public class Controller implements BoardListener {
     @FXML
     public GridPane gridPaneRight;
     @FXML
-    private Label showDice;
-    @FXML
     private AnchorPane leftMenu;
+    @FXML
+    private Label showDice;
 
     Board board = new Board();
 
@@ -136,7 +141,7 @@ public class Controller implements BoardListener {
     }
 
 
-    private void endGame(Checkers winner){
+    private void endGame(Checkers winner) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText("Press ok to restart, cancel to close the game");
         String win;

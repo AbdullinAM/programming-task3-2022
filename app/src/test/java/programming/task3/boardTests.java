@@ -1,12 +1,9 @@
 package programming.task3;
 
-
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import programming.task3.Core.Board;
-import programming.task3.Core.Cell;
 import programming.task3.Core.Checkers;
-
 import java.util.ArrayList;
 import java.util.List;
 
